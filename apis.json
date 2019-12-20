@@ -1,0 +1,48 @@
+{
+    "name": "Validic",
+    "description": "<p>Validic collects de-identified patient data from wearables, clinical devices and patient healthcare applications. Validic is a behind the scenes IT infrastructure solution where with one simple RESTful API connection to Validic, you have access to the standardized, secure data you need to accelerate your strategic business initiatives, reduce costs and improve patient outcomes.<\/p>",
+    "image": "http:\/\/kinlane-productions.s3.amazonaws.com\/api-evangelist-site\/company\/logos\/validic-logo.png",
+    "tags": [
+        "have api",
+        "healthcare"
+    ],
+    "created": "2019-12-19",
+    "modified": "2019-12-19",
+    "url": "https:\/\/raw.githubusercontent.com\/api-evangelist\/validic\/master\/apis.json",
+    "specificationVersion": "0.14",
+    "apis": [
+        {
+            "name": "Validic",
+            "description": null,
+            "image": "http:\/\/kinlane-productions.s3.amazonaws.com\/api-evangelist-site\/company\/logos\/validic-logo.png",
+            "humanURL": "https:\/\/validic.com",
+            "baseURL": "",
+            "tags": [],
+            "properties": [
+                {
+                    "type": "x-openapi",
+                    "url": "https:\/\/raw.githubusercontent.com\/api-evangelist\/1forge\/master\/validic-openapi.json"
+                }
+            ]
+        }
+    ],
+    "include": [],
+    "x-common": [
+        {
+            "type": "Developers",
+            "url": "https:\/\/validic.com\/api"
+        },
+        {
+            "type": "Email",
+            "url": "hello@validic.com"
+        },
+        {
+            "type": "Twitter",
+            "url": "https:\/\/twitter.com\/validic"
+        },
+        {
+            "type": "Website",
+            "url": "https:\/\/validic.com"
+        }
+    ]
+}
