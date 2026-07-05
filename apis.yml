@@ -1,0 +1,165 @@
+aid: validic
+url: https://raw.githubusercontent.com/api-evangelist/validic/refs/heads/main/apis.yml
+name: Validic
+kind: company
+description: Validic is an enterprise health-data platform that connects patient-recorded
+  data from digital health applications, medical devices, and wearables to healthcare
+  organizations. Its Inform API and Mobile SDK provision users against an organization,
+  present a hosted Marketplace for connecting API/cloud and Bluetooth sources, and
+  return standardized health observations - CGM, intraday activity, point-in-time
+  measurements, nutrition, sleep, daily summaries, and workouts. Validic also manages
+  cellular-enabled devices, exposes connection-event history, and delivers data in
+  real time through a Server-Sent Events Streaming API and a webhook Push Service.
+  The platform is HITRUST-certified and HIPAA-compliant. Requests authenticate with
+  an organization access token passed as the token query parameter over HTTPS.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Health Data
+- Digital Health
+- Wearables
+- Remote Patient Monitoring
+- Health IoT
+- Interoperability
+- HIPAA
+created: '2026-07-05'
+modified: '2026-07-05'
+specificationVersion: '0.19'
+apis:
+- aid: validic:validic-users-api
+  name: Validic Users API
+  tags:
+  - Users
+  - Provisioning
+  - Organizations
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.validic.com/docs/provision-and-managing-users
+  baseURL: https://api.v2.validic.com
+  properties:
+  - url: https://developer.validic.com/docs/provision-and-managing-users
+    type: Documentation
+  - url: https://developer.validic.com/docs/inform-rest-api
+    type: APIReference
+  - url: openapi/validic-openapi.yml
+    type: OpenAPI
+  description: Provision, list, retrieve, and delete users under an organization. A
+    newly provisioned user returns Marketplace and mobile connection tokens plus
+    location metadata; users should only be provisioned when ready to connect a
+    device.
+- aid: validic:validic-marketplace-connections-api
+  name: Validic Marketplace & Connections API
+  tags:
+  - Marketplace
+  - Connections
+  - Sources
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.validic.com/docs/unified-marketplace
+  baseURL: https://api.v2.validic.com
+  properties:
+  - url: https://developer.validic.com/docs/requesting-access-to-data
+    type: Documentation
+  - url: https://developer.validic.com/reference/get-connection-events-by-orgid
+    type: APIReference
+  - url: openapi/validic-openapi.yml
+    type: OpenAPI
+  description: The hosted Standard, Custom, and Unified Marketplace lets users connect
+    API/cloud and Bluetooth sources; the connection-events resource returns the
+    history of source connect (create) and disconnect (delete) events for the
+    organization.
+- aid: validic:validic-observations-data-api
+  name: Validic Observations & Data API
+  tags:
+  - Observations
+  - CGM
+  - Measurements
+  - Activity
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.validic.com/docs/accessing-data
+  baseURL: https://api.v2.validic.com
+  properties:
+  - url: https://developer.validic.com/docs/accessing-data
+    type: Documentation
+  - url: https://developer.validic.com/docs/inform-rest-api
+    type: APIReference
+  - url: openapi/validic-openapi.yml
+    type: OpenAPI
+  description: Retrieve standardized health observations for a user - continuous
+    glucose monitoring (CGM), intraday activity time series, point-in-time
+    measurements (weight, blood pressure, glucose), nutrition, sleep, daily
+    activity summaries, and workouts - filtered by date range and source.
+- aid: validic:validic-devices-api
+  name: Validic Devices API
+  tags:
+  - Devices
+  - Cellular
+  - RPM
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://help.validic.com/space/VCS/4314071049/Cellular-Enabled+Device+Support
+  baseURL: https://api.v2.validic.com
+  properties:
+  - url: https://help.validic.com/space/VCS/4314071049/Cellular-Enabled+Device+Support
+    type: Documentation
+  - url: https://developer.validic.com/docs/inform-rest-api
+    type: APIReference
+  - url: openapi/validic-openapi.yml
+    type: OpenAPI
+  description: Activate and suspend the cellular data plan for cellular-enabled health
+    devices so they can transmit readings without a paired phone - the backbone of
+    Validic's remote patient monitoring device programs.
+- aid: validic:validic-streaming-api
+  name: Validic Streaming API
+  tags:
+  - Streaming
+  - Server-Sent Events
+  - Real Time
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.validic.com/docs/connect-to-a-stream
+  baseURL: https://streams.v2.validic.com
+  properties:
+  - url: https://developer.validic.com/docs/creating-a-stream
+    type: Documentation
+  - url: https://developer.validic.com/docs/connect-to-a-stream
+    type: APIReference
+  - url: openapi/validic-openapi.yml
+    type: OpenAPI
+  description: Create a stream and connect to it over a long-lived HTTP connection
+    that delivers organization-wide health and marketplace-connection events as
+    Server-Sent Events (text/event-stream), with 5-second heartbeats, replay, and
+    up to 5 streams per customer. This is SSE over HTTPS, not a WebSocket.
+- aid: validic:validic-push-service-api
+  name: Validic Push Service API
+  tags:
+  - Push
+  - Webhooks
+  - Notifications
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://help.validic.com/space/VCS/3374284801/Streaming+API+vs+Push+Service
+  baseURL: https://api.v2.validic.com
+  properties:
+  - url: https://help.validic.com/space/VCS/3374284801/Streaming+API+vs+Push+Service
+    type: Documentation
+  - url: openapi/validic-openapi.yml
+    type: OpenAPI
+  description: Event-based Push Service that POSTs notifications to a customer webhook
+    endpoint as new health data arrives - an alternative delivery model to the
+    Streaming API for organizations that prefer to receive rather than hold a
+    connection.
+common:
+- type: GitHubOrganization
+  url: https://github.com/validic
+- type: LinkedIn
+  url: https://www.linkedin.com/company/validic
+- type: Website
+  url: https://validic.com
+- type: Documentation
+  url: https://developer.validic.com
+- type: Plans
+  url: plans/validic-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/validic-rate-limits.yml
+- type: FinOps
+  url: finops/validic-finops.yml
+- url: https://validic.com/blog/
+  type: Blog
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

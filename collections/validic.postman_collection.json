@@ -1,0 +1,221 @@
+{
+  "info": {
+    "name": "Validic Inform API",
+    "description": "Validic Inform connects patient-recorded data from digital health apps, devices, and wearables to healthcare organizations. Inform REST base URL: https://api.v2.validic.com. Streaming API base URL: https://streams.v2.validic.com (Server-Sent Events). All requests authenticate with an organization access token passed as the `token` query parameter.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.v2.validic.com", "type": "string" },
+    { "key": "streamsUrl", "value": "https://streams.v2.validic.com", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "org_id", "value": "", "type": "string" },
+    { "key": "uid", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get all users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "Lists all users provisioned under the organization."
+          }
+        },
+        {
+          "name": "Provision a user",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"uid\": \"my-user-1\"\n}" },
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "Creates a new user and returns marketplace + mobile connection tokens and location metadata."
+          }
+        },
+        {
+          "name": "Get a user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "Retrieves a single user (modeled path)."
+          }
+        },
+        {
+          "name": "Delete a user",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "Permanently removes a user."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Observations & Data",
+      "item": [
+        {
+          "name": "Get CGM",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/cgm?start_date=2026-01-01&end_date=2026-01-30&token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "cgm"], "query": [{ "key": "start_date", "value": "2026-01-01" }, { "key": "end_date", "value": "2026-01-30" }, { "key": "token", "value": "{{token}}" }] },
+            "description": "Time series continuous glucose monitoring data."
+          }
+        },
+        {
+          "name": "Get intraday",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/intraday?start_date=2026-01-01&end_date=2026-01-30&token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "intraday"], "query": [{ "key": "start_date", "value": "2026-01-01" }, { "key": "end_date", "value": "2026-01-30" }, { "key": "token", "value": "{{token}}" }] },
+            "description": "Intraday activity time series (steps, heart rate)."
+          }
+        },
+        {
+          "name": "Get measurements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/measurements?start_date=2026-01-01&end_date=2026-01-30&token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "measurements"], "query": [{ "key": "start_date", "value": "2026-01-01" }, { "key": "end_date", "value": "2026-01-30" }, { "key": "token", "value": "{{token}}" }] },
+            "description": "Point-in-time measurements (weight, blood pressure, glucose)."
+          }
+        },
+        {
+          "name": "Get nutrition",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/nutrition?start_date=2026-01-01&end_date=2026-01-30&token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "nutrition"], "query": [{ "key": "start_date", "value": "2026-01-01" }, { "key": "end_date", "value": "2026-01-30" }, { "key": "token", "value": "{{token}}" }] },
+            "description": "Daily nutritional intake summaries."
+          }
+        },
+        {
+          "name": "Get sleep",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/sleep?start_date=2026-01-01&end_date=2026-01-30&token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "sleep"], "query": [{ "key": "start_date", "value": "2026-01-01" }, { "key": "end_date", "value": "2026-01-30" }, { "key": "token", "value": "{{token}}" }] },
+            "description": "Sleep session data."
+          }
+        },
+        {
+          "name": "Get daily summaries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/summaries?start_date=2026-01-01&end_date=2026-01-30&token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "summaries"], "query": [{ "key": "start_date", "value": "2026-01-01" }, { "key": "end_date", "value": "2026-01-30" }, { "key": "token", "value": "{{token}}" }] },
+            "description": "Daily activity summaries (steps, calories, heart rate)."
+          }
+        },
+        {
+          "name": "Get workouts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/workouts?start_date=2026-01-01&end_date=2026-01-30&token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "workouts"], "query": [{ "key": "start_date", "value": "2026-01-01" }, { "key": "end_date", "value": "2026-01-30" }, { "key": "token", "value": "{{token}}" }] },
+            "description": "Workout events list."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Marketplace & Connections",
+      "item": [
+        {
+          "name": "Get connection events by organization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/connection_events?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "connection_events"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "History of source connect (create) and disconnect (delete) events. Modeled path."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "Activate a cellular device",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/devices/:device_id/activate?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "devices", ":device_id", "activate"], "query": [{ "key": "token", "value": "{{token}}" }], "variable": [{ "key": "device_id", "value": "" }] },
+            "description": "Enables the cellular data plan for a device. Method PUT confirmed; path modeled."
+          }
+        },
+        {
+          "name": "Suspend a cellular device",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/users/{{uid}}/devices/:device_id/suspend?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "users", "{{uid}}", "devices", ":device_id", "suspend"], "query": [{ "key": "token", "value": "{{token}}" }], "variable": [{ "key": "device_id", "value": "" }] },
+            "description": "Disables the cellular data plan for a device. Method PUT confirmed; path modeled."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Streaming",
+      "item": [
+        {
+          "name": "Create a stream",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"my-stream\",\n  \"start_date\": \"2026-01-01\"\n}" },
+            "url": { "raw": "{{streamsUrl}}/streams?token={{token}}", "host": ["{{streamsUrl}}"], "path": ["streams"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "Creates a stream (up to 5 per customer) and returns its id."
+          }
+        },
+        {
+          "name": "Get a stream",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{streamsUrl}}/streams/:id?token={{token}}", "host": ["{{streamsUrl}}"], "path": ["streams", ":id"], "query": [{ "key": "token", "value": "{{token}}" }], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Retrieves stream metadata."
+          }
+        },
+        {
+          "name": "Connect to a stream (SSE)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "text/event-stream" }],
+            "url": { "raw": "{{streamsUrl}}/streams/:id/connect?token={{token}}", "host": ["{{streamsUrl}}"], "path": ["streams", ":id", "connect"], "query": [{ "key": "token", "value": "{{token}}" }], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Opens a long-lived HTTP connection delivering Server-Sent Events (text/event-stream), with a poke heartbeat every 5 seconds. Not a WebSocket."
+          }
+        },
+        {
+          "name": "Replay a stream",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"start_date\": \"2026-01-01T00:00:00Z\"\n}" },
+            "url": { "raw": "{{streamsUrl}}/streams/:id/replay?token={{token}}", "host": ["{{streamsUrl}}"], "path": ["streams", ":id", "replay"], "query": [{ "key": "token", "value": "{{token}}" }], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Replays previously delivered events from a point in time."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Push Service",
+      "item": [
+        {
+          "name": "Create a push subscription",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"url\": \"https://example.com/validic/webhook\"\n}" },
+            "url": { "raw": "{{baseUrl}}/organizations/{{org_id}}/push?token={{token}}", "host": ["{{baseUrl}}"], "path": ["organizations", "{{org_id}}", "push"], "query": [{ "key": "token", "value": "{{token}}" }] },
+            "description": "Registers a webhook endpoint for the Push Service. Service documented; exact path/payload modeled."
+          }
+        }
+      ]
+    }
+  ]
+}

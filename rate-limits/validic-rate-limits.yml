@@ -1,0 +1,65 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Validic
+providerId: validic
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Health Data
+- Digital Health
+- Rate Limiting
+- Quotas
+description: >-
+  Validic's Inform REST API applies a default rate limit of 2,000 requests per
+  access token per hour. Data-retrieval requests are additionally bounded by a
+  maximum date range of 30 days per request; up to 1 year of data is available via
+  the API (7 years are retained for compliance). The Streaming API is capped at 5
+  streams per customer with up to 3 concurrent client connections per stream, and
+  emits a poke (heartbeat) event every 5 seconds to keep the connection alive.
+notes: >-
+  The 2,000 requests/token/hour figure is the documented default and may be
+  adjusted per contract. Verify current limits with Validic during reconciliation.
+sources:
+- https://developer.validic.com/docs/inform-rest-api
+- https://developer.validic.com/docs/connect-to-a-stream
+- https://developer.validic.com/docs/creating-a-stream
+responseCodes:
+  throttled: 429
+limits:
+- name: Inform REST API Requests
+  scope: token
+  metric: requests
+  limit: 2000 per hour
+  notes: Default limit of 2,000 requests per access token per hour.
+- name: Data Query Date Range
+  scope: request
+  metric: days
+  limit: 30 per request
+  notes: A single data-retrieval request may span at most 30 days.
+- name: Data Availability Window
+  scope: account
+  metric: days
+  limit: 365 via API
+  notes: Up to 1 year of data is retrievable via the API; 7 years retained for compliance.
+- name: Streams Per Customer
+  scope: account
+  metric: streams
+  limit: 5
+  notes: A customer may create up to 5 streams.
+- name: Concurrent Stream Connections
+  scope: stream
+  metric: connections
+  limit: 3
+  notes: Events are distributed across up to 3 concurrent client connections per stream.
+policies:
+- name: Heartbeat
+  description: The Streaming API sends a poke event every 5 seconds over the SSE connection to keep it alive.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+- name: Date-Range Paging
+  description: Retrieve long histories by paging the 30-day maximum window across successive requests.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

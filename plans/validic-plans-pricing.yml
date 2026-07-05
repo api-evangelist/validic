@@ -1,0 +1,104 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Validic
+providerId: validic
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Health Data
+- Digital Health
+- Remote Patient Monitoring
+- HIPAA
+- Plans
+description: >-
+  Validic does not publish public list pricing. It sells the Inform health-data
+  platform to enterprise healthcare organizations - health systems, payers,
+  pharma, and digital health vendors - through a sales-led, contract/private-offer
+  motion (including via AWS Marketplace private offers). Pricing is typically
+  structured around the population of monitored lives (a per-member-per-month /
+  PMPM style model) plus platform and integration fees, and scales with the number
+  of connected users, sources, and data volume. Exact figures are quoted per
+  engagement and are not reconciled here.
+notes: >-
+  Validic reports serving 18M+ lives and 7,500+ providers with 605+ connected
+  devices. There is no self-service signup with published tiers; all access is
+  arranged with sales. Verify current commercial terms directly with Validic
+  during reconciliation.
+sources:
+- https://validic.com/
+- https://developer.validic.com/
+- https://aws.amazon.com/marketplace/pp/prodview-kdhpjvqi6nnnm
+- https://www.validic.com/online-service-agreement-inform
+plans:
+- id: validic-inform-platform
+  name: Inform Platform (Enterprise Contract)
+  type: enterprise
+  description: >-
+    Access to the Inform API and Mobile SDK for connecting apps, devices, and
+    wearables and retrieving standardized health data. Priced per engagement,
+    commonly on a per-monitored-life (PMPM) basis plus platform fees.
+  entries:
+  - label: Monitored Lives
+    name: monitored_lives
+    type: usage
+    metric: members
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales (per-member-per-month, negotiated)
+    userMultiplied: true
+  elements:
+  - name: Inform REST API
+  - name: Inform Mobile SDK
+  - name: Standard / Custom / Unified Marketplace
+  - name: Standardized Health Data
+  - name: HITRUST Certified / HIPAA Compliant
+- id: validic-streaming-push
+  name: Streaming & Push Delivery
+  type: enterprise
+  description: >-
+    Real-time data delivery add-ons - the Server-Sent Events Streaming API (up to
+    5 streams per customer, 3 concurrent connections per stream) and the webhook
+    Push Service. Included or priced as part of the enterprise agreement.
+  entries:
+  - label: Streams
+    name: streams
+    type: usage
+    metric: streams
+    limit: 5
+    timeFrame: ongoing
+    geo: global
+    unit: 1
+    price: included with enterprise contract
+    userMultiplied: false
+  elements:
+  - name: Server-Sent Events Streaming API
+  - name: Stream Replay
+  - name: Webhook Push Service
+- id: validic-cellular-rpm
+  name: Cellular RPM Devices
+  type: enterprise
+  description: >-
+    Remote patient monitoring programs using cellular-enabled devices, with
+    activation/suspension of device data plans managed through the Devices API.
+    Device and connectivity costs are quoted per program.
+  entries:
+  - label: Cellular Devices
+    name: cellular_devices
+    type: usage
+    metric: devices
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales (device + connectivity, negotiated)
+    userMultiplied: false
+  elements:
+  - name: Cellular Device Activation / Suspension
+  - name: Remote Patient Monitoring Program Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,135 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Validic Inform API",
+    "version": "2.0"
+  },
+  "items": [
+    {
+      "info": { "name": "Users", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get all users", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users?token=:token" },
+          "docs": "Lists all users provisioned under the organization."
+        },
+        {
+          "info": { "name": "Provision a user", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.v2.validic.com/organizations/:org_id/users?token=:token", "body": { "type": "json", "data": "{\n  \"uid\": \"my-user-1\"\n}" } },
+          "docs": "Creates a new user and returns marketplace + mobile connection tokens and location metadata."
+        },
+        {
+          "info": { "name": "Get a user", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid?token=:token" },
+          "docs": "Retrieves a single user. Modeled path."
+        },
+        {
+          "info": { "name": "Delete a user", "type": "http" },
+          "http": { "method": "DELETE", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid?token=:token" },
+          "docs": "Permanently removes a user."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Observations & Data", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get CGM", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/cgm?start_date=2026-01-01&end_date=2026-01-30&token=:token" },
+          "docs": "Time series continuous glucose monitoring data."
+        },
+        {
+          "info": { "name": "Get intraday", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/intraday?start_date=2026-01-01&end_date=2026-01-30&token=:token" },
+          "docs": "Intraday activity time series (steps, heart rate)."
+        },
+        {
+          "info": { "name": "Get measurements", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/measurements?start_date=2026-01-01&end_date=2026-01-30&token=:token" },
+          "docs": "Point-in-time measurements (weight, blood pressure, glucose)."
+        },
+        {
+          "info": { "name": "Get nutrition", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/nutrition?start_date=2026-01-01&end_date=2026-01-30&token=:token" },
+          "docs": "Daily nutritional intake summaries."
+        },
+        {
+          "info": { "name": "Get sleep", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/sleep?start_date=2026-01-01&end_date=2026-01-30&token=:token" },
+          "docs": "Sleep session data."
+        },
+        {
+          "info": { "name": "Get daily summaries", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/summaries?start_date=2026-01-01&end_date=2026-01-30&token=:token" },
+          "docs": "Daily activity summaries (steps, calories, heart rate)."
+        },
+        {
+          "info": { "name": "Get workouts", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/workouts?start_date=2026-01-01&end_date=2026-01-30&token=:token" },
+          "docs": "Workout events list."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Marketplace & Connections", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get connection events by organization", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.v2.validic.com/organizations/:org_id/connection_events?token=:token" },
+          "docs": "History of source connect (create) and disconnect (delete) events. Modeled path."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Devices", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Activate a cellular device", "type": "http" },
+          "http": { "method": "PUT", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/devices/:device_id/activate?token=:token" },
+          "docs": "Enables the cellular data plan for a device. Method PUT confirmed; path modeled."
+        },
+        {
+          "info": { "name": "Suspend a cellular device", "type": "http" },
+          "http": { "method": "PUT", "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/devices/:device_id/suspend?token=:token" },
+          "docs": "Disables the cellular data plan for a device. Method PUT confirmed; path modeled."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Streaming", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a stream", "type": "http" },
+          "http": { "method": "POST", "url": "https://streams.v2.validic.com/streams?token=:token", "body": { "type": "json", "data": "{\n  \"name\": \"my-stream\",\n  \"start_date\": \"2026-01-01\"\n}" } },
+          "docs": "Creates a stream (up to 5 per customer) and returns its id."
+        },
+        {
+          "info": { "name": "Get a stream", "type": "http" },
+          "http": { "method": "GET", "url": "https://streams.v2.validic.com/streams/:id?token=:token" },
+          "docs": "Retrieves stream metadata."
+        },
+        {
+          "info": { "name": "Connect to a stream (SSE)", "type": "http" },
+          "http": { "method": "GET", "url": "https://streams.v2.validic.com/streams/:id/connect?token=:token", "headers": [ { "name": "Accept", "value": "text/event-stream" } ] },
+          "docs": "Opens a long-lived HTTP connection delivering Server-Sent Events (text/event-stream), with a poke heartbeat every 5 seconds. Not a WebSocket."
+        },
+        {
+          "info": { "name": "Replay a stream", "type": "http" },
+          "http": { "method": "POST", "url": "https://streams.v2.validic.com/streams/:id/replay?token=:token", "body": { "type": "json", "data": "{\n  \"start_date\": \"2026-01-01T00:00:00Z\"\n}" } },
+          "docs": "Replays previously delivered events from a point in time."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Push Service", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a push subscription", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.v2.validic.com/organizations/:org_id/push?token=:token", "body": { "type": "json", "data": "{\n  \"url\": \"https://example.com/validic/webhook\"\n}" } },
+          "docs": "Registers a webhook endpoint for the Push Service. Service documented; exact path/payload modeled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

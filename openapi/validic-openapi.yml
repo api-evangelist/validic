@@ -1,0 +1,708 @@
+openapi: 3.1.0
+info:
+  title: Validic Inform API
+  version: '2.0'
+  description: >-
+    The Validic Inform API connects patient-recorded data from digital health
+    applications, devices, and wearables to healthcare organizations. It provides
+    user provisioning against an organization, a hosted Marketplace for connecting
+    API/cloud and Bluetooth sources, retrieval of standardized health observations
+    (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts),
+    cellular device management, connection-event history, a Server-Sent Events (SSE)
+    Streaming API, and a Push Service for webhook delivery. Requests are authenticated
+    with an organization access token passed as the `token` query parameter over HTTPS.
+
+
+    Transport note: the Inform REST resources are request/response REST over HTTPS on
+    `https://api.v2.validic.com`. The Streaming API is a long-lived HTTP connection
+    delivering Server-Sent Events (`Content-Type: text/event-stream`) on
+    `https://streams.v2.validic.com`. Validic does not document a public WebSocket API.
+  contact:
+    name: Validic Developer Support
+    url: https://developer.validic.com
+  license:
+    name: Proprietary
+    url: https://www.validic.com/online-service-agreement-inform
+servers:
+  - url: https://api.v2.validic.com
+    description: Inform REST API (request/response over HTTPS)
+  - url: https://streams.v2.validic.com
+    description: Inform Streaming API (Server-Sent Events over HTTPS)
+security:
+  - tokenAuth: []
+tags:
+  - name: Users
+    description: Provision and manage users within an organization.
+  - name: Marketplace & Connections
+    description: Hosted Marketplace tokens and connection (connect/disconnect) event history.
+  - name: Observations & Data
+    description: Standardized health observations recorded by connected apps and devices.
+  - name: Devices
+    description: Cellular-enabled health device activation and suspension.
+  - name: Streaming
+    description: Server-Sent Events stream of organization-wide health events.
+  - name: Push Service
+    description: Event-based webhook delivery to a customer endpoint.
+paths:
+  /organizations/{org_id}/users:
+    get:
+      operationId: getAllUsers
+      summary: Get all users
+      description: Lists all users provisioned under the organization.
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+    post:
+      operationId: provisionUser
+      summary: Provision a user
+      description: >-
+        Creates a new user record and returns the user id, the customer-supplied
+        uid, marketplace and mobile connection tokens, and location metadata. You
+        should only provision a user when they are ready to connect a device.
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - uid
+              properties:
+                uid:
+                  type: string
+                  description: The customer-defined unique identifier for the user.
+      responses:
+        '201':
+          description: User created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request.
+        '401':
+          description: Unauthorized.
+        '422':
+          description: Unprocessable entity.
+  /organizations/{org_id}/users/{uid}:
+    get:
+      operationId: getUser
+      summary: Get a user
+      description: Retrieves a single user, including connected sources and marketplace tokens.
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The requested user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+    delete:
+      operationId: deleteUser
+      summary: Delete a user
+      description: Permanently removes a user and their access to the platform.
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted.
+        '404':
+          description: User not found.
+  /organizations/{org_id}/users/{uid}/cgm:
+    get:
+      operationId: getCgm
+      summary: Get CGM data
+      description: Returns time series continuous glucose monitoring (CGM) data for a user.
+      tags:
+        - Observations & Data
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: CGM time series.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/intraday:
+    get:
+      operationId: getIntraday
+      summary: Get intraday activity
+      description: Returns intraday (time series) activity data such as steps and heart rate.
+      tags:
+        - Observations & Data
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Intraday time series.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/measurements:
+    get:
+      operationId: getMeasurements
+      summary: Get measurements
+      description: >-
+        Returns point-in-time health measurements such as weight, blood pressure,
+        and blood glucose.
+      tags:
+        - Observations & Data
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Measurement records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/nutrition:
+    get:
+      operationId: getNutrition
+      summary: Get nutrition
+      description: Returns daily nutritional intake summaries.
+      tags:
+        - Observations & Data
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Nutrition records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/sleep:
+    get:
+      operationId: getSleep
+      summary: Get sleep
+      description: Returns sleep session data.
+      tags:
+        - Observations & Data
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Sleep records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/summaries:
+    get:
+      operationId: getSummaries
+      summary: Get daily summaries
+      description: >-
+        Returns a summary of daily activity such as steps, calories, and heart rate.
+      tags:
+        - Observations & Data
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Daily summary records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/workouts:
+    get:
+      operationId: getWorkouts
+      summary: Get workouts
+      description: Returns a list of workout events.
+      tags:
+        - Observations & Data
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Workout records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/connection_events:
+    get:
+      operationId: getConnectionEventsByOrgId
+      summary: Get connection events by organization
+      description: >-
+        Returns the history of connection events for the organization. Each event
+        is a Validic standard object with a type indicating a connection (create)
+        or disconnection (delete) of a data source via the Marketplace. Path is
+        modeled from the documented "Get Connection Events By OrgID" reference.
+      tags:
+        - Marketplace & Connections
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Connection event records.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connection_events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConnectionEvent'
+  /organizations/{org_id}/users/{uid}/devices/{device_id}/activate:
+    put:
+      operationId: activateCellularDevice
+      summary: Activate a cellular device
+      description: >-
+        Enables the cellular data plan for a cellular-enabled health device so it
+        can transmit readings. Path is modeled from the documented "Activate
+        Cellular Device" reference (method PUT confirmed).
+      tags:
+        - Devices
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Device activated.
+  /organizations/{org_id}/users/{uid}/devices/{device_id}/suspend:
+    put:
+      operationId: suspendCellularDevice
+      summary: Suspend a cellular device
+      description: >-
+        Disables the cellular data plan for a cellular-enabled health device. Path
+        is modeled from the documented "Suspend Cellular Device" reference (method
+        PUT confirmed).
+      tags:
+        - Devices
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Uid'
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Device suspended.
+  /streams:
+    post:
+      operationId: createStream
+      summary: Create a stream
+      description: >-
+        Creates a stream by submitting a name and start_date, optionally limited to
+        specific resources. Validic returns an id used to open (connect to) the
+        stream. A customer may create up to 5 streams. Served on
+        https://streams.v2.validic.com.
+      tags:
+        - Streaming
+      servers:
+        - url: https://streams.v2.validic.com
+      parameters:
+        - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - start_date
+              properties:
+                name:
+                  type: string
+                start_date:
+                  type: string
+                  format: date
+                resource_filter:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Stream created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stream'
+  /streams/{id}:
+    get:
+      operationId: getStream
+      summary: Get a stream
+      description: Retrieves metadata for a stream. Served on https://streams.v2.validic.com.
+      tags:
+        - Streaming
+      servers:
+        - url: https://streams.v2.validic.com
+      parameters:
+        - $ref: '#/components/parameters/StreamId'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Stream metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stream'
+    put:
+      operationId: updateStream
+      summary: Update a stream
+      description: >-
+        Updates a stream's configuration. Modeled from the Streaming API navigation
+        (Working With a Stream). Served on https://streams.v2.validic.com.
+      tags:
+        - Streaming
+      servers:
+        - url: https://streams.v2.validic.com
+      parameters:
+        - $ref: '#/components/parameters/StreamId'
+        - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Stream'
+      responses:
+        '200':
+          description: Stream updated.
+    delete:
+      operationId: deleteStream
+      summary: Delete a stream
+      description: >-
+        Deletes a stream. Modeled from the Streaming API navigation. Served on
+        https://streams.v2.validic.com.
+      tags:
+        - Streaming
+      servers:
+        - url: https://streams.v2.validic.com
+      parameters:
+        - $ref: '#/components/parameters/StreamId'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '204':
+          description: Stream deleted.
+  /streams/{id}/connect:
+    get:
+      operationId: connectToStream
+      summary: Connect to a stream (SSE)
+      description: >-
+        Opens a long-lived HTTP connection and streams organization-wide health
+        events using Server-Sent Events (Content-Type text/event-stream). Data
+        events carry health records; a poke (heartbeat) event is sent every 5
+        seconds. Events are distributed across up to 3 concurrent client
+        connections. This is SSE over HTTPS, not a WebSocket. Served on
+        https://streams.v2.validic.com.
+      tags:
+        - Streaming
+      servers:
+        - url: https://streams.v2.validic.com
+      parameters:
+        - $ref: '#/components/parameters/StreamId'
+        - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: A text/event-stream of Server-Sent Events.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+  /streams/{id}/replay:
+    post:
+      operationId: replayStream
+      summary: Replay a stream
+      description: >-
+        Replays previously delivered events on a stream from a given point.
+        Served on https://streams.v2.validic.com.
+      tags:
+        - Streaming
+      servers:
+        - url: https://streams.v2.validic.com
+      parameters:
+        - $ref: '#/components/parameters/StreamId'
+        - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_date:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Replay initiated.
+  /organizations/{org_id}/push:
+    post:
+      operationId: createPushSubscription
+      summary: Create a push subscription
+      description: >-
+        Registers a customer webhook endpoint for the Push Service so Validic can
+        POST event notifications as data arrives. Modeled from the documented Push
+        Service; exact path and payload are not published in the public reference.
+      tags:
+        - Push Service
+      parameters:
+        - $ref: '#/components/parameters/OrgId'
+        - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: The customer endpoint Validic will POST events to.
+                resource_filter:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Push subscription created.
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: query
+      name: token
+      description: Organization access token passed as the `token` query parameter.
+  parameters:
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+    Uid:
+      name: uid
+      in: path
+      required: true
+      description: The user identifier (customer-supplied uid or Validic id).
+      schema:
+        type: string
+    StreamId:
+      name: id
+      in: path
+      required: true
+      description: The stream identifier returned when the stream was created.
+      schema:
+        type: string
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
+    StartDate:
+      name: start_date
+      in: query
+      required: false
+      description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
+      schema:
+        type: string
+        format: date
+    EndDate:
+      name: end_date
+      in: query
+      required: false
+      description: End of the date range (YYYY-MM-DD).
+      schema:
+        type: string
+        format: date
+    Source:
+      name: source
+      in: query
+      required: false
+      description: Comma-separated list of source (device/app) types to filter by.
+      schema:
+        type: string
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        uid:
+          type: string
+        marketplace:
+          type: object
+          properties:
+            token:
+              type: string
+            url:
+              type: string
+              format: uri
+        mobile:
+          type: object
+          properties:
+            token:
+              type: string
+        location:
+          type: object
+          properties:
+            timezone:
+              type: string
+            country_code:
+              type: string
+        sources:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        last_processed_at:
+          type: string
+          format: date-time
+    ObservationList:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            status:
+              type: integer
+            message:
+              type: string
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    ConnectionEvent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - create
+            - delete
+        user_id:
+          type: string
+        source:
+          type: string
+        occurred_at:
+          type: string
+          format: date-time
+    Stream:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        resource_filter:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time

@@ -1,0 +1,88 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Validic
+providerId: validic
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Health Data
+- Digital Health
+- Remote Patient Monitoring
+- HIPAA
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Validic spend. Validic is a sales-led enterprise health-data
+  platform with no public list pricing; cost is set by negotiated contract or AWS
+  Marketplace private offer. Spend is typically driven by the population of
+  monitored lives (a per-member-per-month / PMPM style model) plus platform and
+  integration fees, and scales with connected users, sources, data volume, and -
+  for remote patient monitoring - cellular device and connectivity costs.
+notes: >-
+  Per-unit rates are not reconciled here; obtain them from your Validic agreement.
+  Because billing is contract-based rather than metered self-service, allocation
+  and forecasting depend on tracking monitored lives and active devices per
+  program.
+sources:
+- https://validic.com/
+- https://developer.validic.com/
+- https://aws.amazon.com/marketplace/pp/prodview-kdhpjvqi6nnnm
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Validic
+serviceCategory: Health Data Platform
+billingModel:
+  pricingCategory: Committed-Use
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+meters:
+- name: monitored_lives
+  description: Population of monitored members, the primary PMPM cost driver.
+  unit: members
+  aggregation: sum
+  dimensions:
+  - organization
+  - program
+- name: connected_users
+  description: Users provisioned and actively connecting sources.
+  unit: users
+  aggregation: sum
+  dimensions:
+  - organization
+- name: cellular_devices
+  description: Cellular-enabled RPM devices with active data plans.
+  unit: devices
+  aggregation: sum
+  dimensions:
+  - organization
+  - program
+- name: data_volume
+  description: Volume of health observations ingested and delivered.
+  unit: records
+  aggregation: sum
+  dimensions:
+  - organization
+  - source
+principles:
+- name: Visibility
+  description: Track monitored lives, active connected users, and activated cellular devices per program against the contracted commitment.
+- name: Allocation
+  description: Map organizations, programs, and marketplace sources to internal cost centers so PMPM and device costs attribute correctly.
+- name: Optimization
+  description: Provision users only when ready to connect a device (avoiding database bloat), suspend idle cellular devices, and scope streaming/push filters to needed resources.
+- name: Accountability
+  description: Assign program owners; review monitored-life and device counts against the enterprise commitment each billing cycle.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

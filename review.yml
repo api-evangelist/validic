@@ -1,0 +1,117 @@
+aid: validic
+name: Validic
+review:
+  question: Does Validic expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-05'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored for this entry. Validic's real-time
+    surface is the Inform Streaming API, which is HTTP Server-Sent Events (SSE)
+    - a long-lived one-way HTTP connection returning Content-Type
+    text/event-stream on https://streams.v2.validic.com. SSE is in-scope for
+    AsyncAPI modeling under current API Evangelist scope, but for this entry the
+    SSE stream is documented in the OpenAPI (the /streams/{id}/connect operation
+    returns text/event-stream) and described in review.yml transports rather
+    than in a separate AsyncAPI file. No WebSocket surface exists to model.
+findings:
+  summary: |
+    Validic does not publish a documented public WebSocket API. Validic Inform is
+    an enterprise health-data platform. Its public API surface is request/response
+    REST over HTTPS on https://api.v2.validic.com (user provisioning, health
+    observations, cellular device management, connection events), authenticated
+    with an organization access token passed as the ?token= query parameter. Its
+    real-time delivery is the Inform Streaming API on
+    https://streams.v2.validic.com, which uses HTTP Server-Sent Events (SSE):
+    GET /streams/{id}/connect opens a long-lived HTTP connection returning
+    Content-Type text/event-stream, with a poke (heartbeat) event every 5 seconds
+    and events distributed across up to 3 concurrent client connections. Validic
+    also offers a webhook-based Push Service (server-to-endpoint HTTP POST). None
+    of these are WebSocket (ws:// or wss://). No bidirectional or WebSocket
+    transport is documented anywhere in Validic's developer documentation as of
+    the review date.
+  openSource: |
+    Validic Inform is a proprietary, commercial platform (HITRUST-certified,
+    HIPAA-compliant). Validic maintains a public GitHub organization
+    (github.com/validic) with an active inform-quickstart repo and several
+    archived language wrappers (Ruby, PHP, C#, Node.js, Python), but the platform
+    itself is not open source.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.v2.validic.com
+      documented: true
+      note: Inform REST API - users, observations, devices, connection events. Token via ?token= query parameter.
+    - protocol: SSE
+      scheme: https
+      baseURL: https://streams.v2.validic.com
+      documented: true
+      note: Streaming API. GET /streams/{id}/connect returns Content-Type text/event-stream (Server-Sent Events), poke heartbeat every 5s. Not WebSocket.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Push Service POSTs event notifications to a customer endpoint. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Validic's Inform API, Streaming API, Push Service, or Mobile SDK docs as of the review date.
+  endpointsConfirmedRest:
+    - GET    https://api.v2.validic.com/organizations/:org_id/users
+    - POST   https://api.v2.validic.com/organizations/:org_id/users
+    - DELETE https://api.v2.validic.com/organizations/:org_id/users/:uid
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid/cgm
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid/intraday
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid/measurements
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid/nutrition
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid/sleep
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid/summaries
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid/workouts
+  endpointsConfirmedStreaming:
+    - POST https://streams.v2.validic.com/streams
+    - GET  https://streams.v2.validic.com/streams/:id
+    - GET  https://streams.v2.validic.com/streams/:id/connect   # SSE, text/event-stream
+    - POST https://streams.v2.validic.com/streams/:id/replay
+  endpointsModeled:
+    - GET    https://api.v2.validic.com/organizations/:org_id/users/:uid   # get a single user; referenced in docs, exact path modeled
+    - GET    https://api.v2.validic.com/organizations/:org_id/connection_events   # "Get Connection Events By OrgID" confirmed to exist, path modeled
+    - PUT    https://api.v2.validic.com/organizations/:org_id/users/:uid/devices/:device_id/activate   # activate cellular device - method PUT confirmed, path modeled
+    - PUT    https://api.v2.validic.com/organizations/:org_id/users/:uid/devices/:device_id/suspend   # suspend cellular device - method PUT confirmed, path modeled
+    - PUT    https://streams.v2.validic.com/streams/:id   # update stream - nav referenced, path modeled
+    - DELETE https://streams.v2.validic.com/streams/:id   # delete stream - nav referenced, path modeled
+    - POST   https://api.v2.validic.com/organizations/:org_id/push   # Push Service subscription - service documented, exact path/payload modeled
+sources:
+  - url: https://developer.validic.com/
+    type: Documentation
+    note: Inform developer docs index; sections for Users, Streaming API, Push Service, Device Management, Marketplace.
+  - url: https://developer.validic.com/docs/inform-rest-api
+    type: APIReference
+    note: Inform REST API base URL https://api.v2.validic.com, token query-param auth, data resources (cgm, intraday, measurements, nutrition, sleep, summaries, workouts), 30-day max range, 2000 req/token/hour.
+  - url: https://developer.validic.com/docs/provision-a-user
+    type: APIReference
+    note: POST /organizations/:org_id/users provisions a user and returns marketplace + mobile tokens.
+  - url: https://developer.validic.com/docs/creating-a-stream
+    type: Documentation
+    note: POST https://streams.v2.validic.com/streams creates a stream; up to 5 streams per customer.
+  - url: https://developer.validic.com/docs/connect-to-a-stream
+    type: APIReference
+    note: GET /streams/:id/connect returns Content-Type text/event-stream (SSE), poke heartbeat every 5s, up to 3 concurrent connections. Not WebSocket.
+  - url: https://help.validic.com/space/VCS/3374284801/Streaming+API+vs+Push+Service
+    type: Documentation
+    note: Push Service (webhook POST) vs Streaming API (SSE) delivery comparison.
+  - url: https://help.validic.com/space/VCS/4314071049/Cellular-Enabled+Device+Support
+    type: Documentation
+    note: Cellular device activation/suspension (PUT) for RPM programs.
+  - url: https://github.com/validic
+    type: SourceCode
+    note: Verified public GitHub org; active inform-quickstart plus archived language wrappers. Platform itself is proprietary.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Validic's own public API is
+    request/response REST (Inform API) plus an HTTP Server-Sent Events stream
+    (Streaming API) and a webhook Push Service. The SSE stream is captured in the
+    OpenAPI (/streams/{id}/connect returning text/event-stream) and documented in
+    the transports block above, so it is never misrepresented as WebSocket. No
+    separate AsyncAPI document was authored for this entry.
