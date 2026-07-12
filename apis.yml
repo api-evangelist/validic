@@ -144,6 +144,12 @@ apis:
     Streaming API for organizations that prefer to receive rather than hold a
     connection.
 common:
+- type: TrustCenter
+  url: security/validic-trust-center.yml
+- type: DomainSecurity
+  url: security/validic-domain-security.yml
+- type: Authentication
+  url: authentication/validic-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/validic
 - type: LinkedIn

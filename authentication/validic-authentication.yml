@@ -1,0 +1,16 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/validic-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - query
+schemes:
+- name: tokenAuth
+  type: apiKey
+  in: query
+  parameter: token
+  description: Organization access token passed as the `token` query parameter.
+  sources:
+  - openapi/validic-openapi.yml
