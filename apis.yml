@@ -144,6 +144,8 @@ apis:
     Streaming API for organizations that prefer to receive rather than hold a
     connection.
 common:
+- type: AgenticAccess
+  url: agentic-access/validic-agentic-access.yml
 - type: TrustCenter
   url: security/validic-trust-center.yml
 - type: DomainSecurity
