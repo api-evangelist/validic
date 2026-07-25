@@ -1,0 +1,92 @@
+openapi: 3.1.0
+info:
+  title: Validic Inform Devices API
+  version: '2.0'
+  description: 'The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations. It provides user provisioning against an organization, a hosted Marketplace for connecting API/cloud and Bluetooth sources, retrieval of standardized health observations (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts), cellular device management, connection-event history, a Server-Sent Events (SSE) Streaming API, and a Push Service for webhook delivery. Requests are authenticated with an organization access token passed as the `token` query parameter over HTTPS.
+
+
+    Transport note: the Inform REST resources are request/response REST over HTTPS on `https://api.v2.validic.com`. The Streaming API is a long-lived HTTP connection delivering Server-Sent Events (`Content-Type: text/event-stream`) on `https://streams.v2.validic.com`. Validic does not document a public WebSocket API.'
+  contact:
+    name: Validic Developer Support
+    url: https://developer.validic.com
+  license:
+    name: Proprietary
+    url: https://www.validic.com/online-service-agreement-inform
+servers:
+- url: https://api.v2.validic.com
+  description: Inform REST API (request/response over HTTPS)
+- url: https://streams.v2.validic.com
+  description: Inform Streaming API (Server-Sent Events over HTTPS)
+security:
+- tokenAuth: []
+tags:
+- name: Devices
+  description: Cellular-enabled health device activation and suspension.
+paths:
+  /organizations/{org_id}/users/{uid}/devices/{device_id}/activate:
+    put:
+      operationId: activateCellularDevice
+      summary: Activate a cellular device
+      description: Enables the cellular data plan for a cellular-enabled health device so it can transmit readings. Path is modeled from the documented "Activate Cellular Device" reference (method PUT confirmed).
+      tags:
+      - Devices
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Device activated.
+  /organizations/{org_id}/users/{uid}/devices/{device_id}/suspend:
+    put:
+      operationId: suspendCellularDevice
+      summary: Suspend a cellular device
+      description: Disables the cellular data plan for a cellular-enabled health device. Path is modeled from the documented "Suspend Cellular Device" reference (method PUT confirmed).
+      tags:
+      - Devices
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - name: device_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Device suspended.
+components:
+  parameters:
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
+    Uid:
+      name: uid
+      in: path
+      required: true
+      description: The user identifier (customer-supplied uid or Validic id).
+      schema:
+        type: string
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: query
+      name: token
+      description: Organization access token passed as the `token` query parameter.

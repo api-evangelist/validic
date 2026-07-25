@@ -1,0 +1,77 @@
+openapi: 3.1.0
+info:
+  title: Validic Inform Devices Push Service API
+  version: '2.0'
+  description: 'The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations. It provides user provisioning against an organization, a hosted Marketplace for connecting API/cloud and Bluetooth sources, retrieval of standardized health observations (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts), cellular device management, connection-event history, a Server-Sent Events (SSE) Streaming API, and a Push Service for webhook delivery. Requests are authenticated with an organization access token passed as the `token` query parameter over HTTPS.
+
+
+    Transport note: the Inform REST resources are request/response REST over HTTPS on `https://api.v2.validic.com`. The Streaming API is a long-lived HTTP connection delivering Server-Sent Events (`Content-Type: text/event-stream`) on `https://streams.v2.validic.com`. Validic does not document a public WebSocket API.'
+  contact:
+    name: Validic Developer Support
+    url: https://developer.validic.com
+  license:
+    name: Proprietary
+    url: https://www.validic.com/online-service-agreement-inform
+servers:
+- url: https://api.v2.validic.com
+  description: Inform REST API (request/response over HTTPS)
+- url: https://streams.v2.validic.com
+  description: Inform Streaming API (Server-Sent Events over HTTPS)
+security:
+- tokenAuth: []
+tags:
+- name: Push Service
+  description: Event-based webhook delivery to a customer endpoint.
+paths:
+  /organizations/{org_id}/push:
+    post:
+      operationId: createPushSubscription
+      summary: Create a push subscription
+      description: Registers a customer webhook endpoint for the Push Service so Validic can POST event notifications as data arrives. Modeled from the documented Push Service; exact path and payload are not published in the public reference.
+      tags:
+      - Push Service
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: The customer endpoint Validic will POST events to.
+                resource_filter:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Push subscription created.
+components:
+  parameters:
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: query
+      name: token
+      description: Organization access token passed as the `token` query parameter.

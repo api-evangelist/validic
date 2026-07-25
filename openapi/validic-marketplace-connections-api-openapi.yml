@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: Validic Inform Devices Marketplace & Connections API
+  version: '2.0'
+  description: 'The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations. It provides user provisioning against an organization, a hosted Marketplace for connecting API/cloud and Bluetooth sources, retrieval of standardized health observations (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts), cellular device management, connection-event history, a Server-Sent Events (SSE) Streaming API, and a Push Service for webhook delivery. Requests are authenticated with an organization access token passed as the `token` query parameter over HTTPS.
+
+
+    Transport note: the Inform REST resources are request/response REST over HTTPS on `https://api.v2.validic.com`. The Streaming API is a long-lived HTTP connection delivering Server-Sent Events (`Content-Type: text/event-stream`) on `https://streams.v2.validic.com`. Validic does not document a public WebSocket API.'
+  contact:
+    name: Validic Developer Support
+    url: https://developer.validic.com
+  license:
+    name: Proprietary
+    url: https://www.validic.com/online-service-agreement-inform
+servers:
+- url: https://api.v2.validic.com
+  description: Inform REST API (request/response over HTTPS)
+- url: https://streams.v2.validic.com
+  description: Inform Streaming API (Server-Sent Events over HTTPS)
+security:
+- tokenAuth: []
+tags:
+- name: Marketplace & Connections
+  description: Hosted Marketplace tokens and connection (connect/disconnect) event history.
+paths:
+  /organizations/{org_id}/connection_events:
+    get:
+      operationId: getConnectionEventsByOrgId
+      summary: Get connection events by organization
+      description: Returns the history of connection events for the organization. Each event is a Validic standard object with a type indicating a connection (create) or disconnection (delete) of a data source via the Marketplace. Path is modeled from the documented "Get Connection Events By OrgID" reference.
+      tags:
+      - Marketplace & Connections
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Connection event records.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connection_events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConnectionEvent'
+components:
+  schemas:
+    ConnectionEvent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - create
+          - delete
+        user_id:
+          type: string
+        source:
+          type: string
+        occurred_at:
+          type: string
+          format: date-time
+  parameters:
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
+    EndDate:
+      name: end_date
+      in: query
+      required: false
+      description: End of the date range (YYYY-MM-DD).
+      schema:
+        type: string
+        format: date
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+    StartDate:
+      name: start_date
+      in: query
+      required: false
+      description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
+      schema:
+        type: string
+        format: date
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: query
+      name: token
+      description: Organization access token passed as the `token` query parameter.

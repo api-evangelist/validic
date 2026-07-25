@@ -1,0 +1,199 @@
+openapi: 3.1.0
+info:
+  title: Validic Inform Devices Streaming API
+  version: '2.0'
+  description: 'The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations. It provides user provisioning against an organization, a hosted Marketplace for connecting API/cloud and Bluetooth sources, retrieval of standardized health observations (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts), cellular device management, connection-event history, a Server-Sent Events (SSE) Streaming API, and a Push Service for webhook delivery. Requests are authenticated with an organization access token passed as the `token` query parameter over HTTPS.
+
+
+    Transport note: the Inform REST resources are request/response REST over HTTPS on `https://api.v2.validic.com`. The Streaming API is a long-lived HTTP connection delivering Server-Sent Events (`Content-Type: text/event-stream`) on `https://streams.v2.validic.com`. Validic does not document a public WebSocket API.'
+  contact:
+    name: Validic Developer Support
+    url: https://developer.validic.com
+  license:
+    name: Proprietary
+    url: https://www.validic.com/online-service-agreement-inform
+servers:
+- url: https://api.v2.validic.com
+  description: Inform REST API (request/response over HTTPS)
+- url: https://streams.v2.validic.com
+  description: Inform Streaming API (Server-Sent Events over HTTPS)
+security:
+- tokenAuth: []
+tags:
+- name: Streaming
+  description: Server-Sent Events stream of organization-wide health events.
+paths:
+  /streams:
+    post:
+      operationId: createStream
+      summary: Create a stream
+      description: Creates a stream by submitting a name and start_date, optionally limited to specific resources. Validic returns an id used to open (connect to) the stream. A customer may create up to 5 streams. Served on https://streams.v2.validic.com.
+      tags:
+      - Streaming
+      servers:
+      - url: https://streams.v2.validic.com
+      parameters:
+      - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - start_date
+              properties:
+                name:
+                  type: string
+                start_date:
+                  type: string
+                  format: date
+                resource_filter:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Stream created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stream'
+  /streams/{id}:
+    get:
+      operationId: getStream
+      summary: Get a stream
+      description: Retrieves metadata for a stream. Served on https://streams.v2.validic.com.
+      tags:
+      - Streaming
+      servers:
+      - url: https://streams.v2.validic.com
+      parameters:
+      - $ref: '#/components/parameters/StreamId'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Stream metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stream'
+    put:
+      operationId: updateStream
+      summary: Update a stream
+      description: Updates a stream's configuration. Modeled from the Streaming API navigation (Working With a Stream). Served on https://streams.v2.validic.com.
+      tags:
+      - Streaming
+      servers:
+      - url: https://streams.v2.validic.com
+      parameters:
+      - $ref: '#/components/parameters/StreamId'
+      - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Stream'
+      responses:
+        '200':
+          description: Stream updated.
+    delete:
+      operationId: deleteStream
+      summary: Delete a stream
+      description: Deletes a stream. Modeled from the Streaming API navigation. Served on https://streams.v2.validic.com.
+      tags:
+      - Streaming
+      servers:
+      - url: https://streams.v2.validic.com
+      parameters:
+      - $ref: '#/components/parameters/StreamId'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '204':
+          description: Stream deleted.
+  /streams/{id}/connect:
+    get:
+      operationId: connectToStream
+      summary: Connect to a stream (SSE)
+      description: Opens a long-lived HTTP connection and streams organization-wide health events using Server-Sent Events (Content-Type text/event-stream). Data events carry health records; a poke (heartbeat) event is sent every 5 seconds. Events are distributed across up to 3 concurrent client connections. This is SSE over HTTPS, not a WebSocket. Served on https://streams.v2.validic.com.
+      tags:
+      - Streaming
+      servers:
+      - url: https://streams.v2.validic.com
+      parameters:
+      - $ref: '#/components/parameters/StreamId'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: A text/event-stream of Server-Sent Events.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+  /streams/{id}/replay:
+    post:
+      operationId: replayStream
+      summary: Replay a stream
+      description: Replays previously delivered events on a stream from a given point. Served on https://streams.v2.validic.com.
+      tags:
+      - Streaming
+      servers:
+      - url: https://streams.v2.validic.com
+      parameters:
+      - $ref: '#/components/parameters/StreamId'
+      - $ref: '#/components/parameters/Token'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_date:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Replay initiated.
+components:
+  parameters:
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
+    StreamId:
+      name: id
+      in: path
+      required: true
+      description: The stream identifier returned when the stream was created.
+      schema:
+        type: string
+  schemas:
+    Stream:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        resource_filter:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: query
+      name: token
+      description: Organization access token passed as the `token` query parameter.

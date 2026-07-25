@@ -1,0 +1,240 @@
+openapi: 3.1.0
+info:
+  title: Validic Inform Devices Observations & Data API
+  version: '2.0'
+  description: 'The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations. It provides user provisioning against an organization, a hosted Marketplace for connecting API/cloud and Bluetooth sources, retrieval of standardized health observations (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts), cellular device management, connection-event history, a Server-Sent Events (SSE) Streaming API, and a Push Service for webhook delivery. Requests are authenticated with an organization access token passed as the `token` query parameter over HTTPS.
+
+
+    Transport note: the Inform REST resources are request/response REST over HTTPS on `https://api.v2.validic.com`. The Streaming API is a long-lived HTTP connection delivering Server-Sent Events (`Content-Type: text/event-stream`) on `https://streams.v2.validic.com`. Validic does not document a public WebSocket API.'
+  contact:
+    name: Validic Developer Support
+    url: https://developer.validic.com
+  license:
+    name: Proprietary
+    url: https://www.validic.com/online-service-agreement-inform
+servers:
+- url: https://api.v2.validic.com
+  description: Inform REST API (request/response over HTTPS)
+- url: https://streams.v2.validic.com
+  description: Inform Streaming API (Server-Sent Events over HTTPS)
+security:
+- tokenAuth: []
+tags:
+- name: Observations & Data
+  description: Standardized health observations recorded by connected apps and devices.
+paths:
+  /organizations/{org_id}/users/{uid}/cgm:
+    get:
+      operationId: getCgm
+      summary: Get CGM data
+      description: Returns time series continuous glucose monitoring (CGM) data for a user.
+      tags:
+      - Observations & Data
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Source'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: CGM time series.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/intraday:
+    get:
+      operationId: getIntraday
+      summary: Get intraday activity
+      description: Returns intraday (time series) activity data such as steps and heart rate.
+      tags:
+      - Observations & Data
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Source'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Intraday time series.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/measurements:
+    get:
+      operationId: getMeasurements
+      summary: Get measurements
+      description: Returns point-in-time health measurements such as weight, blood pressure, and blood glucose.
+      tags:
+      - Observations & Data
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Source'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Measurement records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/nutrition:
+    get:
+      operationId: getNutrition
+      summary: Get nutrition
+      description: Returns daily nutritional intake summaries.
+      tags:
+      - Observations & Data
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Source'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Nutrition records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/sleep:
+    get:
+      operationId: getSleep
+      summary: Get sleep
+      description: Returns sleep session data.
+      tags:
+      - Observations & Data
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Source'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Sleep records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/summaries:
+    get:
+      operationId: getSummaries
+      summary: Get daily summaries
+      description: Returns a summary of daily activity such as steps, calories, and heart rate.
+      tags:
+      - Observations & Data
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Source'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Daily summary records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+  /organizations/{org_id}/users/{uid}/workouts:
+    get:
+      operationId: getWorkouts
+      summary: Get workouts
+      description: Returns a list of workout events.
+      tags:
+      - Observations & Data
+      parameters:
+      - $ref: '#/components/parameters/OrgId'
+      - $ref: '#/components/parameters/Uid'
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      - $ref: '#/components/parameters/Source'
+      - $ref: '#/components/parameters/Token'
+      responses:
+        '200':
+          description: Workout records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationList'
+components:
+  schemas:
+    ObservationList:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            status:
+              type: integer
+            message:
+              type: string
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+  parameters:
+    Uid:
+      name: uid
+      in: path
+      required: true
+      description: The user identifier (customer-supplied uid or Validic id).
+      schema:
+        type: string
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
+    EndDate:
+      name: end_date
+      in: query
+      required: false
+      description: End of the date range (YYYY-MM-DD).
+      schema:
+        type: string
+        format: date
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+    Source:
+      name: source
+      in: query
+      required: false
+      description: Comma-separated list of source (device/app) types to filter by.
+      schema:
+        type: string
+    StartDate:
+      name: start_date
+      in: query
+      required: false
+      description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
+      schema:
+        type: string
+        format: date
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: query
+      name: token
+      description: Organization access token passed as the `token` query parameter.
