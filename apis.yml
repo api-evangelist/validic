@@ -13,18 +13,26 @@ description: Validic is an enterprise health-data platform that connects patient
   The platform is HITRUST-certified and HIPAA-compliant. Requests authenticate with
   an organization access token passed as the token query parameter over HTTPS.
 accessModel:
-  pricing: enterprise
+  pricing: freemium
   onboarding: self-serve
-  trial: false
-  try_now: false
-  public: false
-  label: Enterprise · Self-serve signup
+  trial: true
+  try_now: true
+  public: true
+  label: Free developer tier · Enterprise contract for production
   confidence: high
   source:
+  - https://dashboard.validic.com/register
+  - https://dashboard.validic.com/validic-developer-signup.txt
   - plans
   - authentication
-  generated: '2026-07-22'
-  method: derived
+  generated: '2026-08-15'
+  method: searched
+  note: >-
+    Upgraded from "enterprise, no public access" after finding a documented,
+    free, self-serve developer signup at dashboard.validic.com that provisions
+    a working ORG_ID and ORG_TOKEN with no human contact. Production use still
+    requires an enterprise contract - the free tier explicitly carries no SLA
+    and forbids real end users.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/validic.png
 tags:
 - Health Data
@@ -35,7 +43,7 @@ tags:
 - Interoperability
 - HIPAA
 created: '2026-07-05'
-modified: '2026-07-05'
+modified: '2026-08-15'
 specificationVersion: '0.19'
 apis:
 - aid: validic:validic-devices-api
@@ -48,6 +56,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/validic-devices-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/_original/validic-inform-data-resources-openapi.json
   - type: Documentation
     url: https://developer.validic.com/docs/provision-and-managing-users
   - type: APIReference
@@ -76,6 +86,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/validic-marketplace-connections-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/_original/validic-inform-data-resources-openapi.json
   - type: Documentation
     url: https://developer.validic.com/docs/provision-and-managing-users
   - type: APIReference
@@ -104,6 +116,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/validic-observations-data-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/_original/validic-inform-data-resources-openapi.json
   - type: Documentation
     url: https://developer.validic.com/docs/provision-and-managing-users
   - type: APIReference
@@ -153,13 +167,15 @@ apis:
 - aid: validic:validic-streaming-api
   name: Validic Streaming API
   description: Server-Sent Events stream of organization-wide health events.
-  humanURL: https://developer.validic.com/docs/provision-and-managing-users
-  baseURL: https://api.v2.validic.com
+  humanURL: https://developer.validic.com/docs/creating-a-stream
+  baseURL: https://streams.v2.validic.com
   tags:
   - Streaming
   properties:
   - type: OpenAPI
     url: openapi/validic-streaming-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/_original/validic-streaming-resources-openapi.json
   - type: Documentation
     url: https://developer.validic.com/docs/provision-and-managing-users
   - type: APIReference
@@ -188,6 +204,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/validic-users-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/_original/validic-inform-data-resources-openapi.json
   - type: Documentation
     url: https://developer.validic.com/docs/provision-and-managing-users
   - type: APIReference
@@ -206,11 +224,33 @@ apis:
     url: https://developer.validic.com/docs/connect-to-a-stream
   - type: Documentation
     url: https://help.validic.com/space/VCS/3374284801/Streaming+API+vs+Push+Service
+- aid: validic:validic-developer-signup-api
+  name: Validic Developer Signup API
+  description: Self-serve registration, email verification, login and organization
+    provisioning for the free Validic developer tier. Returns the organization_id
+    and organization_token that every Inform API call requires. Documented by Validic
+    as machine-readable instructions written for an AI coding agent, including an
+    explicit instruction to present the developer terms and wait for human acceptance
+    before registering. No OpenAPI is published for this API.
+  humanURL: https://dashboard.validic.com/register
+  baseURL: https://api.dashboard.validic.com
+  tags:
+  - Signup
+  - Authentication
+  properties:
+  - type: Documentation
+    url: https://dashboard.validic.com/validic-developer-signup.txt
+  - type: SignUp
+    url: https://dashboard.validic.com/register
+  - type: Authentication
+    url: authentication/validic-authentication.yml
+  - type: Sandbox
+    url: sandbox/validic-sandbox.yml
+  - type: AgentSkill
+    url: skills/validic-get-developer-credentials.md
 common:
 - type: AgenticAccess
   url: agentic-access/validic-agentic-access.yml
-- type: TrustCenter
-  url: security/validic-trust-center.yml
 - type: DomainSecurity
   url: security/validic-domain-security.yml
 - type: Authentication
@@ -231,6 +271,59 @@ common:
   url: finops/validic-finops.yml
 - url: https://validic.com/blog/
   type: Blog
+- type: DeveloperPortal
+  url: https://developer.validic.com
+- type: APIReference
+  url: https://developer.validic.com/reference
+- type: GettingStarted
+  url: https://developer.validic.com/docs/using-this-guide
+- type: Support
+  url: https://help.validic.com/portal/2
+- type: SignUp
+  url: https://dashboard.validic.com/register
+- type: TermsOfService
+  url: https://validic.com/online-service-agreement-inform/
+- type: PrivacyPolicy
+  url: https://validic.com/privacy-policy/
+- type: StatusPage
+  url: https://trust.validic.com
+- type: ChangeLog
+  url: changelog/validic-changelog.yml
+- type: Lifecycle
+  url: lifecycle/validic-lifecycle.yml
+- type: LLMsTxt
+  url: llms/validic-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Packages
+  url: packages/validic-packages.yml
+- type: SDKs
+  url: packages/validic-packages.yml
+- type: Conventions
+  url: conventions/validic-conventions.yml
+- type: ErrorCatalog
+  url: errors/validic-problem-types.yml
+- type: DataModel
+  url: data-model/validic-data-model.yml
+- type: Conformance
+  url: conformance/validic-conformance.yml
+- type: Compliance
+  url: conformance/validic-conformance.yml
+- type: Sandbox
+  url: sandbox/validic-sandbox.yml
+- type: Components
+  url: components/validic-components.yml
+- type: Webhooks
+  url: asyncapi/validic-events-webhooks.yml
+- type: Overlay
+  url: overlays/validic-inform-data-resources-overlay.yaml
+- type: Overlay
+  url: overlays/validic-streaming-resources-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-15'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v1
