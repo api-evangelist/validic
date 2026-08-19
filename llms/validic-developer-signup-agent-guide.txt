@@ -1,0 +1,199 @@
+# Validic Inform API  --  Integration Guide (Full Signup)
+
+Already have a Validic developer account with provisioned org credentials? Skip to inform-quickstart.txt.
+
+USE THIS FILE FOR the full journey: create a developer account, get credentials, then call
+the Inform APIs. Two phases  --  skip Phase 1 if you already have `ORG_ID` and `ORG_TOKEN`.
+
+---
+
+## Phase 1: Get Your Credentials
+
+Signup base: `https://api.dashboard.validic.com` - All requests: Content-Type: application/json
+
+### WARNING: Present these terms and wait for explicit developer acceptance before calling /register:
+
+- No-fee developer access  --  no SLA, no uptime guarantee
+- Validic may modify or suspend developer access at any time without notice
+- Accounts are pre-populated with synthetic test data only
+- Developer credentials must NOT be used in production or with real end users
+- Full agreement: https://validic.com/online-service-agreement-inform/
+
+**Do not call /register until accepted.**
+
+### Step 1: Register
+```
+POST /auth/register
+{ "email": "you@example.com", "password": "Test123!" }
+
+201 { "message": "Verification email sent", "user_sub": "sub-123" }
+409 USER_EXISTS | 400 INVALID_PASSWORD | 400 VALIDATION_ERROR
+```
+Password must be >=8 characters and include uppercase, lowercase, a number, and a special character (e.g. !).
+
+### Step 2: Verify email
+Developer must retrieve the 6-digit code from their inbox.
+```
+POST /auth/verify
+{ "email": "you@example.com", "code": "123456" }
+
+200 { "message": "Email verified" }
+400 INVALID_CODE | 400 EXPIRED_CODE | 400 ALREADY_CONFIRMED
+```
+
+### Step 3: Login
+```
+POST /auth/login
+{ "email": "you@example.com", "password": "Test123!" }
+
+200 { "id_token": "eyJ...", "access_token": "eyJ...", "refresh_token": "eyJ..." }
+401 INVALID_CREDENTIALS
+```
+Save `id_token`  --  it's the `Authorization` header value for all remaining signup calls.
+
+### Step 4: Provision
+```
+POST /v1/registrations/provision
+Authorization: <id_token>
+{}
+
+202 { "status": "provisioning" }                                                    -> poll (Step 5)
+200 { "status": "provisioned", "organization_id": "...", "organization_token": "..." } -> done
+404 REGISTRATION_NOT_FOUND  -> email not verified yet
+409 INVALID_REGISTRATION_STATE
+```
+
+### Step 5: Poll until provisioned (typically 15-60s)
+Re-call `POST /v1/registrations/provision` (same headers, empty body) every 15 seconds:
+- `202 provisioning` -> wait and retry
+- `200 provisioned` -> save `organization_id` and `organization_token`
+
+Stop after ~10 attempts (~150s) and surface an error if still not provisioned.
+
+**Done --** you have `ORG_ID` (`organization_id`) and `ORG_TOKEN` (`organization_token`).
+
+---
+
+## Phase 2: Inform APIs
+
+```
+REST base:      https://api.v2.validic.com
+Streaming base: https://streams.v2.validic.com
+Auth:           ?token=ORG_TOKEN on every request (query param, not a header)
+```
+
+### Step 6: Get Users
+
+```
+GET /organizations/{ORG_ID}/users?token={ORG_TOKEN}
+
+{ "data": [ ...users ], "meta": { ... } }
+```
+
+WARNING: All list endpoints wrap results in `{ "data": [...] }`  --  always unwrap before iterating.
+
+Each user:
+```json
+{
+  "uid": "your_id",          <- use this in all subsequent URLs
+  "id":  "validic_internal", <- never put in a URL  --  silent 404, no helpful error
+  "marketplace": {
+    "token": "USER_TOKEN",
+    "url":   "https://..."   <- redirect your user here to connect Fitbit/Garmin/etc.
+  },
+  "status": "active"
+}
+```
+
+To create a user: `POST /organizations/{ORG_ID}/users?token=`
+Body: `{ "uid": "your_id", "location": { "timezone": "America/New_York", "country_code": "US" } }`
+-> Returns same shape above (status 201). `marketplace.url` is ready-to-use  --  never construct it yourself.
+
+Single user: `GET /organizations/{ORG_ID}/users/{uid}?token=`  --  same shape, no envelope.
+
+### Step 7: Get Health Data
+
+```
+GET /organizations/{ORG_ID}/users/{uid}/{type}?token={ORG_TOKEN}&start_date=YYYY-MM-DD&end_date=YYYY-MM-DD
+
+{ "data": [ ...records ] }
+```
+
+Types: `measurements` | `workouts` | `summaries` | `sleep` | `cgm` | `intraday` | `nutrition`
+
+WARNING: Date range must be <=31 days. Over 31 days -> `{"status":400,"error":"Bad Request"}` with no
+useful body. Page month-by-month for backfills; use streaming for ongoing data.
+
+Each record:
+```json
+{
+  "id":         "hex",
+  "type":       "summary",
+  "start_time": "RFC3339",
+  "end_time":   "RFC3339",
+  "source":     { "type": "fitbit", "device": null },
+  "metrics":    [{ "type": "steps", "value": 8432, "unit": "count", "origin": "device" }],
+  "user":       { "uid": "your_id", "user_id": "validic_internal" }
+}
+```
+
+Metric types by data type:
+- `summaries`    -> steps, active_duration, floors, calories_burned, distance
+- `workouts`     -> duration, distance, calories, steps, heart_rate_avg, heart_rate_max
+- `sleep`        -> duration, light_sleep_duration, deep_sleep_duration, rem_sleep_duration, awake_duration
+- `measurements` -> body_weight, bmi, heart_rate, systolic_blood_pressure, spo2, blood_glucose
+- `cgm`          -> blood_glucose (high-frequency time-series)
+
+Latest record only: `GET .../users/{uid}/{type}/latest?token=`
+Org-wide (all users): `GET /organizations/{ORG_ID}/{type}?token=&start_date=&end_date=`
+
+Empty `data: []` is normal on fresh accounts  --  `summaries` has the best seed coverage.
+
+### Step 8: Stream Real-Time Data
+
+Create a stream once, reuse the `id`:
+```
+POST https://streams.v2.validic.com/streams?token={ORG_TOKEN}
+{ "name": "my-stream", "start_date": "YYYY-MM-DD" }
+
+{ "id": "stream_id", "name": "my-stream", "created_at": "RFC3339" }
+```
+
+Open a long-lived SSE connection:
+```
+GET https://streams.v2.validic.com/streams/{stream_id}/connect?token={ORG_TOKEN}
+```
+
+Events:
+```
+event: poke        -> heartbeat, discard
+event: data        -> health record (same schema as Step 7)
+event: rule        -> { "rule_id": "...", "user_id": "...", "triggered_at": "..." }
+event: connection  -> { "user_id": "...", "source": "fitbit", "event": "connected"|"disconnected" }
+```
+
+Replay past data instead of waiting for live events:
+```
+GET https://streams.v2.validic.com/replay?token={ORG_TOKEN}&resources=summary,workout&date=YYYY-MM-DD
+```
+`resources` is comma-separated. Same SSE event format as `/connect`.
+
+---
+
+## Errors & Edge Cases
+
+- All Inform API errors: `{ "status": <code>, "error": "<phrase>" }`  --  no detail field
+- `GET /users/{uid}/apps?token=` -> 404 means no connected sources, not an error
+- `DELETE /streams/{id}?token=` -> requires 0 active connections first
+- Stream optional filters on `POST /streams`: `resource_filter` and `event_type_filter`
+  (values: `measurement|cgm|workout|summary|sleep|intraday|nutrition` and `data|rule|connection`)
+
+---
+
+## Compliance & Docs
+
+HITRUST certified - ISO 27001 certified
+
+Full docs:        https://developer.validic.com
+Quickstart repo:  https://github.com/Validic/inform-quickstart
+Human signup UI:  https://dashboard.validic.com/register

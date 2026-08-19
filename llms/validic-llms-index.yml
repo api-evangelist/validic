@@ -1,0 +1,87 @@
+generated: '2026-08-15'
+method: searched
+source: https://developer.validic.com/llms.txt
+description: >-
+  Validic publishes an unusually complete agent-facing text surface. There are
+  TWO llms.txt files on two different hosts - a technical one on the developer
+  portal and a company one on the marketing site - plus a three-file agent
+  routing guide served from the developer dashboard. All five were fetched over
+  HTTPS with no credentials and are stored here verbatim.
+documents:
+- file: validic-llms.txt
+  url: https://developer.validic.com/llms.txt
+  host: developer.validic.com
+  http_status: 200
+  content_type: text/plain; charset=utf-8
+  bytes: 27892
+  role: technical
+  note: >-
+    ReadMe-generated index of every guide, API reference and changelog page,
+    each addressable as Markdown by appending `.md`. This is the canonical
+    LLMsTxt for the Inform API.
+- file: validic-company-llms.txt
+  url: https://validic.com/llms.txt
+  host: validic.com
+  http_status: 200
+  content_type: text/markdown; charset=utf-8
+  bytes: 58141
+  role: company
+  note: >-
+    Marketing-site llms.txt covering products, solutions, blog, news, case
+    studies and compliance. It explicitly routes developer-integration agents
+    away from itself and over to https://dashboard.validic.com/agents.txt.
+- file: validic-agents.txt
+  url: https://dashboard.validic.com/agents.txt
+  host: dashboard.validic.com
+  http_status: 200
+  content_type: text/plain
+  bytes: 673
+  role: agent-router
+  note: >-
+    A two-path router for coding agents - Path A (developer already holds
+    ORG_ID/ORG_TOKEN) loads inform-quickstart.txt, Path B (no account) loads
+    validic-developer-signup.txt.
+- file: validic-inform-quickstart-agent-guide.txt
+  url: https://dashboard.validic.com/inform-quickstart.txt
+  host: dashboard.validic.com
+  http_status: 200
+  content_type: text/plain
+  bytes: 4209
+  role: agent-skill
+  note: >-
+    Provider-authored integration guide written FOR an AI agent - call
+    sequence, envelope shape, the 31-day date-range ceiling, SSE event names,
+    and the id-vs-uid trap. Grounds skills/validic-inform-quickstart.md.
+- file: validic-developer-signup-agent-guide.txt
+  url: https://dashboard.validic.com/validic-developer-signup.txt
+  host: dashboard.validic.com
+  http_status: 200
+  content_type: text/plain
+  bytes: 6930
+  role: agent-skill
+  note: >-
+    Full signup-to-first-call journey against https://api.dashboard.validic.com,
+    including an explicit instruction that the agent must present the developer
+    terms and WAIT for human acceptance before calling /auth/register. Grounds
+    skills/validic-developer-signup.md.
+probe:
+- url: https://developer.validic.com/llms.txt
+  status: 200
+- url: https://validic.com/llms.txt
+  status: 200
+- url: https://dashboard.validic.com/agents.txt
+  status: 200
+- url: https://dashboard.validic.com/inform-quickstart.txt
+  status: 200
+- url: https://dashboard.validic.com/validic-developer-signup.txt
+  status: 200
+- url: https://api.v2.validic.com/llms.txt
+  status: 403
+- url: https://streams.v2.validic.com/llms.txt
+  status: 403
+notes: >-
+  No llms-full.txt is committed - `*-llms-full.txt` is gitignored because those
+  verbatim dumps embed vendor example tokens that trip GitHub push protection.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

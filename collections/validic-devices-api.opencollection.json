@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Validic Inform Devices API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "token",
+      "value": "{{token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Devices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Activate a cellular device",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/devices/:device_id/activate",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "device_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Enables the cellular data plan for a cellular-enabled health device so it can transmit readings. Path is modeled from the documented \"Activate Cellular Device\" reference (method PUT confirmed)."
+        },
+        {
+          "info": {
+            "name": "Suspend a cellular device",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/devices/:device_id/suspend",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "device_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Disables the cellular data plan for a cellular-enabled health device. Path is modeled from the documented \"Suspend Cellular Device\" reference (method PUT confirmed)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,168 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://developer.validic.com/docs/standard-marketplace +
+  https://developer.validic.com/docs/custom-marketplace +
+  https://developer.validic.com/docs/unified-marketplace +
+  https://developer.validic.com/docs/using-the-inform-mobile-sdk
+description: >-
+  Validic ships a real client-side surface, not just an API. The Marketplace is
+  a hosted, per-user connection experience for linking wearables and medical
+  devices, offered in three "flavors" that trade styling control against build
+  effort, and the Inform Mobile SDK adds on-device capture families (Bluetooth
+  LE, Apple Health, Health Connect, OCR) that have no REST equivalent. These
+  are embeddable product surfaces, distinct from the client SDKs catalogued in
+  packages/.
+families:
+- family: Marketplace
+  description: >-
+    The device/app connection surface an end user is sent to in order to
+    authorize a source. Every flavor is addressed through the SAME per-user
+    `marketplace.url` returned on the user profile; the flavor is selected by
+    the path and the `format` query parameter.
+  base_pattern: 'https://syncmydevice.com?token={marketplace_token}'
+  critical_rule: >-
+    Never construct the marketplace URL yourself. Validic's agent guide is
+    explicit - "redirect them to marketplace.url as-is - never construct it
+    yourself, it's environment-specific." Mint a fresh one with
+    POST /organizations/{org_id}/users/{uid}/marketplace.
+  components:
+  - name: Standard Marketplace
+    type: hosted prebuilt UI
+    hosted_by: Validic
+    technology: HTML5 mobile-responsive web experience
+    sources_supported:
+    - cloud
+    - cellular
+    customizable: false
+    integration: open the user's marketplace URL in a new window
+    url_pattern: 'https://syncmydevice.com?token={marketplace_token}'
+    docs: https://developer.validic.com/docs/standard-marketplace
+    note: >-
+      Zero-build option. Validic controls all styling and behaviour, handles
+      every source callback, and emits a `connection` event on the Streaming
+      API on success. The disconnect flow also lives here, so an integrator
+      must keep a route back to it.
+  - name: Custom Marketplace
+    type: JSON data surface for a self-built UI
+    hosted_by: consumer
+    sources_supported:
+    - cloud
+    - cellular
+    customizable: true
+    integration: append `&format=json` to the user's marketplace URL
+    url_pattern: 'https://syncmydevice.com/?token={marketplace_token}&format=json'
+    docs: https://developer.validic.com/docs/custom-marketplace
+    note: >-
+      Returns exactly the data Validic uses to render the Standard Marketplace,
+      so the connection semantics cannot drift. Lets a consumer show or hide
+      individual sources - the documented reason to choose it is hiding
+      cellular sources so users never have to type an IMEI.
+    redirect_contract: >-
+      Success is signalled by the ABSENCE of a message parameter on the
+      redirect; `?message=access_denied` means the user cancelled or denied
+      permission. Validic warns that a rare failure can redirect with no
+      parameter at all, so connection status should be re-verified against the
+      Marketplace JSON.
+  - name: Unified Marketplace
+    type: JSON data surface for a self-built UI
+    hosted_by: consumer
+    sources_supported:
+    - cloud
+    - cellular
+    - mobile
+    customizable: true
+    integration: request the `/unified` path with `&format=json`
+    url_pattern: 'https://syncmydevice.com/unified?token={marketplace_token}&format=json'
+    docs: https://developer.validic.com/docs/unified-marketplace
+    requires: Inform Mobile SDK v2.x in the consuming app
+    configuration_gated: true
+    note: >-
+      The superset - Custom Marketplace data plus mobile sources. Two real
+      preconditions: it must be enabled by Validic Support before it works, and
+      the app must be running the Inform SDK, because all mobile-source
+      connection and sync happens through SDK modules rather than over HTTP.
+- family: Inform Mobile SDK (v2.x)
+  description: >-
+    On-device capture frameworks embedded in a customer's own mobile app. These
+    are the only route to data classes the REST API cannot reach - Bluetooth LE
+    peripherals, phone-held health stores, and OCR off a device screen.
+  platforms:
+  - iOS (native, Swift/Obj-C frameworks)
+  - Android (native, Kotlin/Java modules)
+  - Cordova (wrapper plugins)
+  docs: https://developer.validic.com/docs/using-the-inform-mobile-sdk
+  distribution: private Artifactory - see packages/validic-packages.yml
+  components:
+  - name: Core / Shared
+    ios_framework: ValidicCore
+    android_module: validicmobile-shared
+    cordova_plugin: '@validic-mobile/cordova-inform-core'
+    required: true
+    responsibilities:
+    - session
+    - authentication
+    - record types
+    - record identifiers
+    - record events
+  - name: Bluetooth
+    ios_framework: ValidicBluetooth
+    android_module: bluetooth
+    cordova_plugin: '@validic-mobile/cordova-inform-ble'
+    required: false
+    capabilities:
+    - Bluetooth peripherals
+    - permissions handling
+    - passive read
+    - Companion Device Manager (Android)
+    note: Bluetooth LE devices are SDK-only - there is no REST path to them.
+  - name: Apple Health (HealthKit)
+    ios_framework: ValidicHealthKit
+    cordova_plugin: '@validic-mobile/cordova-inform-healthkit'
+    platform: iOS
+    required: false
+  - name: Health Connect
+    android_module: health-connect
+    platform: Android
+    required: false
+    note: >-
+      Google Fit and Samsung Health are both migration sources into Health
+      Connect; Validic publishes user-migration guides for each.
+  - name: VitalSnap (OCR)
+    ios_framework: ValidicOCR
+    android_module: vitalsnap
+    required: false
+    description: >-
+      Optical capture of a reading off a non-connected device's display -
+      brings legacy meters into the same normalised record model.
+  - name: LifeScan / OneTouch
+    ios_framework: ValidicOneTouch
+    android_module: lifescan
+    required: false
+    description: Vendor-specific glucose meter integration.
+- family: Sample applications
+  description: >-
+    Runnable reference UIs, MIT licensed. Not embeddable components, but they
+    are the fastest read on how the surfaces fit together.
+  components:
+  - name: quickstart
+    url: https://github.com/validic/inform-quickstart/tree/main/apps/quickstart
+    stack: Node.js + Express, vanilla HTML
+  - name: explorer
+    url: https://github.com/validic/inform-quickstart/tree/main/apps/explorer
+    stack: Next.js + React
+    note: >-
+      Three-panel API workbench with live request preview and copy-as-curl.
+      Proxies with your credentials - Validic warns against deploying it
+      publicly as-is.
+loaders:
+  web_component_library: null
+  script_tag: null
+  cdn: null
+  note: >-
+    There is no drop-in JavaScript element library, no web component and no CDN
+    loader. Web integration is a redirect to a hosted page or a self-built UI
+    over JSON; rich client integration is native mobile only.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

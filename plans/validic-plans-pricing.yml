@@ -4,8 +4,11 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Validic
 providerId: validic
 created: '2026-07-05'
-modified: '2026-07-05'
+modified: '2026-08-15'
+generated: '2026-08-15'
+method: searched
 reconciled: false
+plan_count: 4
 tags:
 - Health Data
 - Digital Health
@@ -13,25 +16,73 @@ tags:
 - HIPAA
 - Plans
 description: >-
-  Validic does not publish public list pricing. It sells the Inform health-data
-  platform to enterprise healthcare organizations - health systems, payers,
-  pharma, and digital health vendors - through a sales-led, contract/private-offer
-  motion (including via AWS Marketplace private offers). Pricing is typically
-  structured around the population of monitored lives (a per-member-per-month /
-  PMPM style model) plus platform and integration fees, and scales with the number
-  of connected users, sources, and data volume. Exact figures are quoted per
-  engagement and are not reconciled here.
+  Validic publishes no list pricing for its commercial product, but it is no
+  longer sales-gated end to end. As of this pass there is a FREE, self-serve
+  developer tier at https://dashboard.validic.com - register, verify an email,
+  provision an organization, and hold a working ORG_ID and ORG_TOKEN in under
+  three minutes with no human contact. Its terms are published and specific.
+  Beyond that tier, the Inform health-data platform is sold to enterprise
+  healthcare organizations - health systems, payers, pharma and digital health
+  vendors - through a sales-led contract/private-offer motion (including AWS
+  Marketplace private offers). Commercial pricing is typically structured
+  around the population of monitored lives (a per-member-per-month / PMPM style
+  model) plus platform and integration fees, and scales with connected users,
+  sources and data volume. Exact figures are quoted per engagement and are not
+  reconciled here.
 notes: >-
-  Validic reports serving 18M+ lives and 7,500+ providers with 605+ connected
-  devices. There is no self-service signup with published tiers; all access is
-  arranged with sales. Verify current commercial terms directly with Validic
-  during reconciliation.
+  CHANGE SINCE LAST PASS: the free developer tier was not recorded before and
+  materially changes the access model - Validic went from "contact sales to see
+  anything" to a documented self-serve on-ramp. There is still no published
+  price for any paid tier, and no pricing page exists on validic.com
+  (https://validic.com/pricing/ soft-404s to the homepage). Validic reports
+  serving 18M+ lives and 7,500+ providers with 605+ connected devices (its own
+  site now says 700+ device integrations). Verify current commercial terms
+  directly with Validic during reconciliation.
 sources:
+- https://dashboard.validic.com/register
+- https://dashboard.validic.com/validic-developer-signup.txt
 - https://validic.com/
 - https://developer.validic.com/
 - https://aws.amazon.com/marketplace/pp/prodview-kdhpjvqi6nnnm
 - https://www.validic.com/online-service-agreement-inform
 plans:
+- id: validic-developer-free
+  name: Developer (Free)
+  type: free
+  price: 0
+  currency: USD
+  self_serve: true
+  signup: https://dashboard.validic.com/register
+  description: >-
+    No-fee, self-serve developer access to the Inform API and Streaming API.
+    Accounts are provisioned automatically and pre-populated with synthetic
+    test data. Intended for evaluation and integration development only.
+  terms:
+  - No SLA and no uptime guarantee.
+  - Validic may modify or suspend developer access at any time without notice.
+  - Accounts carry synthetic test data only.
+  - Credentials must NOT be used in production or with real end users.
+  entries:
+  - label: Developer Access
+    name: developer_access
+    type: subscription
+    metric: organizations
+    limit: 1
+    timeFrame: ongoing
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  elements:
+  - name: Inform REST API
+  - name: Inform Streaming API
+  - name: Synthetic seeded test data
+  - name: Hosted Marketplace
+  source: https://dashboard.validic.com/validic-developer-signup.txt
+  note: >-
+    On-demand synthetic data GENERATION (the explorer app's Data Generator) is
+    NOT included - it needs a DATAGEN_URL obtained from an Inform
+    representative. Seeded data is included; `summaries` has the best coverage.
 - id: validic-inform-platform
   name: Inform Platform (Enterprise Contract)
   type: enterprise

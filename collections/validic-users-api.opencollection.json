@@ -1,0 +1,138 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Validic Inform Devices Users API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "token",
+      "value": "{{token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists all users provisioned under the organization."
+        },
+        {
+          "info": {
+            "name": "Provision a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new user record and returns the user id, the customer-supplied uid, marketplace and mobile connection tokens, and location metadata. You should only provision a user when they are ready to connect a device."
+        },
+        {
+          "info": {
+            "name": "Get a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieves a single user, including connected sources and marketplace tokens."
+        },
+        {
+          "info": {
+            "name": "Delete a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Permanently removes a user and their access to the platform."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

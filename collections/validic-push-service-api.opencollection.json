@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Validic Inform Devices Push Service API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "token",
+      "value": "{{token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Push Service",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a push subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.v2.validic.com/organizations/:org_id/push",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers a customer webhook endpoint for the Push Service so Validic can POST event notifications as data arrives. Modeled from the documented Push Service; exact path and payload are not published in the public reference."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

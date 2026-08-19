@@ -1,0 +1,143 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://dashboard.validic.com/validic-developer-signup.txt +
+  https://dashboard.validic.com/register +
+  https://github.com/validic/inform-quickstart
+description: >-
+  Validic runs a free, self-serve developer tier whose accounts are
+  pre-populated with SYNTHETIC test data. This is the most significant change
+  on the profile since the last pass - the platform was previously recorded as
+  enterprise-sales-only with no way in. There is now a documented path from
+  zero to a first API call with no human in the loop, and Validic publishes it
+  as machine-readable instructions written for an AI agent.
+available: true
+type: free developer tier with synthetic data
+console:
+  url: https://dashboard.validic.com
+  signup: https://dashboard.validic.com/register
+  http_status: 200
+  note: >-
+    Org ID and Org Token are both visible on the dashboard once provisioned.
+    There is no separate "test mode" toggle - a developer account IS the
+    sandbox.
+modes:
+  test_vs_live: separate accounts, not separate keys
+  key_prefixes: none
+  note: >-
+    Validic does not use a key-prefix convention (no sk_test_ / sk_live_
+    equivalent). A token is an opaque organization token and nothing about its
+    value tells you whether it is a developer or production credential. The
+    only distinguishing property is which account issued it.
+terms:
+  published: https://validic.com/online-service-agreement-inform/
+  developer_tier_terms:
+  - No-fee developer access - no SLA, no uptime guarantee.
+  - Validic may modify or suspend developer access at any time without notice.
+  - Accounts are pre-populated with synthetic test data only.
+  - Developer credentials must NOT be used in production or with real end users.
+  agent_obligation: >-
+    Validic's signup guide instructs the AGENT to present these terms and WAIT
+    for explicit developer acceptance before calling /auth/register - "Do not
+    call /register until accepted." That is a human-in-the-loop gate written
+    into the provider's own agent instructions, and it is rare enough to be
+    worth naming.
+signup_api:
+  base: https://api.dashboard.validic.com
+  content_type: application/json
+  auth: 'Authorization: <id_token> (bearer-style, Cognito-shaped)'
+  documented_at: https://dashboard.validic.com/validic-developer-signup.txt
+  steps:
+  - step: 1
+    call: POST /auth/register
+    body: '{ "email": "...", "password": "..." }'
+    success: 201 { message, user_sub }
+    errors:
+    - 409 USER_EXISTS
+    - 400 INVALID_PASSWORD
+    - 400 VALIDATION_ERROR
+    constraint: >-
+      Password >= 8 characters with uppercase, lowercase, a number and a
+      special character.
+  - step: 2
+    call: POST /auth/verify
+    body: '{ "email": "...", "code": "<6-digit code from email>" }'
+    success: 200 { message }
+    errors:
+    - 400 INVALID_CODE
+    - 400 EXPIRED_CODE
+    - 400 ALREADY_CONFIRMED
+    human_required: true
+    note: The 6-digit code must be retrieved from the developer's inbox by a human.
+  - step: 3
+    call: POST /auth/login
+    success: 200 { id_token, access_token, refresh_token }
+    errors:
+    - 401 INVALID_CREDENTIALS
+  - step: 4
+    call: POST /v1/registrations/provision
+    headers: 'Authorization: <id_token>'
+    body: '{}'
+    success:
+    - 202 { status: provisioning }
+    - 200 { status: provisioned, organization_id, organization_token }
+    errors:
+    - 404 REGISTRATION_NOT_FOUND (email not verified yet)
+    - 409 INVALID_REGISTRATION_STATE
+  - step: 5
+    call: POST /v1/registrations/provision (poll)
+    interval_seconds: 15
+    typical_duration: 15-60s
+    give_up_after: ~10 attempts (~150s)
+test_data:
+  synthetic: true
+  seeded: true
+  best_seed_coverage: summaries
+  note: >-
+    "Empty data: [] is normal on fresh accounts - summaries has the best seed
+    coverage." Validic names which resource to test against first, which saves
+    an integrator from misreading an empty array as a broken integration.
+  generator:
+    name: Data Generator
+    available: false
+    access: contact your Inform representative for a DATAGEN_URL
+    note: >-
+      The explorer sample app has a "Generate Data" panel that creates
+      realistic synthetic records for a user without owning the device. The
+      generator endpoint itself is NOT public - the repo's .env.example lists
+      API_URL, DATAGEN_URL and STREAM_URL as "<contact your Inform
+      representative>". So the free tier gives you seeded data, but on-demand
+      fixture generation is still gated.
+test_values:
+  cards: []
+  magic_identifiers: []
+  note: >-
+    No published magic test identifiers, no test device serials, no trigger
+    values. Testing is done against seeded synthetic records or by connecting a
+    real device through the Marketplace.
+fixtures_and_tooling:
+- name: inform-quickstart
+  url: https://github.com/validic/inform-quickstart
+  license: MIT
+  runtime: Node.js 22+
+  description: >-
+    Node/Express app exercising the four core calls - get user, get data,
+    connect to a live stream, replay the last 30 days. Every panel has a
+    "copy curl" button that emits the exact request just made. Auto-provisions
+    a user and a stream on boot.
+- name: explorer
+  url: https://github.com/validic/inform-quickstart/tree/main/apps/explorer
+  license: MIT
+  runtime: Next.js + React
+  description: >-
+    A three-panel API workbench - every users endpoint, every data type, stream
+    replay over SSE, live request preview and copy-as-curl. Proxies requests
+    with your credentials, so Validic warns not to deploy it publicly as-is.
+time_simulation:
+  supported: false
+  note: >-
+    No test clocks or time travel. Historical behaviour is exercised through
+    the real /replay endpoint against seeded dates instead.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

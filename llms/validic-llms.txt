@@ -1,0 +1,209 @@
+# Validic Technical Documentation Documentation
+
+> Validic is a cloud-based technology platform that connects patient-recorded data from digital health applications, devices and wearables to key healthcare companies like hospital systems, providers, pharmaceutical companies, payers, health information technology platforms, health clubs and wellness companies.
+
+## Guides
+- [What is Validic?](https://developer.validic.com/docs/what-is-validic.md)
+- [Inform, the Health IoT Platform](https://developer.validic.com/docs/overview.md): Access hundreds of devices, through a single API.
+- [Using This Guide](https://developer.validic.com/docs/using-this-guide.md)
+- [Provision and Managing Users](https://developer.validic.com/docs/provision-and-managing-users.md): It all starts here...
+- [Requesting Access to Data](https://developer.validic.com/docs/requesting-access-to-data.md)
+- [Unified Marketplace](https://developer.validic.com/docs/unified-marketplace.md)
+- [Custom Marketplace](https://developer.validic.com/docs/custom-marketplace.md)
+- [Standard Marketplace](https://developer.validic.com/docs/standard-marketplace.md)
+- [Accessing Data](https://developer.validic.com/docs/accessing-data.md): Choose your own adventure...
+- [Inform REST API](https://developer.validic.com/docs/inform-rest-api.md)
+- [Understanding The Data Model](https://developer.validic.com/docs/working-with-data.md)
+- [High-Frequency Data](https://developer.validic.com/docs/high-frequency-data.md): Spoiler, it's a LOT of data
+- [Time Management in Validic's API](https://developer.validic.com/docs/time-zones.md): "A big ball of wibbly wobbly, timey wimey stuff..."
+- [User Notes](https://developer.validic.com/docs/user-notes.md)
+- [Metrics](https://developer.validic.com/docs/metrics.md)
+- [Creating a Stream](https://developer.validic.com/docs/creating-a-stream.md): POST /streams
+- [Get a Stream](https://developer.validic.com/docs/get-a-stream-1.md): GET /streams
+- [Connect to a Stream](https://developer.validic.com/docs/connect-to-a-stream.md): GET /streams/:id/connect
+- [Replay a Stream](https://developer.validic.com/docs/replay-a-stream.md): GET /replay
+- [Working With a Stream](https://developer.validic.com/docs/working-with-a-stream.md)
+- [Push Service Status](https://developer.validic.com/docs/using-the-status-event-api.md)
+- [Using the Inform Mobile SDK (v2.x.x)](https://developer.validic.com/docs/using-the-inform-mobile-sdk.md): Inform Mobile SDK
+- [Migrating from the v1.x.x SDK to the Inform SDK (v2.x.x)](https://developer.validic.com/docs/migrating-from-v1-to-inform-sdk.md): Inform Mobile SDK
+- [Inform SDK Mobile Quick Start Guides](https://developer.validic.com/docs/mobile-quick-start-guides.md)
+- [Inform SDK Native Class Documentation](https://developer.validic.com/docs/mobile-documentation.md): Class Documentation for the Inform (v2) SDK
+- [Inform SDK Mobile App Launch & Store Submission Checklist](https://developer.validic.com/docs/inform-sdk-store-submission-checklist.md): A guide to help you prepare and submit your iOS and Android apps with confidence
+- [Native Android SDK](https://developer.validic.com/docs/native-android-mobile-inform-sdk.md): Native Android
+- [Native Android Migration Guide](https://developer.validic.com/docs/native-android-mobile-inform-migration-guide.md): Native Android
+- [Getting Started With Native Android SDK](https://developer.validic.com/docs/native-android-mobile-inform-sdk-overview.md): Native Android
+- [Minimum Requirements](https://developer.validic.com/docs/native-android-mobile-inform-sdk-requirements.md): Native Android
+- [Modules](https://developer.validic.com/docs/native-android-mobile-inform-sdk-modules.md): Native Android
+- [Installation](https://developer.validic.com/docs/native-android-mobile-inform-sdk-installation.md): Native Android
+- [Logging](https://developer.validic.com/docs/native-android-mobile-inform-sdk-logging.md): Native Android
+- [Session](https://developer.validic.com/docs/native-android-mobile-inform-sdk-session.md): Native Android ==> Shared module
+- [Authentication](https://developer.validic.com/docs/native-android-mobile-inform-sdk-authentication.md): Native Android ==> Shared module
+- [Record Types](https://developer.validic.com/docs/native-android-mobile-inform-sdk-record-types.md): Native Android ==> Shared module
+- [Record Identifiers](https://developer.validic.com/docs/native-android-mobile-inform-sdk-record-identifiers.md): Native Android ==> Shared module
+- [Record Events](https://developer.validic.com/docs/native-android-mobile-inform-sdk-record-events.md): Native Android ==> Shared module
+- [Health Connect](https://developer.validic.com/docs/native-android-mobile-inform-sdk-health-connect.md): Native Android ==> Health Connect module
+- [Installation](https://developer.validic.com/docs/native-android-mobile-inform-sdk-health-connect-installation.md): Native Android ==> Health Connect module
+- [Using Health Connect in the Android Mobile Inform SDK](https://developer.validic.com/docs/native-android-mobile-inform-sdk-using-android-health-connect.md): Native Android ==> Health Connect module
+- [Migrating Users from Google Fit SDK to Health Connect](https://developer.validic.com/docs/native-android-mobile-inform-sdk-migrating-users-from-google-fit-sdk-to-health-connect.md): Native Android ==> Health Connect module
+- [Migrating Users from Samsung Health SDK to Health Connect](https://developer.validic.com/docs/migrating-users-from-samsung-health-sdk-to-health-connect.md): Native Android ==> Health Connect module
+- [Bluetooth](https://developer.validic.com/docs/native-android-mobile-inform-sdk-bluetooth.md): Native Android ==> Bluetooth module
+- [Installation](https://developer.validic.com/docs/native-android-mobile-inform-sdk-bluetooth-installation.md)
+- [Bluetooth Peripherals](https://developer.validic.com/docs/native-android-mobile-inform-sdk-bluetooth-peripherals.md): Native Android ==> Bluetooth module
+- [Bluetooth Permissions](https://developer.validic.com/docs/native-android-mobile-inform-sdk-bluetooth-permissions.md): Native Android ==> Bluetooth module
+- [Bluetooth Operations](https://developer.validic.com/docs/native-android-mobile-inform-sdk-bluetooth-operations.md): Native Android ==> Bluetooth module
+- [Passive Read](https://developer.validic.com/docs/native-android-mobile-inform-sdk-bluetooth-passive-read.md): Native Android ==> Bluetooth module
+- [Bluetooth Behavior](https://developer.validic.com/docs/native-android-mobile-inform-sdk-bluetooth-behavior.md): Native Android ==> Bluetooth module
+- [Kotlin Bluetooth](https://developer.validic.com/docs/native-android-mobile-inform-sdk-kotlin-bluetooth.md): Native Android ==> Bluetooth module
+- [Companion Device Manager](https://developer.validic.com/docs/native-android-mobile-inform-sdk-companion-device-manager.md): Native Android ==> Bluetooth module
+- [VitalSnap](https://developer.validic.com/docs/native-android-mobile-inform-sdk-vitalsnap.md): Native Android ==> OCR module
+- [Installation](https://developer.validic.com/docs/native-android-mobile-inform-sdk-vitalsnap-installation.md): Native Android ==> OCR module
+- [VitalSnap Peripherals](https://developer.validic.com/docs/native-android-mobile-inform-sdk-vitalsnap-peripherals.md): Native Android ==> OCR module
+- [VitalSnap Operations](https://developer.validic.com/docs/native-android-mobile-inform-sdk-vitalsnap-operations.md): Native Android ==> OCR module
+- [LifeScan](https://developer.validic.com/docs/native-android-mobile-inform-sdk-lifescan.md): Native Android ==> LifeScan module
+- [Installation](https://developer.validic.com/docs/native-android-mobile-inform-sdk-lifescan-installation.md): Native Android ==> LifeScan module
+- [LifeScan Operations](https://developer.validic.com/docs/native-android-mobile-inform-sdk-lifescan-operations.md): Native Android ==> LifeScan module
+- [Native iOS SDK](https://developer.validic.com/docs/native-ios-mobile-inform-sdk.md): Native iOS Inform SDK
+- [Native iOS Migration Guide](https://developer.validic.com/docs/native-ios-mobile-inform-migration-guide.md): Native iOS Inform SDK
+- [Getting Started With Native iOS](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-overview.md): Native iOS Inform SDK
+- [Minimum Requirements](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-requirements.md): Native iOS Inform SDK
+- [Frameworks](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-frameworks.md): Native iOS Inform SDK
+- [Installation](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-installation.md): Native iOS Inform SDK
+- [Logging](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-logging.md): Native iOS Inform SDK
+- [Session](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-session.md): Native iOS ==> Core framework
+- [Authentication](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-authentication.md): Native iOS ==> Core framework
+- [Record Types](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-record-types.md): Native iOS ==> Core framework
+- [Record Identifiers](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-record-identifiers.md): Native iOS ==> Core framework
+- [Record Events](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-record-events.md): Native iOS ==> Core framework
+- [Apple Health (HealthKit)](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-apple-health.md): Native iOS ==> Apple HealthKit framework
+- [Installation](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-apple-health-installation.md): Native iOS ==> Apple Health framework
+- [Using Apple Health in the iOS Mobile Inform SDK](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-using-apple-health.md): Native iOS ==> Apple Health framework
+- [Apple Health Behavior](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-apple-health-behavior.md): Native iOS ==> Apple Health framework
+- [Bluetooth](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-bluetooth.md): Native iOS ==> Bluetooth framework
+- [Installation](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-bluetooth-installation.md): Native iOS ==> Bluetooth framework
+- [Bluetooth Peripherals](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-bluetooth-peripherals.md): Native iOS ==> Bluetooth framework
+- [Bluetooth Operations](https://developer.validic.com/docs/xnative-ios-mobile-inform-sdk-bluetooth-operations.md): Native iOS ==> Bluetooth framework
+- [Passive Read](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-bluetooth-passive-read.md): Native iOS ==> Bluetooth framework
+- [Bluetooth Behavior](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-bluetooth-behavior.md): Native iOS ==> Bluetooth framework
+- [VitalSnap](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-vitalsnap.md): Native iOS ==> OCR framework
+- [Installation](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-vitalsnap-installation.md): Native iOS ==> OCR framework
+- [VitalSnap Peripherals](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-vitalsnap-peripherals.md): Native iOS ==> OCR framework
+- [VitalSnap Operations](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-vitalsnap-operations.md): Native iOS ==> OCR framework
+- [LifeScan](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-lifescan.md): Native iOS ==> OneTouch framework
+- [Installation](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-lifescan-installation.md): Native iOS ==> OneTouch framework
+- [LifeScan Operations](https://developer.validic.com/docs/native-ios-mobile-inform-sdk-lifescan-operations.md): Native iOS ==> OneTouch framework
+- [Cordova SDK Wrapper](https://developer.validic.com/docs/cordova-mobile-inform-wrapper.md): Cordova Wrapper
+- [Cordova Migration Guide](https://developer.validic.com/docs/cordova-inform-migration-guide.md): Cordova Inform SDK Wrapper
+- [Getting Started with Cordova](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-overview.md): Cordova Inform SDK Wrapper
+- [Minimum Requirements](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-requirements.md): Cordova Inform SDK Wrapper
+- [Modules](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-modules.md): Cordova Inform SDK Wrapper
+- [Installation](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-installation.md): Cordova Inform SDK Wrapper
+- [Logging](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-logging.md): Cordova Inform SDK Wrapper
+- [Session](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-session.md): Cordova ==> Core module
+- [Authentication](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-authentication.md): Cordova ==> Core module
+- [Record Types](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-record-types.md): Cordova ==> Core module
+- [Record Identifiers](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-record-identifiers.md): Cordova ==> Core module
+- [Record Events](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-record-events.md): Cordova ==> Core module
+- [Apple Health](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-apple-health.md): Cordova ==> Apple Health module
+- [Installation](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-apple-health-installation.md): Cordova ==> Apple Health module
+- [Using Apple Health in the Cordova Wrapper](https://developer.validic.com/docs/cordova-wrapper-using-apple-health.md): Cordova ==> Apple Health module
+- [Health Connect](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-health-connect.md): Cordova ==> Health Connect module
+- [Installation](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-health-connect-installation.md): Cordova ==> Health Connect module
+- [Using Health Connect in the Cordova Wrapper](https://developer.validic.com/docs/cordova-wrapper-using-health-connect.md): Cordova ==> Health Connect module
+- [Bluetooth](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-bluetooth.md): Cordova ==> Bluetooth module
+- [Installation](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-bluetooth-installation.md): Cordova ==> Bluetooth module
+- [Bluetooth Peripherals](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-bluetooth-peripherals.md): Cordova ==> Bluetooth module
+- [Bluetooth Permissions](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-bluetooth-permissions.md): Cordova ==> Bluetooth module
+- [Bluetooth Operations](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-bluetooth-operations.md): Cordova ==> Bluetooth module
+- [Passive Read](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-passive-read.md): Cordova ==> Bluetooth module
+- [VitalSnap](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-vitalsnap.md): Cordova ==> VitalSnap module
+- [Installation](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-vitalsnap-installation.md): Cordova ==> VitalSnap module
+- [VitalSnap Peripherals](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-vitalsnap-peripherals.md): Cordova ==> VitalSnap module
+- [VitalSnap Operations](https://developer.validic.com/docs/cordova-mobile-inform-wrapper-vitalsnap-operations.md): Cordova ==> VitalSnap module
+- [Flutter SDK Wrapper](https://developer.validic.com/docs/flutter-mobile-inform-wrapper.md): Flutter Wrapper
+- [Getting Started with Flutter](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-overview.md): Flutter Inform SDK Wrapper
+- [Minimum Requirements](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-requirements.md): Flutter Inform SDK Wrapper
+- [Modules](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-modules.md): Flutter Inform SDK Wrapper
+- [Installation](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-installation.md): Flutter Inform SDK Wrapper
+- [Logging](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-logging.md): Flutter Inform SDK Wrapper
+- [Session](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-session.md): Flutter ==> Core module
+- [Authentication](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-authentication.md): Flutter ==> Core module
+- [Record Types](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-record-types.md): Flutter ==> Core module
+- [Record Identifiers](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-record-identifiers.md): Flutter ==> Core module
+- [Record Events](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-record-events.md): Flutter ==> Core module
+- [Apple Health](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-apple-health.md): Flutter ==> Apple Health module
+- [Installation](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-apple-health-installation.md): Flutter ==> Apple Health module
+- [Using Apple Health in the Flutter Wrapper](https://developer.validic.com/docs/flutter-wrapper-using-apple-health.md): Flutter ==> Apple Health module
+- [Health Connect](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-health-connect.md): Flutter ==> Health Connect module
+- [Installation](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-health-connect-installation.md): Flutter ==> Health Connect module
+- [Using Health Connect in the Flutter Wrapper](https://developer.validic.com/docs/flutter-wrapper-using-health-connect.md): Flutter ==> Health Connect module
+- [Bluetooth](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-bluetooth.md): Flutter ==> Bluetooth module
+- [Installation](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-bluetooth-installation.md): Flutter ==> Bluetooth module
+- [Bluetooth Peripherals](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-bluetooth-peripherals.md): Flutter ==> Bluetooth module
+- [Bluetooth Permissions](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-bluetooth-permissions.md): Flutter ==> Bluetooth module
+- [Bluetooth Operations](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-bluetooth-operations.md): Flutter ==> Bluetooth module
+- [Passive Read](https://developer.validic.com/docs/flutter-mobile-inform-wrapper-passive-read.md): Flutter ==> Bluetooth module
+- [React Native SDK Wrapper](https://developer.validic.com/docs/react-native-mobile-inform-wrapper.md): React Native Wrapper
+- [React Native Migration Guide](https://developer.validic.com/docs/react-native-mobile-inform-migration-guide.md): React Native Inform SDK Wrapper
+- [Getting Started With React Native](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-overview.md): React Native Inform SDK Wrapper
+- [Minimum Requirements](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-requirements.md): React Native Inform SDK Wrapper
+- [Modules](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-modules.md): React Native Inform SDK Wrapper
+- [Installation](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-installation.md): React Native Inform SDK Wrapper
+- [Logging](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-logging.md): React Native Inform SDK Wrapper
+- [Session](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-session.md): React Native ==> Session module
+- [Authentication](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-authentication.md): React Native ==> Session module
+- [Record Types](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-record-types.md): React Native ==> Session module
+- [Record Identifiers](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-record-identifiers.md): React Native ==> Session module
+- [Record Events](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-record-events.md): React Native ==> Session module
+- [Apple Health](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-apple-health.md): React Native ==> Apple Health module
+- [Installation](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-apple-health-installation.md): React Native ==> Apple Health module
+- [Using Apple Health in the React Native Wrapper](https://developer.validic.com/docs/react-native-wrapper-using-apple-health.md): React Native ==> Apple Health module
+- [Health Connect](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-health-connect.md): React Native ==> Health Connect module
+- [Installation](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-health-connect-installation.md): React Native ==> Health Connect module
+- [Using Health Connect in the React Native Wrapper](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-using-health-connect.md): React Native ==> Health Connect module
+- [Bluetooth](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-bluetooth.md): React Native ==> Bluetooth module
+- [Installation](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-bluetooth-installation.md): React Native ==> Bluetooth module
+- [Bluetooth Peripherals](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-bluetooth-peripherals.md): React Native ==> Bluetooth module
+- [Bluetooth Permissions](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-bluetooth-permissions.md): React Native ==> Bluetooth module
+- [Bluetooth Operations](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-bluetooth-operations.md): React Native ==> Bluetooth module
+- [Passive Read](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-bluetooth-passive-read.md): React Native ==> Bluetooth module
+- [VitalSnap](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-vitalsnap.md): React Native ==> VitalSnap module
+- [Installation](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-vitalsnap-installation.md): React Native ==> VitalSnap module
+- [VitalSnap Peripherals](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-vitalsnap-peripherals.md): React Native ==> VitalSnap module
+- [VitalSnap Operations](https://developer.validic.com/docs/react-native-mobile-inform-wrapper-vitalsnap-operations.md): React Native ==> VitalSnap module
+- [iOS Native SDK](https://developer.validic.com/docs/ios-native-sdk.md): validic_ios_native_1.18.4
+- [Android Native SDK](https://developer.validic.com/docs/android-native-sdk.md): validic_android_native_1.19.2
+- [Cordova Framework Wrapper](https://developer.validic.com/docs/cordova-framework-wrapper.md): validic_cordova_1.20.1
+- [React Native Framework Wrapper](https://developer.validic.com/docs/react-native-framework-wrapper.md): Validic_react-native-1.9.1
+- [Native Class Documentation](https://developer.validic.com/docs/legacy-mobile-documentation.md): Class Documentation for the Legacy (v1) SDK
+- [About HealthBridge](https://developer.validic.com/docs/about-healthbridge.md): We were bridging the gap between your data and the care team. See what we did there?
+- [Registration](https://developer.validic.com/docs/registration.md): The journey of a thousand clicks starts with a single login.
+- [Informed Consent](https://developer.validic.com/docs/program-enrollment.md): Because knowing is half the battle.
+- [Connect a Device](https://developer.validic.com/docs/connect-a-device.md): Sharing is Caring
+- [Managing Your Program](https://developer.validic.com/docs/managing-your-program.md): Making it work for you
+- [HealthBridge FAQ](https://developer.validic.com/docs/healthbridge-faq.md)
+- [Inform Supported Apps and Devices](https://developer.validic.com/docs/inform-supported-apps-and-devices.md)
+- [How To Test Your Inform Connect Integration](https://developer.validic.com/docs/testing-inform-connect-data-integration.md)
+
+## API Reference
+- [Provision a User](https://developer.validic.com/reference/provision-a-user.md): Creates the user and returns an id, uid, marketplace information, and created_at parameters for the user.  POST /organizations/:org_id/users?token=:token
+- [Delete User](https://developer.validic.com/reference/delete-user.md): Deletes a user. Deleting a user will permanently remove user data access. Per HIPAA guidelines, data is retained for 7 years and is available upon special request.   DELETE /organizations/:org_id/users/:uid?token=:token
+- [Get All Users](https://developer.validic.com/reference/get-all-user-profiles.md): Returns all end users and includes profiles (minus connected devices) based on the organization ID.   GET /organizations/:org_id/users?token=:token
+- [Measurements](https://developer.validic.com/reference/measurements.md): Returns a list of measurements for a given user   GET /organizations/:org_id/users/:uid/measurements
+- [Intraday](https://developer.validic.com/reference/intraday-2.md): Returns a list of time series activity data for a given user.  GET /organizations/:org_id/users/:uid/intraday
+- [CGM](https://developer.validic.com/reference/cgm.md): Returns a list of time series CGM data for a given user.
+- [Create a Stream](https://developer.validic.com/reference/create-a-stream.md): Before connecting to the Stream endpoint, a customer will need to create a stream. Validic allows a customer to create up to 5 streams (note that this number is the number of streams, not the number of client connections to the stream). Attempting to create more than the allowed number will result in an error. Please note that optional filters need to be assigned when creating a stream. This allows Validic to apply the filters for each client that connects to the created stream’s connect endpoint, ensuring all clients receive a consistent view of the stream.
+- [Get Connection Events By OrgID](https://developer.validic.com/reference/get-connection-events-by-orgid.md)
+- [Activate Cellular Device](https://developer.validic.com/reference/put-activate-cellular.md): Activates the data plan for a cellular-enabled health device
+- [Suspend Cellular Device](https://developer.validic.com/reference/put-suspend-cellular.md): Suspends the data plan for a cellular-enabled health device
+
+## Changelog
+- [The Inform Changelog Has Moved!](https://developer.validic.com/changelog/the-inform-changelog-has-moved.md)
+- [Under Armour source type updated to MapMyFitness](https://developer.validic.com/changelog/under-armour-source-type-updated-to-mapmyfitness.md)
+- [Garmin: New Intraday & Summaries Metrics Added](https://developer.validic.com/changelog/garmin-new-metrics-added-intraday-summaries.md)
+- [CGM Model Added to Inform API](https://developer.validic.com/changelog/cgm-model-added-to-inform-api.md)
+- [Oura: New Metrics Added](https://developer.validic.com/changelog/oura-new-metrics-added.md)
+- [Fitbit Temperature Metric added](https://developer.validic.com/changelog/fitbit-temperature-metrics-added.md)
+- [Garmin Connect data metrics expanded](https://developer.validic.com/changelog/garmin-connect-data-metrics-expanded.md)
+- [Dexcom G7 CGM meter support added](https://developer.validic.com/changelog/dexcom-g7-cgm-meter-support-added.md)
+- [Marketplace connection activity added to the Streaming API](https://developer.validic.com/changelog/marketplace-connection-activity-added-to-the-streaming-api.md)
+- [Fitbit Health Metrics added](https://developer.validic.com/changelog/fitbit-health-metrics-added-1.md)

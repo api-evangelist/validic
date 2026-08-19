@@ -1,0 +1,176 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://developer.validic.com/docs/creating-a-stream +
+  https://developer.validic.com/docs/connect-to-a-stream +
+  https://developer.validic.com/docs/using-the-status-event-api +
+  https://help.validic.com/space/VCS/3374284801/Streaming+API+vs+Push+Service +
+  https://dashboard.validic.com/inform-quickstart.txt
+description: >-
+  Validic's event surface, captured as a catalogue because Validic publishes NO
+  AsyncAPI document for it. There are two independent asynchronous delivery
+  channels for the same normalised record - a pull-style Server-Sent Events
+  stream the customer connects OUT to, and a push-style webhook Validic
+  delivers IN to a customer endpoint. Both are real, both are documented in
+  prose, neither has a machine-readable contract.
+asyncapi_published: false
+asyncapi_probe:
+- url: https://api.v2.validic.com/asyncapi.yaml
+  status: 403
+- url: https://streams.v2.validic.com/asyncapi.yaml
+  status: 403
+- url: https://developer.validic.com/asyncapi.yaml
+  status: 404
+- source: https://github.com/validic
+  result: no AsyncAPI document in any of the 8 public repositories
+- source: https://developer.validic.com/llms.txt
+  result: no AsyncAPI or event-schema page in the documentation index
+channels:
+- name: Streaming API
+  style: server-sent-events
+  direction: consumer connects out
+  protocol: HTTP long-lived connection
+  content_type: text/event-stream
+  base: https://streams.v2.validic.com
+  auth: '?token={ORG_TOKEN}'
+  scope: organization-wide (all users under the org)
+  lifecycle:
+    create: POST /streams?token= with { name, start_date, resource_filter?, event_type_filter? }
+    read: GET /streams?token= and GET /streams/{id}?token=
+    update: PUT /streams/{id}?token=
+    delete: DELETE /streams/{id}?token= (requires 0 active connections)
+    connect: GET /streams/{id}/connect?token=
+    replay: GET /replay?token=&resources=summary,workout&date=YYYY-MM-DD
+  limits:
+    streams_per_customer: 5
+    concurrent_connections_per_stream: 3
+    heartbeat_seconds: 5
+  delivery_guarantee: at-least-once
+  consumer_obligation: >-
+    "It is up to the customer to ensure idempotent handling of redelivered
+    messages." De-duplicate on the record `id` / `checksum`.
+  load_balancing: >-
+    With more than one connection to a single stream, events are distributed
+    across the connections. There is NO load balancing across separate streams -
+    each stream is independent.
+  reconnect_hazard: >-
+    A disconnect starts an internal rebalance. Reconnecting before it finishes
+    can return HTTP 422 (max client connections exceeded). Retry with back-off.
+  resumption:
+    last_event_id: false
+    mechanism: >-
+      No Last-Event-ID resumption. Recovery is via the separate /replay
+      endpoint, parameterised by DATE and resource list rather than by event id
+      - so a consumer can replay a day but cannot resume precisely where it
+      stopped.
+  events:
+  - name: data
+    payload: >-
+      A full normalised Record - identical schema to the REST data endpoints
+      (id, type, start_time, end_time, source, metrics[], user).
+    note: The primary payload; this is why the stream exists.
+  - name: rule
+    payload: '{ rule_id, user_id, triggered_at }'
+    note: >-
+      Fires when a configured rule threshold is met - the alerting hook for
+      remote patient monitoring.
+  - name: connection
+    payload: '{ user_id, source, event: "connected" | "disconnected" }'
+    note: >-
+      Emitted when a user connects or disconnects an API/cloud source through
+      the Marketplace. Added 2023-01-26 per the changelog. The REST equivalent
+      is GET /organizations/{org_id}/connections.
+  - name: poke
+    payload: none
+    note: Heartbeat every 5 seconds. Discard it; it exists to keep the connection open.
+  filters:
+    resource_filter:
+      applies_to: the `data` event
+      values:
+      - measurement
+      - cgm
+      - workout
+      - summary
+      - sleep
+      - intraday
+      - nutrition
+    event_type_filter:
+      applies_to: the event stream as a whole
+      values:
+      - data
+      - rule
+      - connection
+    note: >-
+      Filters are set at stream CREATION, not per connection, so every client
+      on a stream sees a consistent view. Changing what you receive means
+      updating or recreating the stream.
+- name: Push Service
+  style: webhook
+  direction: Validic delivers in
+  protocol: HTTPS POST to a customer-supplied endpoint
+  scope: organization-wide
+  payload: >-
+    Batches of normalised records, same record model as REST and the stream.
+    FHIR R4 mapping is available on this channel per
+    https://validic.com/how-we-help/arpa-h-advocate/.
+  configuration: >-
+    Endpoint registration is arranged with Validic rather than self-served -
+    there is no public API operation for creating or listing push
+    subscriptions.
+  observability:
+    name: Push Service Status API
+    operation: GET /organizations/{organization_id}/notifications?token={token}
+    host: https://api.prod.validic.com
+    parameters:
+    - name: organization_id
+      in: path
+      required: true
+    - name: token
+      in: query
+      required: true
+    - name: start_time
+      in: query
+      required: false
+      format: YYYY-MM-DDTHH:MM:SSZ
+    - name: end_time
+      in: query
+      required: false
+      format: YYYY-MM-DDTHH:MM:SSZ
+    docs: https://developer.validic.com/docs/using-the-status-event-api
+    note: >-
+      Returns the delivery status of individual push notification BATCHES over
+      a time window - a genuine webhook-observability endpoint, which is more
+      than most providers ship.
+    host_discrepancy: >-
+      This operation is documented against api.prod.validic.com, a FOURTH host
+      that appears nowhere else in Validic's documentation, in either published
+      OpenAPI, or in apis.yml. Recorded exactly as published; not reconciled,
+      and not added as a baseURL, because no other Validic source names it.
+  security:
+    signature_verification: not documented
+    retry_policy: not documented
+    note: >-
+      No webhook signing secret, HMAC header or replay-window is published, and
+      no retry/back-off schedule is documented. For a HIPAA-regulated PHI
+      delivery channel that is a notable omission in the public docs.
+choosing_between_them:
+  guidance_url: https://help.validic.com/space/VCS/3374284801/Streaming+API+vs+Push+Service
+  summary: >-
+    Both channels carry the same records. The Streaming API suits consumers
+    that can hold an outbound long-lived connection and want control over
+    replay; the Push Service suits consumers that would rather expose an
+    endpoint and be delivered to. Validic steers whole-population retrieval to
+    either of these and away from the REST API, which it explicitly says is not
+    for bulk.
+gap:
+  summary: >-
+    Two production event channels, four named SSE event types, a documented
+    filter vocabulary and a batch-status API - and not one line of AsyncAPI.
+    Everything needed to generate one already exists in the prose.
+  what_would_close_it: >-
+    An AsyncAPI 3.x document for streams.v2.validic.com describing the four
+    event types and their payload schema, plus a webhook channel for the Push
+    Service with a documented signature scheme.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

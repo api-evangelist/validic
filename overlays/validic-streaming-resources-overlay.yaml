@@ -1,0 +1,92 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Validic Streaming Resources API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-15'
+  method: generated
+  source: openapi/_original/validic-streaming-resources-openapi.json
+  extends: openapi/_original/validic-streaming-resources-openapi.json
+  note: >-
+    Not applied to the original. Validic's published streaming spec covers only
+    the five stream MANAGEMENT operations; the two operations that actually
+    move data - GET /streams/{id}/connect and GET /replay - are absent from it
+    because they return an unbounded Server-Sent Events body that OpenAPI 3.1
+    models poorly. The event catalogue lives in
+    asyncapi/validic-events-webhooks.yml instead.
+actions:
+- target: $.info
+  description: Give the document a human title, description, contact and licence.
+  update:
+    title: Validic Streaming API
+    description: >-
+      Management surface for Validic Inform streams - organization-wide
+      Server-Sent Events subscriptions carrying normalised health records, rule
+      triggers and Marketplace connection activity. A customer may create up to
+      5 streams, each accepting up to 3 concurrent client connections.
+      Authenticated with the organization access token as the `token` query
+      parameter.
+    contact:
+      name: Validic Developer Support
+      url: https://developer.validic.com
+    license:
+      name: Proprietary
+      url: https://www.validic.com/online-service-agreement-inform
+    termsOfService: https://validic.com/online-service-agreement-inform/
+- target: $.servers[0]
+  description: Describe the streaming host.
+  update:
+    description: Inform Streaming API (Server-Sent Events over HTTPS)
+- target: $.components.securitySchemes.sec0
+  description: >-
+    Remove the example token value baked into the published security scheme.
+    Validic's spec ships an `x-default` holding a 32-character hex string in
+    the position of a live organization token; whether or not it is a demo
+    credential, a secret-shaped literal does not belong in a public contract.
+  update:
+    type: apiKey
+    in: query
+    name: token
+    description: >-
+      Organization access token supplied by Validic, passed as the `token`
+      query parameter.
+    x-default: null
+- target: $
+  description: Declare a tag for the stream management surface.
+  update:
+    tags:
+    - name: Streaming
+      description: Create, inspect, update and delete Server-Sent Events streams.
+- target: $.paths[*][?(@.operationId == 'create-a-stream')]
+  description: Tag it and record the documented ceiling.
+  update:
+    tags:
+    - Streaming
+    x-api-evangelist-note: >-
+      Maximum 5 streams per customer; a sixth create returns an error. Filters
+      (resource_filter, event_type_filter) must be set here, not per
+      connection, so all clients on a stream see a consistent view.
+- target: $.paths[*][?(@.operationId == 'get-a-stream')]
+  update:
+    tags:
+    - Streaming
+- target: $.paths[*][?(@.operationId == 'get-a-stream-by-id-1')]
+  description: Normalise the ReadMe-generated operationId suffix.
+  update:
+    operationId: get-stream-by-id
+    tags:
+    - Streaming
+- target: $.paths[*][?(@.operationId == 'update-a-stream-1')]
+  update:
+    operationId: update-stream
+    tags:
+    - Streaming
+- target: $.paths[*][?(@.operationId == 'delete-a-stream-1')]
+  description: Tag it and record the precondition Validic documents in prose only.
+  update:
+    operationId: delete-stream
+    tags:
+    - Streaming
+    x-api-evangelist-note: >-
+      Requires 0 active client connections. Close every connected client before
+      calling, or the delete fails.

@@ -1,0 +1,168 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://developer.validic.com/reference/errors +
+  https://developer.validic.com/docs/inform-rest-api +
+  https://dashboard.validic.com/inform-quickstart.txt +
+  openapi/_original/validic-inform-data-resources-openapi.json
+description: >-
+  Error catalogue for the Validic Inform API. Validic publishes an HTTP status
+  summary and two example error bodies, and its published OpenAPI carries real
+  4xx examples on most operations. It does NOT publish an application-level
+  error-code registry - there are no stable machine-readable error codes to
+  branch on, only HTTP status plus a human-readable string.
+format: none
+rfc9457: false
+content_type: application/json
+envelope:
+  primary:
+    shape: '{ "errors": [ "human readable message" ] }'
+    field: errors
+    field_type: array of strings
+    documented_at: https://developer.validic.com/reference/errors
+    description: An array of human-readable messages giving more detail about the error.
+  field_scoped:
+    shape: '{ "errors": { "<field>": [ "message" ] } }'
+    example: '{ "errors": { "type": [ "invalid source type" ] } }'
+    note: Validation failures key the message array by the offending field.
+  gateway:
+    shape: '{ "status": <code>, "error": "<phrase>" }'
+    documented_at: https://dashboard.validic.com/inform-quickstart.txt
+    note: >-
+      "All non-2xx errors: { status, error } - no detail field." Confirmed on a
+      live unauthenticated probe of https://api.v2.validic.com, which returns
+      {"status":403,"error":"Forbidden"}.
+  edge:
+    shape: '{ "message": "Invalid authentication credentials" }'
+    note: >-
+      A THIRD envelope, appearing as the 403 example on most operations in the
+      published OpenAPI. streams.v2.validic.com returns a fourth variant,
+      {"errors":["Invalid authentication credentials"]}.
+  warning: >-
+    Four different error envelopes are published for one product. A client
+    cannot parse errors from a single shape; it must tolerate `errors` as an
+    array, `errors` as an object, a `{status,error}` pair, and a bare
+    `{message}`. This is the largest error-semantics gap on the profile.
+problem_types:
+- status: 200
+  title: OK
+  meaning: Request processed successfully.
+  action: none
+- status: 400
+  title: Bad Request
+  meaning: >-
+    Invalid request. The reference page says "invalid request headers"; the
+    REST API guide says "see error messages for details". In practice it is
+    also what you get for a date range wider than the documented window.
+  common_causes:
+  - start_date/end_date range exceeds the maximum window (30 days per the API reference, 31 per the agent guide)
+  - malformed or missing query parameter
+  - invalid source filter value
+  action: >-
+    Narrow the date window and page month by month. Note the body carries "no
+    useful body" per Validic's own guide, so the caller must reason from the
+    request, not the response.
+  retryable: false
+  operations_declaring_it: 21
+- status: 401
+  title: Unauthorized
+  meaning: No valid API token provided, or the token is not authorized for that organization.
+  example_body: '{ "errors": [ "Token is not authorized to access organization" ] }'
+  device_variant: '{ "errors": [ "Unable to activate this device" ] }'
+  action: >-
+    Check the `token` query parameter and that the ORG_ID in the path matches
+    the organization the token was issued for. Do not retry unchanged.
+  retryable: false
+  operations_declaring_it: 15
+- status: 402
+  title: Request Failed
+  meaning: >-
+    Listed in Validic's HTTP status summary, but its description there is a
+    copy-paste of the 401 row ("No valid API key provided"). No operation in
+    either published OpenAPI declares a 402 and no example body exists.
+  action: Treat as undocumented; not observed in any published contract.
+  retryable: false
+  documented_but_unexplained: true
+- status: 403
+  title: Forbidden
+  meaning: Authentication credentials rejected at the edge.
+  example_body: '{ "message": "Invalid authentication credentials" }'
+  streaming_variant: '{ "errors": [ "Invalid authentication credentials" ] }'
+  action: >-
+    Distinct from 401 in practice - 403 is the gateway refusing the credential,
+    401 is the application refusing the organization scope. Not listed in the
+    published HTTP status summary despite appearing on 14 operations.
+  retryable: false
+  operations_declaring_it: 14
+  documented_in_status_summary: false
+- status: 404
+  title: Not Found
+  meaning: The requested item does not exist.
+  example_body: '{ "errors": [ "not found" ] }'
+  trap: >-
+    Two documented false-alarm 404s. (1) Passing the Validic-internal `id`
+    instead of your own `uid` in a URL produces a "silent 404, no helpful
+    error". (2) `GET /users/{uid}/apps?token=` returns 404 when the user simply
+    has no connected sources - Validic's guide says to "treat as empty, not an
+    error".
+  action: Verify you used `uid`, not `id`, before treating a 404 as missing data.
+  retryable: false
+  operations_declaring_it: 2
+- status: 422
+  title: Unprocessable Entity
+  meaning: Well-formatted but semantically erroneous request entity.
+  example_body: '{ "message": "An error occurred and an error response has been sent with details." }'
+  streaming_case: >-
+    On the Streaming API, 422 also means the maximum number of client
+    connections for a stream has been exceeded - including transiently, while
+    Validic rebalances after a disconnect.
+  action: >-
+    On the REST API, correct the entity. On a stream reconnect, retry several
+    times with exponential back-off - this one IS retryable and Validic says so.
+  retryable: conditionally
+  operations_declaring_it: 1
+- status: 429
+  title: Too Many Requests
+  meaning: >-
+    Rate limit exceeded (2,000 requests per access token per hour). NOT
+    declared on any operation in either published OpenAPI and NOT listed in
+    Validic's HTTP status summary; recorded here because the limit itself is
+    documented and something must be returned when it is hit.
+  action: Back off. No Retry-After header is published.
+  retryable: true
+  documented: false
+  gap: true
+- status: 50n
+  title: Server Error
+  meaning: Something went wrong on the server side. See error message for details.
+  action: Retry with exponential back-off and jitter.
+  retryable: true
+  note: >-
+    Validic writes this as the literal token "50n" rather than enumerating 500 /
+    502 / 503. No 5xx response is declared on any operation in either published
+    OpenAPI.
+coverage:
+  operations_in_published_specs: 24
+  operations_with_at_least_one_4xx: 21
+  operations_with_any_5xx: 0
+  distinct_4xx_codes_declared:
+  - '400'
+  - '401'
+  - '403'
+  - '404'
+  - '422'
+  note: >-
+    Response-code coverage on the 4xx side is genuinely good for a spec of this
+    age, and many operations carry real example bodies. The gaps are 5xx (never
+    declared anywhere) and 429 (documented as a policy, never as a response).
+error_codes:
+  registry_published: false
+  note: >-
+    There is no numeric or symbolic error-code vocabulary - no `code` field, no
+    error-type URI, nothing stable to switch on. Every discriminating detail is
+    an English sentence inside `errors[0]` or `message`. An agent handling
+    Validic errors must branch on HTTP status alone and treat message text as
+    unstructured.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

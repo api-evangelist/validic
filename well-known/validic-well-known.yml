@@ -1,0 +1,148 @@
+generated: '2026-08-15'
+method: probed
+source: live HTTPS probes of every apis.yml host and every OpenAPI servers[] host
+summary:
+  hosts_probed: 7
+  paths_probed_per_host: 5
+  real_documents_found: 0
+  verdict: >-
+    Validic serves NO /.well-known/ discovery document from any host it
+    controls. The single 200 observed across the whole probe belongs to
+    Atlassian, not to Validic - see third_party below. No WellKnown and no
+    SecurityTxt pointer is emitted in apis.yml, because a pointer asserts that
+    the PROVIDER serves that surface and Validic does not.
+hosts:
+- host: api.v2.validic.com
+  role: Inform REST API base
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/ai-plugin.json
+    status: 403
+  note: >-
+    Every path returns the API's own JSON refusal body
+    `{"status":403,"error":"Forbidden"}` - the gateway rejects unauthenticated
+    requests uniformly rather than serving a discovery surface.
+- host: streams.v2.validic.com
+  role: Inform Streaming API base
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/ai-plugin.json
+    status: 403
+  note: 'Uniform `{"errors":["Invalid authentication credentials"]}` on every path.'
+- host: developer.validic.com
+  role: ReadMe developer portal
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  note: >-
+    The 404s for security.txt / ai-plugin.json are served as the ReadMe HTML
+    404 shell (71KB, text/html) - HTML, not a document, and the status is 404
+    either way.
+- host: validic.com
+  role: corporate website
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  note: >-
+    Also probed /security.txt at the site root (the RFC 9116 legacy location) -
+    404. NOTE this host soft-404s unknown paths by 200-redirecting to `/`, so
+    a 200 on this host is not on its own evidence a page exists; the
+    /.well-known/* paths returned a genuine 404 body.
+- host: dashboard.validic.com
+  role: developer dashboard / signup
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/ai-plugin.json
+    status: 403
+  note: >-
+    S3-backed SPA - every unknown path returns an S3 `AccessDenied` XML body.
+    The host DOES serve /agents.txt (200), captured under llms/.
+- host: api.dashboard.validic.com
+  role: developer signup API (AWS API Gateway)
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/ai-plugin.json
+    status: 403
+  note: >-
+    Uniform API Gateway `{"message":"Missing Authentication Token"}`. Worth
+    noting the signup API issues Cognito-style id/access/refresh tokens yet
+    publishes no OIDC discovery document.
+- host: trust.validic.com
+  role: Atlassian Statuspage (see lifecycle/)
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    credited: false
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+third_party:
+- path: https://trust.validic.com/.well-known/security.txt
+  status: 200
+  bytes: 1448
+  owner: Atlassian
+  credited_to_validic: false
+  reason: >-
+    This is a real, PGP-signed RFC 9116 document, but it is NOT Validic's. It
+    is served by the Atlassian Statuspage platform that trust.validic.com is
+    CNAME'd to (trust.validic.com -> qtyl0stcbvvr.stspg-customer.com). Its own
+    fields say so plainly - Contact
+    https://www.atlassian.com/trust/security/report-a-vulnerability, Contact
+    mailto:security@atlassian.com, Policy on atlassian.com, and an explicit
+    `Canonical: https://www.atlassian.com/.well-known/security.txt`. Crediting
+    it to Validic would be the venue-as-provider error: it would score Validic
+    for a vulnerability-disclosure program run by its status-page vendor. Not
+    saved to disk and no SecurityTxt pointer emitted.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

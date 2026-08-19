@@ -1,13 +1,92 @@
-generated: '2026-07-11'
+generated: '2026-08-15'
 method: searched
-probe: true
-source: https://trust.validic.com/
-url: https://trust.validic.com/
+source: >-
+  https://validic.com/how-we-help/arpa-h-advocate/ +
+  https://dashboard.validic.com/validic-developer-signup.txt
+url: null
+trust_center_published: false
+description: >-
+  Validic states real certifications on its own public pages, but it does NOT
+  operate a trust centre - there is no portal at which a prospect can view or
+  request a certificate, a scope statement, an audit date, a pen-test summary
+  or a subprocessor list. The certifications below are first-party ASSERTIONS,
+  recorded as such.
 certifications:
-- SOC 2
-- ISO 27001
-evidence:
-- source: https://trust.validic.com/
-  keywords:
-  - soc 2
-  - iso 27001
+- name: HITRUST CSF
+  status: certified (asserted)
+  evidence:
+  - source: https://validic.com/how-we-help/arpa-h-advocate/
+    http_status: 200
+    quote: 'Compliance: HIPAA. HITRUST. ISO 27001. FHIR mapping via the Push Service.'
+  - source: https://dashboard.validic.com/validic-developer-signup.txt
+    http_status: 200
+    quote: HITRUST certified - ISO 27001 certified
+  certificate_published: false
+  audit_date_published: false
+  assessor_published: false
+- name: ISO/IEC 27001
+  status: certified (asserted)
+  evidence:
+  - source: https://validic.com/how-we-help/arpa-h-advocate/
+    http_status: 200
+  - source: https://dashboard.validic.com/validic-developer-signup.txt
+    http_status: 200
+  certificate_published: false
+  audit_date_published: false
+  assessor_published: false
+- name: HIPAA
+  status: compliant (asserted, and reflected in API design)
+  evidence:
+  - source: https://validic.com/how-we-help/arpa-h-advocate/
+    http_status: 200
+  - source: https://developer.validic.com/docs/inform-rest-api
+    http_status: 200
+    detail: >-
+      HIPAA drives documented API behaviour, not just a claim - the ban on
+      identifying data in `uid`, and the 1-year-over-API / 7-year-retained
+      split on health records.
+corrections:
+- date: '2026-08-15'
+  removed:
+  - SOC 2
+  reason: >-
+    A previous pass recorded SOC 2 and ISO 27001 for Validic from a keyword
+    match on https://trust.validic.com/ and treated that host as a trust
+    centre. Both parts of that were wrong. (1) trust.validic.com is an ATLASSIAN
+    STATUSPAGE, not a trust centre - DNS CNAME
+    trust.validic.com -> qtyl0stcbvvr.stspg-customer.com, page title "Validic
+    Inform Status", live component and incident APIs at /api/v2/*. It is now
+    recorded correctly in lifecycle/validic-lifecycle.yml as the status page.
+    (2) The strings "SOC 2" and "ISO 27001" appear on that page exactly once
+    each, inside an incident notice about Google Health API CASA requirements
+    which advises CUSTOMERS to "gather existing certifications - SOC 2 or ISO
+    27002 documentation". That is guidance to Validic's customers about THEIR
+    own audits; it is not a Validic certification claim. No first-party SOC 2
+    assertion exists anywhere on Validic's public surface.
+  kept:
+  - ISO 27001
+  kept_reason: >-
+    ISO 27001 survives the correction, but on completely different evidence -
+    Validic asserts it directly on validic.com and in its own
+    provider-published developer guide.
+probe:
+- url: https://trust.validic.com/
+  status: 200
+  finding: Atlassian Statuspage titled "Validic Inform Status" - not a trust centre
+- url: https://validic.com/security/
+  status: 200
+  finding: >-
+    soft-404 - validic.com 200-redirects unknown paths to `/`. Effective URL
+    was https://validic.com/. No security page exists.
+- url: https://validic.com/compliance/
+  status: 200
+  finding: soft-404 to `/`. No compliance page exists.
+- url: https://validic.com/privacy-policy/
+  status: 200
+  finding: real page - the only published policy document found
+subprocessors_published: false
+pen_test_published: false
+soc2_report_available_on_request: unknown
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

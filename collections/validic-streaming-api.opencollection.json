@@ -1,0 +1,182 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Validic Inform Devices Streaming API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "token",
+      "value": "{{token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Streaming",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.v2.validic.com/streams",
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a stream by submitting a name and start_date, optionally limited to specific resources. Validic returns an id used to open (connect to) the stream. A customer may create up to 5 streams. Served on https://streams.v2.validic.com."
+        },
+        {
+          "info": {
+            "name": "Get a stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/streams/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The stream identifier returned when the stream was created."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Retrieves metadata for a stream. Served on https://streams.v2.validic.com."
+        },
+        {
+          "info": {
+            "name": "Update a stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.v2.validic.com/streams/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The stream identifier returned when the stream was created."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a stream's configuration. Modeled from the Streaming API navigation (Working With a Stream). Served on https://streams.v2.validic.com."
+        },
+        {
+          "info": {
+            "name": "Delete a stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.v2.validic.com/streams/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The stream identifier returned when the stream was created."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Deletes a stream. Modeled from the Streaming API navigation. Served on https://streams.v2.validic.com."
+        },
+        {
+          "info": {
+            "name": "Connect to a stream (SSE)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/streams/:id/connect",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The stream identifier returned when the stream was created."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Opens a long-lived HTTP connection and streams organization-wide health events using Server-Sent Events (Content-Type text/event-stream). Data events carry health records; a poke (heartbeat) event is sent every 5 seconds. Events are distributed across up to 3 concurrent client connections. This is SSE over HTTPS, not a WebSocket. Served on https://streams.v2.validic.com."
+        },
+        {
+          "info": {
+            "name": "Replay a stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.v2.validic.com/streams/:id/replay",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The stream identifier returned when the stream was created."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replays previously delivered events on a stream from a given point. Served on https://streams.v2.validic.com."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

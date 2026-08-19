@@ -1,0 +1,285 @@
+generated: '2026-08-15'
+method: derived
+source: >-
+  openapi/_original/validic-inform-data-resources-openapi.json +
+  openapi/_original/validic-streaming-resources-openapi.json +
+  https://developer.validic.com/docs/working-with-data
+description: >-
+  Entity graph for the Validic Inform platform, derived from the response
+  examples in Validic's two published OpenAPI documents and cross-checked
+  against the "Understanding The Data Model" guide. Note the specs declare no
+  `components.schemas` at all - only securitySchemes - so this graph is
+  reconstructed from example payloads and the object reference, not from named
+  schemas. That absence is itself the finding: there is no reusable, named
+  type in the contract for any Validic entity.
+schema_reuse:
+  components_schemas_declared: 0
+  note: >-
+    Both published specs inline every request and response and carry zero
+    named schemas. A code generator run against them produces anonymous
+    per-operation types rather than a shared Record or User type, even though
+    every data endpoint returns the same record envelope.
+entities:
+- name: Organization
+  id_field: org_id
+  id_style: 24-char hex (Mongo-style ObjectId)
+  description: >-
+    The tenant. Every path on the REST API is rooted at
+    /organizations/{org_id}, and the access token is scoped to exactly one
+    organization - using a token against a different org_id returns 401
+    "Token is not authorized to access organization".
+  relationships:
+  - has_many: User
+    via: /organizations/{org_id}/users
+  - has_many: ConnectionEvent
+    via: /organizations/{org_id}/connections
+  - has_many: UnifiedSource
+    via: /organizations/{org_id}/unified_sources
+  - has_many: Device
+    via: /organizations/{org_id}/devices/{activate,suspend}
+- name: User
+  id_field: uid
+  secondary_id: id
+  description: >-
+    An end user provisioned under an organization. Carries TWO identifiers and
+    they are not interchangeable - `uid` is customer-defined and is the only
+    one valid in a URL; `id` is Validic-internal and produces a silent 404 if
+    used as a path segment.
+  fields:
+  - uid
+  - id
+  - status
+  - location.timezone
+  - location.country_code
+  - marketplace.token
+  - marketplace.url
+  - mobile.token
+  - sources[]
+  - user_notes
+  - created_at
+  - updated_at
+  constraint: >-
+    uid must not contain identifying data (no SSN, name, phone, email) because
+    it travels in URLs - a HIPAA constraint Validic states explicitly.
+  relationships:
+  - belongs_to: Organization
+    via: org_id in path
+  - has_one: Marketplace
+    via: marketplace.token
+  - has_many: Source
+    via: sources[]
+  - has_many: Record
+    via: /organizations/{org_id}/users/{uid}/{type}
+- name: Marketplace
+  id_field: marketplace.token
+  description: >-
+    A hosted, per-user connection surface. `marketplace.url` is a ready-to-use
+    redirect that presents the device/app catalogue and runs the OAuth dance
+    with each upstream source. Requesting it with Accept: application/json
+    returns a JSON representation instead of HTML, which is what makes the
+    Custom Marketplace possible.
+  rule: >-
+    Never construct the URL - it is environment-specific and must be used as
+    returned. A fresh token can be minted with POST .../users/{uid}/marketplace.
+  relationships:
+  - belongs_to: User
+    via: uid
+- name: Source
+  id_field: source.type
+  description: >-
+    The upstream that produced a record - fitbit, garmin, dexcom, withings,
+    apple_health, bluetooth and so on. Appears on every record as
+    `source: { type, device }`.
+  caution: >-
+    source.type is a MOVING VOCABULARY. It has been renamed at least twice in
+    the published changelog (nokia -> withings, under_armour -> mapmyfitness).
+    Treat it as data, not as an enum.
+  relationships:
+  - has_many: Record
+    via: source.type on the record
+- name: UnifiedSource
+  description: >-
+    The catalogue of connectable sources, readable org-wide
+    (/organizations/{org_id}/unified_sources) or per user
+    (/organizations/{org_id}/users/{uid}/unified_sources). Backs the Unified
+    Marketplace.
+  relationships:
+  - belongs_to: Organization
+  - belongs_to: User
+- name: Record
+  id_field: id
+  id_style: hex string
+  description: >-
+    The single normalised shape returned by EVERY data endpoint - summaries,
+    measurements, workouts, sleep, nutrition, intraday and cgm all return this
+    same envelope with a different `type` and a different metric vocabulary.
+    This is the heart of the platform: one schema across 700+ devices.
+  fields:
+  - id
+  - type
+  - category
+  - log_id
+  - checksum
+  - version
+  - start_time
+  - end_time
+  - created_at
+  - deleted_at
+  - utc_offset
+  - offset_origin
+  - source
+  - user
+  - metrics[]
+  - segments[]
+  - tags[]
+  - user_notes
+  subtypes:
+  - summary
+  - measurement
+  - workout
+  - sleep
+  - nutrition
+  - intraday
+  - cgm
+  relationships:
+  - belongs_to: User
+    via: user.uid
+  - belongs_to: Source
+    via: source.type
+  - has_many: Metric
+    via: metrics[]
+  - has_many: Segment
+    via: segments[]
+  deletion: >-
+    Soft-deleted. `deleted_at` is present and null on live records; deleted
+    records are surfaced rather than vanishing.
+  integrity: >-
+    `checksum` plus `id` gives a consumer a de-duplication key, which matters
+    because the Streaming API delivers at-least-once.
+- name: Metric
+  description: >-
+    The atomic measurement inside a record - `{ type, value, unit, origin }`.
+    The normalisation layer's actual output.
+  fields:
+  - type
+  - value
+  - unit
+  - origin
+  origin_values:
+  - device
+  - unknown
+  vocabulary_observed:
+  - active_duration
+  - active_energy_burned
+  - avg_heart_rate
+  - awake_count
+  - awake_duration
+  - basal_energy_burned
+  - bmi
+  - body_weight
+  - carbohydrate
+  - deep_sleep
+  - diastolic
+  - dietary_fiber
+  - distance
+  - energy_burned
+  - energy_consumed
+  - fairly_active_duration
+  - fat
+  - heart_rate_zone_high
+  - heart_rate_zone_low
+  - heart_rate_zone_medium
+  - heart_rate_zone_very_low
+  - light_sleep
+  - lightly_active_duration
+  - protein
+  - pulse
+  - rem_sleep
+  - resting_heart_rate
+  - sleep_duration
+  - sodium
+  - steps
+  - systolic
+  - time_to_fall_asleep
+  - very_active_duration
+  - water
+  vocabulary_note: >-
+    The 33 metric types above are those actually present in the response
+    examples of the published OpenAPI. The full published vocabulary is larger
+    (https://developer.validic.com/docs/metrics) and it GROWS - nineteen of
+    twenty changelog entries are metric or source additions. Do not treat this
+    list as closed.
+  relationships:
+  - belongs_to: Record
+- name: Segment
+  description: >-
+    Sub-intervals within a record - e.g. meal segments inside a nutrition
+    record (added 2020), or laps/phases within a workout.
+  relationships:
+  - belongs_to: Record
+- name: Stream
+  id_field: id
+  description: >-
+    A durable, org-wide server-sent-events subscription on
+    streams.v2.validic.com. Created once and reused; up to 5 per customer with
+    up to 3 concurrent client connections each.
+  fields:
+  - id
+  - name
+  - start_date
+  - created_at
+  - resource_filter
+  - event_type_filter
+  - members.count
+  - members.max
+  relationships:
+  - belongs_to: Organization
+  - has_many: StreamEvent
+    via: /streams/{id}/connect
+  constraint: >-
+    DELETE /streams/{id} requires 0 active connections. Filters must be set at
+    creation so every connected client sees a consistent view.
+- name: StreamEvent
+  description: The SSE frames delivered over an open stream connection.
+  event_types:
+  - name: data
+    payload: a Record, identical schema to the REST response
+  - name: rule
+    payload: '{ rule_id, user_id, triggered_at }'
+  - name: connection
+    payload: '{ user_id, source, event: connected|disconnected }'
+  - name: poke
+    payload: heartbeat every 5 seconds, discard
+  relationships:
+  - belongs_to: Stream
+- name: ConnectionEvent
+  description: >-
+    Historical connect/disconnect activity for API/cloud sources, retrievable
+    over REST at /organizations/{org_id}/connections. The pull-based sibling of
+    the `connection` stream event.
+  relationships:
+  - belongs_to: Organization
+- name: Device
+  description: >-
+    A cellular-enabled health device whose data plan is activated or suspended
+    through PUT /organizations/{org_id}/devices/{activate,suspend}. The only
+    operations in the whole contract with a physical-world consequence.
+  relationships:
+  - belongs_to: Organization
+relationships_summary:
+  root: Organization
+  fan_out: Organization -> User -> Record -> Metric
+  parallel_delivery: >-
+    The same Record entity is reachable three ways - REST pull, SSE `data`
+    event, and Push Service webhook. They are projections of one core, not
+    three models.
+id_prefixes:
+  observed: none
+  note: >-
+    Validic uses opaque 24-char hex ids with no type prefix, so an id cannot be
+    identified from its value alone (unlike, say, Stripe's `cus_`/`ch_`). The
+    `type` field on the record carries that information instead.
+render: null
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

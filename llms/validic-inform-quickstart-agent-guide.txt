@@ -1,0 +1,138 @@
+# Validic Inform API  --  Integration Guide
+
+Don't have a Validic developer account yet? Go to validic-developer-signup.txt to get your credentials first.
+
+USE THIS FILE TO understand the Inform API call sequence. Tech stack decisions are yours  -- 
+this is your guide for what to call, when, and what to expect back.
+
+**You need:** `ORG_ID` and `ORG_TOKEN` from your Validic developer account.
+
+```
+REST base:      https://api.v2.validic.com
+Streaming base: https://streams.v2.validic.com
+Auth:           ?token=ORG_TOKEN on every request (query param, not a header)
+```
+
+---
+
+## Step 1: Get Users
+
+```
+GET /organizations/{ORG_ID}/users?token={ORG_TOKEN}
+```
+
+Response: `{ "data": [ ...users ] }`
+
+WARNING: All list endpoints wrap results in `{ "data": [...] }`  --  always unwrap before iterating.
+
+Each user object:
+```json
+{
+  "uid": "your_id",             <- use this in all subsequent URLs
+  "id":  "validic_internal",    <- never put this in a URL  --  silent 404, no helpful error
+  "marketplace": {
+    "token": "USER_TOKEN",
+    "url":   "https://..."      <- ready-to-use redirect URL to connect devices
+  },
+  "status": "active"
+}
+```
+
+-> Store each user's `uid`. To connect a user to Fitbit/Garmin/etc., redirect them to
+`marketplace.url` as-is  --  never construct it yourself, it's environment-specific.
+
+Single user: `GET /organizations/{ORG_ID}/users/{uid}?token=`  --  returns the same shape,
+no envelope.
+
+---
+
+## Step 2: Get Health Data
+
+```
+GET /organizations/{ORG_ID}/users/{uid}/{type}?token={ORG_TOKEN}&start_date=YYYY-MM-DD&end_date=YYYY-MM-DD
+```
+
+Types: `measurements` | `workouts` | `summaries` | `sleep` | `cgm` | `intraday` | `nutrition`
+
+WARNING: Date range must be <=31 days. Longer returns `{"status":400,"error":"Bad Request"}` with no
+useful body. For backfills, page month-by-month.
+
+Response: `{ "data": [ ...records ] }`
+
+Each record:
+```json
+{
+  "id":         "hex",
+  "type":       "summary",
+  "start_time": "RFC3339",
+  "end_time":   "RFC3339",
+  "source":     { "type": "fitbit", "device": null },
+  "metrics": [
+    { "type": "steps", "value": 8432, "unit": "count", "origin": "device" }
+  ],
+  "user": { "uid": "your_id", "user_id": "validic_internal" }
+}
+```
+
+Common metric types by data type:
+- `summaries`    -> steps, active_duration, floors, calories_burned, distance
+- `workouts`     -> duration, distance, calories, steps, heart_rate_avg
+- `sleep`        -> duration, light_sleep_duration, deep_sleep_duration, rem_sleep_duration
+- `measurements` -> body_weight, heart_rate, systolic_blood_pressure, spo2, blood_glucose
+
+Latest record only: `GET .../users/{uid}/{type}/latest?token=`
+
+Empty `data: []` is normal on fresh accounts  --  `summaries` has the best seed coverage.
+
+---
+
+## Step 3: Stream Real-Time Data
+
+**Create a stream** (do this once; reuse the `id`):
+
+```
+POST https://streams.v2.validic.com/streams?token={ORG_TOKEN}
+Body: { "name": "my-stream", "start_date": "YYYY-MM-DD" }
+```
+
+Response:
+```json
+{ "id": "stream_id", "name": "my-stream", "created_at": "RFC3339" }
+```
+
+**Connect** (long-lived SSE  --  keep this open to receive events):
+
+```
+GET https://streams.v2.validic.com/streams/{stream_id}/connect?token={ORG_TOKEN}
+```
+
+Events you'll receive:
+```
+event: poke        -> heartbeat, discard it
+event: data        -> health record (same schema as Step 2)
+event: rule        -> { "rule_id": "...", "user_id": "...", "triggered_at": "..." }
+event: connection  -> { "user_id": "...", "source": "fitbit", "event": "connected"|"disconnected" }
+```
+
+**Replay past data** instead of waiting for live events:
+
+```
+GET https://streams.v2.validic.com/replay?token={ORG_TOKEN}&resources=summary,workout&date=YYYY-MM-DD
+```
+
+Same SSE format. `resources` is comma-separated type names. `date` is the start point.
+
+---
+
+## Errors & Edge Cases
+
+- All non-2xx errors: `{ "status": <code>, "error": "<phrase>" }`  --  no detail field
+- `GET /users/{uid}/apps?token=` -> 404 means no connected sources  --  treat as empty, not an error
+- `DELETE /streams/{id}?token=` -> requires 0 active connections first
+- Org-wide data (all users): `GET /organizations/{ORG_ID}/{type}?token=&start_date=&end_date=`
+
+---
+
+## Full Docs
+
+https://developer.validic.com

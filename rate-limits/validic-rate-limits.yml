@@ -4,8 +4,11 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Validic
 providerId: validic
 created: '2026-07-05'
-modified: '2026-07-05'
+modified: '2026-08-15'
+generated: '2026-08-15'
+method: searched
 reconciled: false
+limit_count: 5
 tags:
 - Health Data
 - Digital Health
@@ -21,12 +24,42 @@ description: >-
 notes: >-
   The 2,000 requests/token/hour figure is the documented default and may be
   adjusted per contract. Verify current limits with Validic during reconciliation.
+  NOTE the date-range ceiling is published TWICE with different numbers -
+  the API reference and the OpenAPI parameter descriptions both say "Max date
+  range is 30 days", while Validic's own agent guide says "Date range must be
+  <=31 days". Both are Validic's words; recorded as published rather than
+  reconciled. Page at 30 to be safe.
 sources:
 - https://developer.validic.com/docs/inform-rest-api
 - https://developer.validic.com/docs/connect-to-a-stream
 - https://developer.validic.com/docs/creating-a-stream
+- https://dashboard.validic.com/inform-quickstart.txt
 responseCodes:
   throttled: 429
+  throttled_documented: false
+  note: >-
+    429 is the conventional expectation and the code we record, but Validic
+    does NOT document a status code for rate-limit exhaustion anywhere, and no
+    operation in either published OpenAPI declares a 429 response.
+headers:
+  published: []
+  request_headers: []
+  response_headers: []
+  retry_after: false
+  gap: >-
+    This is the single biggest agent-readiness gap in Validic's runtime
+    signalling. The limit is published as a NUMBER IN PROSE and nothing else -
+    no `RateLimit-Limit` / `RateLimit-Remaining` / `RateLimit-Reset`, no
+    `X-RateLimit-*`, no `Retry-After`. A client cannot see how much budget it
+    has left; it can only count its own calls and guess where the hour boundary
+    falls. For an integration doing month-by-month backfills across a
+    population - exactly the access pattern the 30-day window forces - that is
+    the difference between pacing correctly and discovering the ceiling by
+    hitting it.
+  probe:
+  - url: https://api.v2.validic.com/
+    status: 403
+    observed_headers: none of RateLimit-*, X-RateLimit-*, Retry-After present on the unauthenticated response
 limits:
 - name: Inform REST API Requests
   scope: token

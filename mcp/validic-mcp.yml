@@ -1,0 +1,207 @@
+generated: '2026-08-15'
+method: derived
+source: >-
+  openapi/_original/validic-inform-data-resources-openapi.json +
+  openapi/_original/validic-streaming-resources-openapi.json
+status: candidate
+description: >-
+  Validic ships NO Model Context Protocol server. This file is a DERIVED
+  candidate tool surface computed from the two OpenAPI documents Validic
+  publishes - it is a proposal for what an Inform MCP server would expose, not
+  a thing an agent can connect to today. Nothing here is a claim about Validic.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: probed
+search:
+  result: no hosted or local MCP server found
+  probes:
+  - url: https://mcp.validic.com/mcp
+    method: POST tools/list
+    status: 000
+    detail: no DNS record
+  - url: https://api.v2.validic.com/mcp
+    method: POST tools/list
+    status: 403
+  - url: https://developer.validic.com/mcp
+    method: POST tools/list
+    status: 401
+  - url: https://dashboard.validic.com/mcp
+    method: POST tools/list
+    status: 403
+  - source: https://developer.validic.com/llms.txt
+    result: zero occurrences of "MCP" or "Model Context Protocol"
+  - source: https://validic.com/llms.txt
+    result: zero occurrences of "MCP" or "Model Context Protocol"
+  - source: https://github.com/validic
+    result: no MCP server in any of the 8 public repositories
+  - source: npm registry search "validic"
+    result: no results
+context: >-
+  Worth stating plainly, because the absence is not indifference: Validic has
+  invested more in agent-facing surface than most providers in this catalogue.
+  It publishes two llms.txt files, an agents.txt router, and two
+  agent-directed integration guides written in the second person for an AI
+  coding assistant. What it has not done is expose a protocol endpoint. The
+  gap between "documentation an agent can read" and "an API an agent can call
+  through a protocol" is exactly one MCP server wide.
+candidate_tools:
+- name: list_users
+  rest: get-all-user-profiles
+  operation: GET /organizations/{org_id}/users
+  category: users
+  consequence: read
+- name: get_user
+  rest: get-user-profile
+  operation: GET /organizations/{org_id}/users/{uid}
+  category: users
+  consequence: read
+- name: provision_user
+  rest: provision-a-user
+  operation: POST /organizations/{org_id}/users
+  category: users
+  consequence: write
+  note: Returns a ready-to-use marketplace.url for device connection.
+- name: update_user
+  rest: update-user
+  operation: PUT /organizations/{org_id}/users/{uid}
+  category: users
+  consequence: write
+- name: delete_user
+  rest: delete-user
+  operation: DELETE /organizations/{org_id}/users/{uid}
+  category: users
+  consequence: destructive
+  note: >-
+    Permanently removes user data access. Should require human confirmation in
+    any agent binding - see agentic-access/.
+- name: generate_marketplace_token
+  rest: generate-new-marketplace-token
+  operation: POST /organizations/{org_id}/users/{uid}/marketplace
+  category: marketplace
+  consequence: write
+- name: get_summaries
+  rest: summaries
+  operation: GET /organizations/{org_id}/users/{uid}/summaries
+  category: observations
+  consequence: read
+- name: get_measurements
+  rest: measurements
+  operation: GET /organizations/{org_id}/users/{uid}/measurements
+  category: observations
+  consequence: read
+- name: get_workouts
+  rest: workouts
+  operation: GET /organizations/{org_id}/users/{uid}/workouts
+  category: observations
+  consequence: read
+- name: get_sleep
+  rest: sleep
+  operation: GET /organizations/{org_id}/users/{uid}/sleep
+  category: observations
+  consequence: read
+- name: get_nutrition
+  rest: nutrition
+  operation: GET /organizations/{org_id}/users/{uid}/nutrition
+  category: observations
+  consequence: read
+- name: get_intraday
+  rest: intraday-2
+  operation: GET /organizations/{org_id}/users/{uid}/intraday
+  category: observations
+  consequence: read
+- name: get_cgm
+  rest: cgm
+  operation: GET /organizations/{org_id}/users/{uid}/cgm
+  category: observations
+  consequence: read
+- name: list_connection_events
+  rest: get-connection-events-by-orgid
+  operation: GET /organizations/{org_id}/connections
+  category: connections
+  consequence: read
+- name: list_org_sources
+  rest: get-sources-by-orgid
+  operation: GET /organizations/{org_id}/unified_sources
+  category: connections
+  consequence: read
+- name: list_user_sources
+  rest: get-sources-by-userid
+  operation: GET /organizations/{org_id}/users/{uid}/unified_sources
+  category: connections
+  consequence: read
+- name: activate_cellular_device
+  rest: get-connection-events-by-orgid-1
+  operation: PUT /organizations/{org_id}/devices/activate
+  category: devices
+  consequence: physical
+  note: >-
+    Activates a cellular data plan on a physical medical device. Real-world and
+    billable consequence; must not be an unattended agent action.
+- name: suspend_cellular_device
+  rest: get-connection-events-by-orgid-1-1
+  operation: PUT /organizations/{org_id}/devices/suspend
+  category: devices
+  consequence: physical
+  note: >-
+    Suspends a cellular data plan. Suspending a device in an active remote
+    monitoring programme stops patient data flowing - human-in-the-loop.
+- name: create_stream
+  rest: create-a-stream
+  operation: POST /streams
+  category: streaming
+  consequence: write
+- name: list_streams
+  rest: get-a-stream
+  operation: GET /streams
+  category: streaming
+  consequence: read
+- name: get_stream
+  rest: get-a-stream-by-id-1
+  operation: GET /streams/{id}
+  category: streaming
+  consequence: read
+- name: update_stream
+  rest: update-a-stream-1
+  operation: PUT /streams/{id}
+  category: streaming
+  consequence: write
+- name: delete_stream
+  rest: delete-a-stream-1
+  operation: DELETE /streams/{id}
+  category: streaming
+  consequence: destructive
+  note: Requires 0 active connections.
+excluded_from_candidate_surface:
+- operation: GET /streams/{id}/connect
+  reason: >-
+    A long-lived Server-Sent Events connection. MCP tool calls are
+    request/response; an open stream is not expressible as a tool and would
+    need to be modelled as an MCP resource subscription or handled outside the
+    protocol.
+- operation: GET /replay
+  reason: >-
+    Also SSE. Could be adapted to a bounded tool call that drains a date range
+    into a list, but that is a design decision, not a mechanical mapping, so it
+    is not asserted here.
+- operation: GET /measurements
+  reason: >-
+    Declared in the published spec as an operationId `cgm-reports` with a
+    421-byte stub, no parameters and no documented response. Too thin to bind.
+notes:
+  tool_count: 22
+  auth_model: >-
+    Any real server would carry the organization token, and the token is
+    org-scoped - it can read every user in the organization. Because those
+    users are patients, a Validic MCP server is a PHI-bearing surface and
+    scoping to a single uid per session is the only defensible default.
+  input_schemas: >-
+    Real inputSchemas are derivable from the published OpenAPI parameters, but
+    are not written out here - this is a candidate list, and writing schemas
+    would give it the appearance of a shipped server.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

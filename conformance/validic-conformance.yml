@@ -1,0 +1,217 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://validic.com/how-we-help/arpa-h-advocate/ +
+  https://dashboard.validic.com/validic-developer-signup.txt +
+  https://developer.validic.com/docs/inform-rest-api +
+  openapi/_original/validic-inform-data-resources-openapi.json
+description: >-
+  Standards and compliance posture for Validic. The regulatory story is strong
+  and first-party-attested (HIPAA, HITRUST, ISO 27001, FHIR R4 mapping); the
+  API-standards story is thin - the interface predates most of the
+  cross-cutting HTTP standards and adopts none of them.
+compliance_programs:
+- id: hipaa
+  name: HIPAA
+  conforms: true
+  evidence:
+  - source: https://validic.com/how-we-help/arpa-h-advocate/
+    quote: 'Compliance: HIPAA. HITRUST. ISO 27001. FHIR mapping via the Push Service.'
+    http_status: 200
+  - source: https://developer.validic.com/docs/inform-rest-api
+    quote: >-
+      Documents a 7-year retention obligation and instructs customers never to
+      put identifying information (SSN, name, phone, email) in the `uid`
+      because it travels in URLs.
+  note: >-
+    HIPAA shows up as concrete API design constraints, not only as a
+    marketing claim - the uid rule and the 1-year-API / 7-year-retention split
+    are both driven by it.
+- id: hitrust
+  name: HITRUST CSF
+  conforms: true
+  certification: certified
+  evidence:
+  - source: https://validic.com/how-we-help/arpa-h-advocate/
+    http_status: 200
+  - source: https://dashboard.validic.com/validic-developer-signup.txt
+    quote: HITRUST certified - ISO 27001 certified
+    http_status: 200
+  note: >-
+    Asserted on Validic's own site and repeated in its provider-published
+    developer agent guide. No certificate, scope statement, audit date or
+    assessor is published, so this is a claim, not evidence of currency.
+- id: iso-27001
+  name: ISO/IEC 27001
+  conforms: true
+  certification: certified
+  evidence:
+  - source: https://validic.com/how-we-help/arpa-h-advocate/
+    http_status: 200
+  - source: https://dashboard.validic.com/validic-developer-signup.txt
+    http_status: 200
+  note: >-
+    Same caveat - certification is claimed, the certificate is not published
+    and there is no trust portal to request it from.
+- id: soc2
+  name: SOC 2
+  conforms: unverified
+  evidence: []
+  note: >-
+    CORRECTION. A previous pass recorded SOC 2 for Validic from a keyword hit
+    on trust.validic.com. That host is an Atlassian Statuspage, and the phrase
+    appears inside an incident notice telling CUSTOMERS to gather their own
+    "SOC 2 or ISO 27002 documentation" for Google Health API CASA assessment.
+    It is not a Validic certification claim. No first-party SOC 2 assertion was
+    found anywhere on Validic's public surface.
+- id: fhir
+  name: HL7 FHIR R4
+  conforms: partial
+  evidence:
+  - source: https://validic.com/how-we-help/arpa-h-advocate/
+    quote: FHIR mapping via the Push Service.
+    http_status: 200
+  note: >-
+    FHIR is offered as an output MAPPING on the Push Service, not as the API's
+    native representation. Neither published OpenAPI contains a FHIR resource,
+    there is no /metadata CapabilityStatement, and no FHIR endpoint is
+    documented. Recorded as partial: a real capability, but not a FHIR API.
+- id: gdpr
+  name: GDPR
+  conforms: unverified
+  evidence: []
+  note: >-
+    A privacy policy is published (https://validic.com/privacy-policy/) but no
+    explicit GDPR/DPA statement or EU data-residency commitment was found on
+    the public surface.
+api_standards:
+- id: openapi
+  name: OpenAPI
+  conforms: true
+  version: 3.1.0
+  evidence:
+  - source: https://developer.validic.com/reference
+    detail: >-
+      Two OpenAPI 3.1.0 documents authored in ReadMe API Designer -
+      inform-data-resources.json (19 operations) and streaming-resources.json
+      (5 operations). Both are real, both declare servers[] matching Validic's
+      production hosts.
+  caveats:
+  - >-
+    ReadMe's own upload validator records warnings against this spec - path
+    keys embed the query string ("/organizations/{org_id}/users?token={token}")
+    and therefore declare path parameters that are not path parameters. The
+    spec is valid enough to render but not clean enough to generate a correct
+    client from.
+  - No components.schemas at all; every type is inlined.
+  - No tags on any operation.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence:
+  - detail: >-
+      The Inform API authenticates with a static organization token in a query
+      parameter. No authorization server, no /.well-known/oauth-authorization-server
+      (probed, 403/404 on every host), no scopes.
+  note: >-
+    OAuth IS used INSIDE the product - the hosted Marketplace runs the OAuth
+    dance against Fitbit, Garmin, Dexcom and the rest on the user's behalf -
+    but Validic's own API does not expose an OAuth surface to its customers.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence:
+  - detail: >-
+      /.well-known/openid-configuration probed on all 7 hosts - 403 or 404
+      everywhere. The developer signup API issues id_token / access_token /
+      refresh_token in a Cognito-shaped response but publishes no discovery
+      document.
+- id: rfc9457
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence:
+  - detail: >-
+      No application/problem+json anywhere. Four distinct ad-hoc error
+      envelopes are published instead. See errors/validic-problem-types.yml.
+- id: rfc8594
+  name: RFC 8594 Sunset HTTP Header
+  conforms: false
+  evidence:
+  - detail: >-
+      No Sunset or Deprecation header, and no operation marked deprecated,
+      despite two resource deprecations announced in prose in the changelog.
+- id: rfc9116
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence:
+  - detail: >-
+      Probed on all 7 hosts plus the /security.txt legacy location. The only
+      200 is Atlassian's platform document on trust.validic.com, whose own
+      Canonical field points at atlassian.com. Not Validic's.
+- id: rate-limit-headers
+  name: IETF RateLimit header fields
+  conforms: false
+  evidence:
+  - detail: >-
+      A 2,000/token/hour limit is documented in prose; no RateLimit-*,
+      X-RateLimit-* or Retry-After header is published.
+- id: idempotency-key
+  name: IETF Idempotency-Key header
+  conforms: false
+  evidence:
+  - detail: >-
+      No request idempotency mechanism. The only idempotency Validic documents
+      is the CONSUMER's duty to de-duplicate at-least-once stream deliveries.
+- id: json-api
+  name: 'JSON:API'
+  conforms: false
+  evidence:
+  - detail: >-
+      Responses use a bare `{ "data": [...] }` envelope which superficially
+      resembles JSON:API but carries none of its required structure - no
+      `type`/`id` member pair at the document level, no `links`, no
+      `relationships`, no application/vnd.api+json media type.
+- id: sse
+  name: Server-Sent Events (WHATWG/HTML)
+  conforms: true
+  evidence:
+  - source: https://developer.validic.com/docs/connect-to-a-stream
+    detail: >-
+      The Streaming API is genuine SSE - Content-Type: text/event-stream over
+      a long-lived HTTP connection, named events (data, rule, connection,
+      poke), 5-second heartbeat.
+  note: >-
+    No Last-Event-ID resumption is documented; replay is a separate endpoint
+    (/replay) parameterised by date rather than by event id.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence:
+  - detail: >-
+      Validic has two real event surfaces (SSE streaming and webhook push) and
+      publishes no AsyncAPI document for either. Searched developer.validic.com,
+      the GitHub org and /asyncapi.yaml on every host - nothing. The event
+      catalogue is captured in asyncapi/validic-events-webhooks.yml instead.
+- id: mcp
+  name: Model Context Protocol
+  conforms: false
+  evidence:
+  - detail: >-
+      No hosted MCP server. POST tools/list probed against mcp.validic.com (no
+      DNS), api.v2.validic.com/mcp (403), developer.validic.com/mcp (401),
+      dashboard.validic.com/mcp (403). The string "MCP" does not appear in
+      either llms.txt.
+  note: >-
+    Worth flagging that Validic has clearly thought about agents - it ships
+    agents.txt and two agent-directed integration guides - it just has not
+    shipped a protocol endpoint.
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence:
+  - detail: >-
+      /.well-known/agent-card.json and /.well-known/agent.json probed on all 7
+      hosts. No 200 with AgentCard shape. Nothing written to a2a/.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

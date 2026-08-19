@@ -1,0 +1,369 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Validic Inform Devices Observations & Data API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "token",
+      "value": "{{token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Observations & Data",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get CGM data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/cgm",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of source (device/app) types to filter by."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns time series continuous glucose monitoring (CGM) data for a user."
+        },
+        {
+          "info": {
+            "name": "Get intraday activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/intraday",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of source (device/app) types to filter by."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns intraday (time series) activity data such as steps and heart rate."
+        },
+        {
+          "info": {
+            "name": "Get measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/measurements",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of source (device/app) types to filter by."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns point-in-time health measurements such as weight, blood pressure, and blood glucose."
+        },
+        {
+          "info": {
+            "name": "Get nutrition",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/nutrition",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of source (device/app) types to filter by."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns daily nutritional intake summaries."
+        },
+        {
+          "info": {
+            "name": "Get sleep",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/sleep",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of source (device/app) types to filter by."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns sleep session data."
+        },
+        {
+          "info": {
+            "name": "Get daily summaries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/summaries",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of source (device/app) types to filter by."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns a summary of daily activity such as steps, calories, and heart rate."
+        },
+        {
+          "info": {
+            "name": "Get workouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/users/:uid/workouts",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "uid",
+                "value": "",
+                "type": "path",
+                "description": "The user identifier (customer-supplied uid or Validic id)."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of source (device/app) types to filter by."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns a list of workout events."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

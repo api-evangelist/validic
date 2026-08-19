@@ -1,0 +1,63 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Validic Inform Devices Marketplace & Connections API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "token",
+      "value": "{{token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Marketplace & Connections",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get connection events by organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.v2.validic.com/organizations/:org_id/connection_events",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "The Validic organization identifier."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (YYYY-MM-DD)."
+              },
+              {
+                "name": "token",
+                "value": "",
+                "type": "query",
+                "description": "Organization access token."
+              }
+            ]
+          },
+          "docs": "Returns the history of connection events for the organization. Each event is a Validic standard object with a type indicating a connection (create) or disconnection (delete) of a data source via the Marketplace. Path is modeled from the documented \"Get Connection Events By OrgID\" reference."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

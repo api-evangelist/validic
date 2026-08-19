@@ -1,0 +1,110 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://dashboard.validic.com/agents.txt +
+  https://dashboard.validic.com/inform-quickstart.txt +
+  https://dashboard.validic.com/validic-developer-signup.txt +
+  openapi/_original/validic-inform-data-resources-openapi.json +
+  openapi/_original/validic-streaming-resources-openapi.json
+description: >-
+  Packaged Agent Skills for the Validic Inform platform. These are unusually
+  well grounded: Validic publishes its OWN agent-directed integration guides
+  (an agents.txt router plus two second-person guides written for an AI coding
+  assistant), so the steps, warnings and payload shapes below come from
+  Validic's own words rather than from inference. Every operationId referenced
+  was verified against the two OpenAPI documents Validic publishes.
+provider_published_agent_docs:
+  router: https://dashboard.validic.com/agents.txt
+  guides:
+  - https://dashboard.validic.com/inform-quickstart.txt
+  - https://dashboard.validic.com/validic-developer-signup.txt
+  saved_verbatim:
+  - llms/validic-agents.txt
+  - llms/validic-inform-quickstart-agent-guide.txt
+  - llms/validic-developer-signup-agent-guide.txt
+  note: >-
+    Validic's router asks exactly one triage question - does the developer
+    already hold an ORG_ID and ORG_TOKEN? The skills below mirror that split.
+routing:
+  no_credentials_yet: validic-get-developer-credentials
+  has_credentials: validic-connect-a-user-and-read-health-data
+  bulk_or_realtime: validic-stream-real-time-health-events
+skills:
+- name: validic-get-developer-credentials
+  file: validic-get-developer-credentials.md
+  api: Validic Developer Signup API
+  base: https://api.dashboard.validic.com
+  summary: >-
+    Register, verify, log in and provision an organization on the free
+    developer tier. Carries Validic's own instruction to present the developer
+    terms and wait for explicit human acceptance before calling /auth/register.
+  operations: []
+  human_in_the_loop: true
+  note: >-
+    No published OpenAPI backs this API; the contract is transcribed from
+    Validic's agent guide, and operations[] is deliberately empty rather than
+    populated with invented operationIds.
+- name: validic-connect-a-user-and-read-health-data
+  file: validic-connect-a-user-and-read-health-data.md
+  api: Validic Inform API
+  base: https://api.v2.validic.com
+  summary: >-
+    Provision a user, route them through the hosted Marketplace to connect a
+    device, then read normalised observations. Covers the id-vs-uid trap, the
+    date-window ceiling and the four error envelopes.
+  operations:
+  - provision-a-user
+  - get-user-profile
+  - get-all-user-profiles
+  - generate-new-marketplace-token
+  - summaries
+  - measurements
+  - workouts
+  - sleep
+  - nutrition
+  - intraday-2
+  - cgm
+- name: validic-stream-real-time-health-events
+  file: validic-stream-real-time-health-events.md
+  api: Validic Streaming API
+  base: https://streams.v2.validic.com
+  summary: >-
+    Create a stream, consume the four SSE event types, de-duplicate
+    at-least-once delivery, survive the 422 rebalance hazard on reconnect, and
+    replay history by date.
+  operations:
+  - create-a-stream
+  - get-a-stream
+  - get-a-stream-by-id-1
+  - update-a-stream-1
+  - delete-a-stream-1
+cross_cutting_rules:
+  auth: '?token=ORG_TOKEN as a query parameter on Inform; Authorization: <id_token> on signup'
+  envelope: 'lists wrap in { "data": [...] }; single resources do not'
+  identifiers: 'use uid in URLs, never id - id produces a silent 404'
+  date_window: 30 days per request (agent guide says 31; page at 30)
+  rate_limit: 2,000 requests per token per hour, with no runtime header
+  idempotency: none on requests; consumer must de-duplicate stream redelivery
+  phi: uid must never contain identifying data
+  see:
+  - conventions/validic-conventions.yml
+  - errors/validic-problem-types.yml
+  - rate-limits/validic-rate-limits.yml
+  - agentic-access/validic-agentic-access.yml
+not_covered:
+  - operation: PUT /organizations/{org_id}/devices/activate
+    reason: >-
+      Activates a cellular data plan on a physical medical device - a
+      real-world, billable, patient-affecting action. Deliberately not packaged
+      as an agent skill.
+  - operation: PUT /organizations/{org_id}/devices/suspend
+    reason: >-
+      Suspending a device in an active remote monitoring programme stops
+      patient data flowing. Human decision, not an agent one.
+  - operation: DELETE /organizations/{org_id}/users/{uid}
+    reason: >-
+      Permanently removes user data access. Mentioned in the read/write skill
+      but not given a skill of its own.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

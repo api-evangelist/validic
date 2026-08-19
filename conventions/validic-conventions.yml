@@ -1,0 +1,189 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://developer.validic.com/docs/inform-rest-api +
+  https://developer.validic.com/docs/working-with-data +
+  https://developer.validic.com/docs/connect-to-a-stream +
+  https://dashboard.validic.com/inform-quickstart.txt +
+  openapi/_original/validic-inform-data-resources-openapi.json
+description: >-
+  Cross-cutting runtime semantics for the Validic Inform API - the rules an
+  agent needs that are not expressible in the OpenAPI itself. Validic's own
+  agent-facing guide states most of these explicitly, which is unusual and
+  makes this artifact largely SEARCHED rather than derived.
+auth:
+  style: api-key
+  mechanism: organization access token
+  transport: query parameter
+  parameter: token
+  header_supported: false
+  note: >-
+    Every request carries `?token=ORG_TOKEN`. Validic's own guide is blunt
+    about it - "(query param, not a header)" - and warns the token will appear
+    in URLs, logs and any copied curl command, so it must be handled like a
+    password. There is no Authorization-header alternative on the Inform API.
+    The separate developer signup API (api.dashboard.validic.com) uses a
+    bearer-style `Authorization: <id_token>` instead; the two are different
+    auth models on different hosts.
+  see: authentication/validic-authentication.yml
+idempotency:
+  supported: false
+  request_header: null
+  key_scope: null
+  retention: null
+  note: >-
+    Validic publishes NO request idempotency mechanism - no Idempotency-Key
+    header, no client-supplied request id, no documented safe-retry semantics
+    on POST /users or POST /streams. The only place the word appears in the
+    docs inverts the responsibility: "Validic streams operate from an at least
+    once message delivery expectation. It is up to the customer to ensure
+    idempotent handling of redelivered messages." That is consumer-side
+    de-duplication of DELIVERED EVENTS, not provider-side request
+    idempotency, so no `Idempotency` pointer is emitted in apis.yml.
+  consumer_side_dedupe:
+    applies_to: Streaming API SSE events
+    delivery_guarantee: at-least-once
+    dedupe_key: record `id` (and `checksum`) on each data event
+    trigger: >-
+      Redelivery is expected on reconnect - Validic replays rather than risk
+      loss across a client/server disconnect.
+pagination:
+  style: date-window
+  documented_page_params: false
+  params:
+  - name: start_date
+    in: query
+    format: YYYY-MM-DD
+    default: current UTC day
+  - name: end_date
+    in: query
+    format: YYYY-MM-DD
+    default: current UTC day
+  max_window_days: 30
+  max_window_days_alt: 31
+  window_conflict: >-
+    The API reference says "Max date range is 30 days" (repeated in the
+    parameter descriptions of the published OpenAPI); Validic's own agent guide
+    says "Date range must be <=31 days". An agent should page at 30 days to be
+    safe. Recorded as published rather than reconciled - both are Validic's
+    own words.
+  overflow_behaviour: >-
+    Exceeding the window returns `{"status":400,"error":"Bad Request"}` with no
+    useful body explaining why.
+  note: >-
+    There is no cursor, page, offset or limit parameter in either published
+    OpenAPI. Backfilling history means walking the date window month by month;
+    for whole-population retrieval Validic directs you to the Streaming API
+    instead of the REST API.
+  latest_shortcut: GET .../users/{uid}/{type}/latest?token= returns only the most recent record
+response_envelope:
+  list_shape: '{ "data": [ ... ] }'
+  single_shape: bare object, no envelope
+  warning: >-
+    "All list endpoints wrap results in { data: [...] } - always unwrap before
+    iterating." Single-resource GETs return the object directly, so the shape
+    changes between list and item on the same resource.
+  meta: >-
+    A `meta` object appears alongside `data` on the users list in the signup
+    guide's example, but it is not documented and not modelled in the OpenAPI.
+error_envelope:
+  documented_shapes:
+  - shape: '{ "errors": [ "human readable message" ] }'
+    where: REST API reference (developer.validic.com/reference/errors)
+  - shape: '{ "errors": { "field": [ "message" ] } }'
+    where: same page - field-scoped validation errors
+  - shape: '{ "status": 400, "error": "Bad Request" }'
+    where: >-
+      Validic's own agent guide, describing what non-2xx responses actually
+      look like - "no detail field". Also what the live api.v2.validic.com
+      gateway returns on an unauthenticated probe.
+  rfc9457: false
+  conflict: >-
+    Two different error envelopes are published for the same API. The docs
+    describe an `errors` array; the agent guide and the live gateway return a
+    `{status,error}` pair. A client must tolerate both.
+  see: errors/validic-problem-types.yml
+rate_limit_signalling:
+  documented_limit: 2000 requests per access token per hour
+  response_headers: []
+  status_on_exhaustion: null
+  retry_after: false
+  note: >-
+    The number is published but the runtime signal is not. No X-RateLimit-*,
+    no RateLimit-*, no Retry-After and no documented status code on
+    exhaustion. An agent cannot see how close it is to the ceiling; it can only
+    count its own calls.
+  see: rate-limits/validic-rate-limits.yml
+versioning:
+  in: hostname
+  current: v2
+  see: lifecycle/validic-lifecycle.yml
+request_id_tracing:
+  supported: false
+  note: >-
+    No request-id or correlation-id header is documented on requests or
+    responses. Data records carry their own `id`, `log_id` and `checksum`, but
+    those identify the RECORD, not the HTTP call.
+identifiers:
+  trap: >-
+    The single sharpest gotcha in this API, and Validic flags it itself. A user
+    object carries BOTH `id` (Validic-internal) and `uid` (the customer's own
+    identifier). Only `uid` may be used in URLs - "never put this in a URL -
+    silent 404, no helpful error".
+  uid_constraint: >-
+    The uid MUST NOT contain identifying data - no SSNs, names, phone numbers
+    or email addresses - because it travels in URLs and would break the
+    customer's HIPAA posture.
+  record_ids: hex string `id` per record, plus `log_id` and a `checksum`
+time_semantics:
+  format: ISO 8601 / RFC 3339 UTC timestamps
+  fields:
+  - start_time
+  - end_time
+  - created_at
+  - deleted_at
+  utc_offset: whole integer, seconds offset from UTC
+  offset_origin:
+    source: offset provided or calculated from the record source
+    profile: offset from the user profile linked to the record
+    user_defined: offset supplied by the user at marketplace authorization
+  note: >-
+    Timezone handling is the deep end of this API and Validic documents it
+    properly - every record carries both a UTC timestamp and the provenance of
+    its offset, so a consumer can tell a real local time from an inferred one.
+filtering:
+  source_filter:
+    param: source
+    style: comma-separated values
+    example: '?source=fitbit,garmin'
+    matches: the `source.type` value on the record
+    caution: >-
+      `source.type` is a moving vocabulary - it has been renamed twice
+      (nokia -> withings, under_armour -> mapmyfitness). See changelog/.
+field_expansion:
+  supported: false
+  sparse_fields: false
+  metadata_fields: false
+  note: No expand/fields/include parameters; responses are fixed-shape.
+event_delivery:
+  transports:
+  - Server-Sent Events (Streaming API, streams.v2.validic.com)
+  - webhook (Push Service)
+  heartbeat: 'event: poke every 5 seconds on an open SSE connection'
+  concurrency: up to 3 client connections per stream, 5 streams per customer
+  rebalance_hazard: >-
+    A disconnect followed by a fast reconnect can return HTTP 422 (max client
+    connections exceeded) while Validic rebalances the stream. The documented
+    remedy is several retries with back-off.
+  see: asyncapi/validic-events-webhooks.yml
+retry_guidance:
+  documented: partial
+  published:
+  - Retry with back-off on HTTP 422 from a stream reconnect (documented).
+  - Handle redelivered stream messages idempotently (documented).
+  absent:
+  - No documented retry guidance for 429 or 5xx on the REST API.
+  - No Retry-After header.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

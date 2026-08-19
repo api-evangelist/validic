@@ -1,16 +1,144 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/validic-openapi.yml
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://developer.validic.com/docs/requesting-access-to-data +
+  https://developer.validic.com/docs/inform-rest-api +
+  https://dashboard.validic.com/inform-quickstart.txt +
+  https://dashboard.validic.com/validic-developer-signup.txt +
+  openapi/_original/validic-inform-data-resources-openapi.json +
+  openapi/_original/validic-streaming-resources-openapi.json
+docs: https://developer.validic.com/docs/requesting-access-to-data
+description: >-
+  Validic runs TWO different authentication models on two different hosts, and
+  they must not be confused. The Inform data platform (REST + Streaming) uses a
+  static organization access token in a QUERY PARAMETER. The developer signup
+  API on api.dashboard.validic.com uses a bearer-style Authorization header
+  carrying a Cognito-shaped id_token. Nothing bridges them - the signup tokens
+  cannot call Inform, and the org token cannot call signup.
 summary:
   types:
   - apiKey
+  - http
   api_key_in:
   - query
+  oauth2: false
+  openid_connect: false
+  mutual_tls: false
+  scopes: false
+  mfa_on_api: false
 schemes:
 - name: tokenAuth
+  applies_to: Validic Inform API (REST + Streaming)
+  hosts:
+  - https://api.v2.validic.com
+  - https://streams.v2.validic.com
   type: apiKey
   in: query
   parameter: token
-  description: Organization access token passed as the `token` query parameter.
+  required_on: every request
+  rotation_documented: false
+  expiry: none documented (static, long-lived)
+  scope: >-
+    Bound to exactly one organization. Presenting it against a different
+    org_id returns 401 "Token is not authorized to access organization".
+    Within its organization it can read EVERY user - there is no per-user
+    credential and no way to narrow it.
+  obtained_from: https://dashboard.validic.com (Org ID and Org Token both shown)
+  description: >-
+    Organization access token passed as the `token` query parameter over HTTPS.
   sources:
-  - openapi/validic-openapi.yml
+  - openapi/_original/validic-inform-data-resources-openapi.json
+  - openapi/_original/validic-streaming-resources-openapi.json
+  - https://dashboard.validic.com/inform-quickstart.txt
+  spec_defect: >-
+    The published inform-data-resources spec declares this scheme with
+    `name: api_key`, but every documented request, every example and the live
+    API use `token`. A client generated straight from the spec would send the
+    wrong parameter name. Corrected in
+    overlays/validic-inform-data-resources-overlay.yaml, not in the original.
+  header_alternative: false
+  header_note: >-
+    There is no Authorization-header option. Validic's own agent guide spells
+    it out - "(query param, not a header)" - and warns the token will land in
+    URLs, server logs, browser history and any copied curl command, so it must
+    be handled like a password. This is the weakest part of the security
+    posture and it is structural, not incidental: a PHI-bearing credential
+    travelling in a query string cannot be kept out of intermediary logs.
+- name: signupBearer
+  applies_to: Validic Developer Signup API
+  hosts:
+  - https://api.dashboard.validic.com
+  type: http
+  scheme: bearer
+  in: header
+  parameter: Authorization
+  value: the `id_token` returned by POST /auth/login
+  token_set:
+  - id_token
+  - access_token
+  - refresh_token
+  identity_provider: >-
+    Not named by Validic, but the three-token response shape, the
+    register/verify/login sequence, the 6-digit email verification code and the
+    `user_sub` field are all AWS Cognito conventions. Recorded as an
+    observation, not a claim.
+  discovery_document: none
+  discovery_probe:
+  - url: https://api.dashboard.validic.com/.well-known/openid-configuration
+    status: 403
+  - url: https://dashboard.validic.com/.well-known/openid-configuration
+    status: 403
+  note: >-
+    OIDC-shaped tokens with no OIDC discovery document. An agent cannot
+    validate the id_token's signature or issuer from anything Validic
+    publishes.
+  sources:
+  - https://dashboard.validic.com/validic-developer-signup.txt
+  password_policy: >-
+    Minimum 8 characters including uppercase, lowercase, a number and a special
+    character.
+oauth:
+  customer_facing: false
+  internal: true
+  note: >-
+    OAuth 2.0 is central to how the product WORKS but is never exposed to the
+    customer. The hosted Marketplace runs the OAuth authorization dance against
+    Fitbit, Garmin, Dexcom, Withings, Oura and the rest on the end user's
+    behalf, and the resulting grants are what make data flow. Validic
+    absorbs all of that so its customer never handles a third-party token -
+    which is a genuine part of the value, and also why there is no scope
+    surface for us to catalogue. scopes/ is deliberately not written.
+end_user_consent:
+  mechanism: hosted Marketplace (per-user, per-source)
+  revocation: >-
+    The user disconnects a source from the same Marketplace surface. Validic
+    tells integrators to keep a route back to it for exactly this reason.
+  signal: >-
+    Connect and disconnect both emit a `connection` event on the Streaming API
+    and are retrievable over REST at /organizations/{org_id}/connections.
+  see: components/validic-components.yml
+phi_handling:
+  identifier_constraint: >-
+    The customer-defined `uid` travels in URLs and must therefore contain no
+    identifying data - no SSN, name, phone number or email address. Validic
+    states this as a HIPAA requirement on the integrator.
+  retention: 1 year retrievable via API; 7 years retained for compliance
+transport:
+  https_required: true
+  tls_observed:
+  - host: api.v2.validic.com
+    tls: TLSv1.2
+  - host: developer.validic.com
+    tls: TLSv1.3
+  - host: validic.com
+    tls: TLSv1.3
+  see: security/validic-domain-security.yml
+gaps:
+- No Authorization-header option on the data API; the credential is always in the URL.
+- No documented token rotation, expiry or revocation procedure for the organization token.
+- No per-user or per-scope credential - the org token reads every patient in the organization.
+- No OIDC discovery document despite issuing OIDC-shaped tokens on the signup API.
+- No mTLS option for a platform carrying PHI.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

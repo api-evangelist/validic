@@ -1,0 +1,174 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Validic Inform Data Resources API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-15'
+  method: generated
+  source: openapi/_original/validic-inform-data-resources-openapi.json
+  extends: openapi/_original/validic-inform-data-resources-openapi.json
+  note: >-
+    This overlay is NOT applied to the original. Validic's published spec is
+    kept verbatim; these are the enhancements API Evangelist would apply, kept
+    separately so the provider's contract and our additions never blur. The
+    spec as published has three structural problems - path keys that embed the
+    query string, no tags on any operation, and no components.schemas - and
+    ReadMe's own upload validator flags the first of them.
+  known_upstream_warnings:
+  - >-
+    "/paths/organizations/{org_id}/users?token={token}/post is missing path
+    parameter(s) for {token}" - reported by ReadMe on upload.
+  - >-
+    "/paths/organizations/{org_id}/unified_sources?token={token}/get is missing
+    path parameter(s) for {org_id} and {token}".
+  - >-
+    "/paths/organizations/{org_id}/users/{uid}/unified_sources?token={token}/get
+    is missing path parameter(s) for {org_id}, {uid}, and {token}".
+  not_expressible_as_overlay: >-
+    The `?token={token}` suffix baked into every path KEY cannot be corrected
+    by an overlay - JSONPath actions update values, not object keys. Fixing it
+    requires reissuing the spec from ReadMe API Designer with `token` declared
+    as a query parameter only. Recorded here so the defect is visible rather
+    than silently patched.
+actions:
+- target: $.info
+  description: Give the document a human title, a contact and a licence.
+  update:
+    title: Validic Inform Data Resources API
+    description: >-
+      Validic Inform REST resources - user provisioning, hosted Marketplace
+      tokens, connection and source history, cellular device activation, and
+      standardised health observations (summaries, measurements, workouts,
+      sleep, nutrition, intraday, CGM) from 700+ apps, wearables and in-home
+      medical devices. Authenticated with an organization access token passed
+      as the `token` query parameter over HTTPS.
+    contact:
+      name: Validic Developer Support
+      url: https://developer.validic.com
+    license:
+      name: Proprietary
+      url: https://www.validic.com/online-service-agreement-inform
+    termsOfService: https://validic.com/online-service-agreement-inform/
+- target: $.servers[0]
+  description: Describe the production REST host.
+  update:
+    description: Inform REST API (request/response over HTTPS)
+- target: $.components.securitySchemes.sec0
+  description: >-
+    Correct the security scheme name. The published spec declares the API key
+    parameter as `api_key`, but every documented request and every example uses
+    `token`. As published, a generated client would send the wrong parameter
+    name and get a 403.
+  update:
+    type: apiKey
+    in: query
+    name: token
+    description: >-
+      Organization access token supplied by Validic, passed as the `token`
+      query parameter. Treat it as a secret - it appears in URLs and logs.
+- target: $
+  description: Declare the resource tags the operations are grouped under in the docs.
+  update:
+    tags:
+    - name: Users
+      description: Provision and manage users within an organization.
+    - name: Marketplace & Connections
+      description: Hosted Marketplace tokens, connection events and source catalogues.
+    - name: Observations & Data
+      description: Standardised health observations recorded by connected apps and devices.
+    - name: Devices
+      description: Cellular-enabled health device activation and suspension.
+- target: $.paths[*][?(@.operationId == 'provision-a-user')]
+  description: Tag user provisioning and note the HIPAA constraint on uid.
+  update:
+    tags:
+    - Users
+- target: $.paths[*][?(@.operationId == 'get-all-user-profiles')]
+  update:
+    tags:
+    - Users
+- target: $.paths[*][?(@.operationId == 'get-user-profile')]
+  update:
+    tags:
+    - Users
+- target: $.paths[*][?(@.operationId == 'update-user')]
+  update:
+    tags:
+    - Users
+- target: $.paths[*][?(@.operationId == 'delete-user')]
+  update:
+    tags:
+    - Users
+- target: $.paths[*][?(@.operationId == 'generate-new-marketplace-token')]
+  update:
+    tags:
+    - Marketplace & Connections
+- target: $.paths[*][?(@.operationId == 'get-connection-events-by-orgid')]
+  update:
+    tags:
+    - Marketplace & Connections
+- target: $.paths[*][?(@.operationId == 'get-sources-by-orgid')]
+  update:
+    tags:
+    - Marketplace & Connections
+- target: $.paths[*][?(@.operationId == 'get-sources-by-userid')]
+  update:
+    tags:
+    - Marketplace & Connections
+- target: $.paths[*][?(@.operationId == 'summaries')]
+  update:
+    tags:
+    - Observations & Data
+- target: $.paths[*][?(@.operationId == 'measurements')]
+  update:
+    tags:
+    - Observations & Data
+- target: $.paths[*][?(@.operationId == 'workouts')]
+  update:
+    tags:
+    - Observations & Data
+- target: $.paths[*][?(@.operationId == 'sleep')]
+  update:
+    tags:
+    - Observations & Data
+- target: $.paths[*][?(@.operationId == 'nutrition')]
+  update:
+    tags:
+    - Observations & Data
+- target: $.paths[*][?(@.operationId == 'intraday-2')]
+  update:
+    tags:
+    - Observations & Data
+- target: $.paths[*][?(@.operationId == 'cgm')]
+  update:
+    tags:
+    - Observations & Data
+- target: $.paths[*][?(@.operationId == 'get-connection-events-by-orgid-1')]
+  description: >-
+    Rename the cellular ACTIVATE operation. The published spec gives it the
+    operationId `get-connection-events-by-orgid-1`, a copy-paste of an
+    unrelated read operation - so the two operations in this contract with a
+    physical-world consequence are the two with the most misleading names.
+  update:
+    operationId: activate-cellular-device
+    summary: Activate Cellular Device
+    tags:
+    - Devices
+- target: $.paths[*][?(@.operationId == 'get-connection-events-by-orgid-1-1')]
+  description: Rename the cellular SUSPEND operation for the same reason.
+  update:
+    operationId: suspend-cellular-device
+    summary: Suspend Cellular Device
+    tags:
+    - Devices
+- target: $.paths[*][?(@.operationId == 'cgm-reports')]
+  description: >-
+    Flag the stub. `GET /measurements` is declared with no parameters, no
+    documented response and a path that does not match the org-scoped
+    convention every other operation follows.
+  update:
+    tags:
+    - Observations & Data
+    x-api-evangelist-note: >-
+      Incomplete operation in the published spec - 421 bytes, no parameters, no
+      response schema. Not callable as documented.

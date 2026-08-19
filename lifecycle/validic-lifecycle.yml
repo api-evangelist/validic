@@ -1,0 +1,154 @@
+generated: '2026-08-15'
+method: searched
+source: https://trust.validic.com/ (Atlassian Statuspage) + https://developer.validic.com/
+description: >-
+  Versioning, status and deprecation posture for the Validic Inform platform.
+  Validic runs a public, component-level status page and versions its API in
+  the hostname (api.v2.validic.com / streams.v2.validic.com, ReadMe project
+  version 2.0). It publishes no written deprecation policy and sends no
+  Sunset/Deprecation headers, but it does track end-of-life of its own Mobile
+  SDK generations and of upstream device sources as status-page components and
+  scheduled maintenance events.
+versioning:
+  scheme: host-and-path major version
+  current_version: '2.0'
+  evidence:
+  - https://api.v2.validic.com
+  - https://streams.v2.validic.com
+  - ReadMe project version "2.0" (developer.validic.com, branch /branches/2.0/)
+  notes: >-
+    The major version is carried in the host label (`v2`), not in a header or a
+    URL path segment. The OpenAPI documents Validic publishes both declare
+    info.version "2.0". There is no documented version-negotiation header and
+    no dated/calendar versioning.
+  legacy:
+  - name: Inform Mobile SDK 1.x.x
+    status: legacy
+    evidence: >-
+      Status page carries "Legacy SDK (1.x.x)" as a component distinct from
+      "Inform SDK (2.x.x)", and the docs publish migration guides for iOS,
+      Android and Cordova ("Migrating from the v1.x.x SDK to the Inform SDK
+      (v2.x.x)").
+    migration_guide: https://developer.validic.com/docs/migrating-from-v1-to-inform-sdk
+  - name: helpdocs.validic.com
+    status: superseded
+    evidence: >-
+      Older documentation links inside the current docs still point at
+      helpdocs.validic.com; the live portal is developer.validic.com.
+status_page:
+  url: https://trust.validic.com
+  provider: Atlassian Statuspage
+  page_id: qtyl0stcbvvr
+  page_name: Validic Inform
+  machine_readable: true
+  time_zone: America/New_York
+  endpoints:
+  - url: https://trust.validic.com/api/v2/status.json
+    status: 200
+  - url: https://trust.validic.com/api/v2/summary.json
+    status: 200
+  - url: https://trust.validic.com/api/v2/components.json
+    status: 200
+  - url: https://trust.validic.com/history.rss
+    status: 200
+  observed:
+    fetched: '2026-08-15'
+    indicator: none
+    description: All Systems Operational
+    component_count: 43
+    oldest_component_created: '2017-11-09'
+  note: >-
+    The hostname is `trust.` but the page is a STATUS page, not a trust
+    centre - title "Validic Inform Status", DNS CNAME to
+    qtyl0stcbvvr.stspg-customer.com. Anything reading this host as a trust
+    centre will misattribute Atlassian's platform content to Validic; see
+    security/validic-trust-center.yml.
+  platform_components:
+  - Streaming API
+  - REST API
+  - Inform SDK (2.x.x)
+  - Legacy SDK (1.x.x)
+  - Inform Marketplace
+  - Push Service
+  - Support Portal
+  - API Documentation
+  - QuickSight Reporting
+  - Inform Infrastructure
+  source_components:
+  - Abbott
+  - AsthmaMD
+  - BodiMetrics
+  - BodyTrace
+  - Dario
+  - Dexcom
+  - Emfit
+  - Fitbit
+  - Foracare
+  - Garmin Connect
+  - Google Health
+  - Higi
+  - iHealth
+  - Keto-Mojo
+  - LifeScan/OneTouch
+  - MapMyFitness
+  - MyFitnessPal
+  - Omron
+  - Omron Japan
+  - Oura
+  - Philips
+  - Polar
+  - Runkeeper
+  - Smart Meter
+  - Stel
+  - Strava
+  - Tenovi
+  - TMC
+  - Whoop
+  - Withings
+  - Withings Pro
+  - YOO
+  - Zewa
+  note_on_sources: >-
+    Per-source components are the operationally useful part of this page: an
+    integration that depends on Fitbit or Dexcom data can watch that specific
+    upstream rather than the platform as a whole.
+deprecation:
+  policy_published: false
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  evidence: >-
+    No deprecation or sunset policy page exists on developer.validic.com; no
+    operation in either published OpenAPI carries `deprecated: true`; no
+    Sunset or Deprecation response header is documented anywhere in the API
+    reference.
+  practice: >-
+    Deprecation is communicated as prose in the release notes and as scheduled
+    maintenance on the status page rather than as a policy or a response
+    header. Two live examples at time of writing - the Fitbit source is being
+    migrated to the Google Health API with published key dates, and the
+    Under Armour source type was renamed to MapMyFitness (changelog, 2025-02-05).
+  gap: >-
+    An agent calling this API has no runtime signal that an operation, a metric
+    or a device source is going away. This is the highest-value operational
+    gap on the profile: the information exists, it just is not machine-readable.
+sla:
+  published: false
+  url: null
+  note: >-
+    No public SLA or uptime commitment. The free developer tier explicitly
+    disclaims one - "No-fee developer access - no SLA, no uptime guarantee"
+    (https://dashboard.validic.com/validic-developer-signup.txt). Production
+    SLAs are set in the enterprise agreement.
+support:
+  portal: https://help.validic.com/portal/2
+  release_notes: https://help.validic.com/space/VRN
+data_retention:
+  api_window: 1 year retrievable via the API
+  compliance_retention: 7 years retained for HIPAA compliance, available by support request
+  source: https://developer.validic.com/docs/inform-rest-api
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

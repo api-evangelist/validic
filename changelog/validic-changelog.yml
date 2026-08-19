@@ -1,0 +1,204 @@
+generated: '2026-08-15'
+method: searched
+source: https://developer.validic.com/changelog
+description: >-
+  Validic keeps a dated, typed changelog for the Inform API. It is machine
+  readable - the ReadMe project exposes it as JSON at
+  /validicinform/api-next/v2/changelogs, 20 entries with created_at, a change
+  `type` (added / fixed / none) and a Markdown body. IMPORTANT: this changelog
+  is FROZEN. Its most recent entry announces that, from 2025-04-15, all Inform
+  changes moved to the Release Notes space on the support site.
+scheme:
+  style: dated entries with a change type
+  types_used:
+  - added
+  - fixed
+  - none
+  machine_readable: true
+  feed: https://developer.validic.com/validicinform/api-next/v2/changelogs?page=1&per_page=10
+  human_url: https://developer.validic.com/changelog
+current_version: '2.0'
+status: superseded
+superseded_by:
+  url: https://help.validic.com/space/VRN
+  name: Product Updates & Release Notes
+  since: '2025-04-15'
+  http_status: 200
+  machine_readable: false
+  note: >-
+    The live release notes moved onto Validic's Refined-hosted support site
+    (help.validic.com -> custom.domain.refined.site). That page renders
+    client-side and returns an 8KB HTML shell to an unauthenticated fetch, so
+    the current release stream is NOT machine readable. The frozen ReadMe
+    changelog below is the last machine-readable change record Validic
+    published.
+entry_count: 20
+window:
+  oldest: '2019-02-01'
+  newest: '2025-04-11'
+entries:
+- date: '2025-04-11'
+  type: none
+  title: The Inform Changelog Has Moved!
+  breaking: false
+  highlight: >-
+    From 2025-04-15 all Inform releases and changes are posted to the Release
+    Notes space (help.validic.com/space/VRN) instead of this changelog. Prior
+    entries stay for posterity.
+  url: https://developer.validic.com/changelog/the-inform-changelog-has-moved
+- date: '2025-02-05'
+  type: fixed
+  title: Under Armour source type updated to MapMyFitness
+  breaking: true
+  highlight: >-
+    On 2025-02-27 the source type for Under Armour records changed to
+    MapMyFitness; completed 2025-03-03. A consumer matching on the literal
+    source type string had to change.
+  url: https://developer.validic.com/changelog/under-armour-source-type-updated-to-mapmyfitness
+- date: '2025-01-21'
+  type: added
+  title: 'Garmin: New Intraday & Summaries Metrics Added'
+  breaking: false
+  highlight: New Garmin-supplied metrics populate on intraday and summaries from 2025-01-15.
+  url: https://developer.validic.com/changelog/garmin-new-metrics-added-intraday-summaries
+- date: '2024-11-12'
+  type: added
+  title: CGM Model Added to Inform API
+  breaking: true
+  highlight: >-
+    New Dexcom CGM resource added on 2025-01-14, and the Dexcom Intraday
+    resource deprecated in the same change. This is the only resource-level
+    deprecation Validic has published.
+  url: https://developer.validic.com/changelog/cgm-model-added-to-inform-api
+- date: '2024-06-20'
+  type: added
+  title: 'Oura: New Metrics Added'
+  breaking: false
+  highlight: Oura metrics populate from 2024-06-11 where the user grants the required scopes.
+  url: https://developer.validic.com/changelog/oura-new-metrics-added
+- date: '2024-04-22'
+  type: added
+  title: Fitbit Temperature Metric added
+  breaking: false
+  highlight: Fitbit temperature metrics populate from 2024-04-22 subject to user scope grants.
+  url: https://developer.validic.com/changelog/fitbit-temperature-metrics-added
+- date: '2024-02-26'
+  type: added
+  title: Garmin Connect data metrics expanded
+  breaking: false
+  highlight: Additional Garmin metrics and activity-type mappings from 2024-03-04.
+  url: https://developer.validic.com/changelog/garmin-connect-data-metrics-expanded
+- date: '2023-07-19'
+  type: added
+  title: Dexcom G7 CGM meter support added
+  breaking: false
+  highlight: >-
+    Dexcom cloud integration expanded to CGM events and estimated glucose
+    values from the G7 meter.
+  url: https://developer.validic.com/changelog/dexcom-g7-cgm-meter-support-added
+- date: '2023-01-26'
+  type: added
+  title: Marketplace connection activity added to the Streaming API
+  breaking: false
+  highlight: >-
+    The Streaming API began emitting connect/disconnect events for API/cloud
+    sources connected through the Validic Marketplace - the origin of today's
+    `connection` SSE event type.
+  url: https://developer.validic.com/changelog/marketplace-connection-activity-added-to-the-streaming-api
+- date: '2022-09-06'
+  type: added
+  title: Fitbit Health Metrics added
+  breaking: false
+  highlight: Additional Fitbit health metrics from 2022-09-26 subject to user scope grants.
+  url: https://developer.validic.com/changelog/fitbit-health-metrics-added-1
+- date: '2022-08-05'
+  type: added
+  title: Fitbit workouts expanded to include device object
+  breaking: false
+  highlight: Fitbit workout records began reporting the Fitbit device name in the device object.
+  url: https://developer.validic.com/changelog/fitbit-workouts-expanded-to-include-device-object
+- date: '2021-06-25'
+  type: added
+  title: Added new "out_of_bounds_blood_glucose" tag to Inform API
+  breaking: false
+  highlight: New metric tag on blood_glucose metrics from 2021-06-29.
+  url: https://developer.validic.com/changelog/added-new-out_of_bounds_blood_glucose-tag-to-inform-api
+- date: '2021-06-14'
+  type: added
+  title: Additional activity metrics added to Inform API
+  breaking: false
+  highlight: New activity metrics from 2021-06-16.
+  url: https://developer.validic.com/changelog/additional-activity-metrics-added-to-inform-api
+- date: '2020-05-13'
+  type: added
+  title: Phone diagnostic information now returned in mobile records
+  breaking: false
+  highlight: >-
+    From 2020-05-14 records of source type apple_health, bluetooth and
+    google_fit return phone diagnostic information.
+  url: https://developer.validic.com/changelog/phone-diagnostic-information-now-returned-in-mobile-records
+- date: '2020-02-19'
+  type: fixed
+  title: Nokia source type updated to Withings
+  breaking: true
+  highlight: >-
+    From 2020-03-05 the source type for Withings records changed from "nokia"
+    to "withings" - the same class of source-type rename repeated in 2025 with
+    Under Armour / MapMyFitness.
+  url: https://developer.validic.com/changelog/nokia-source-type-updated-to-withings
+- date: '2020-02-19'
+  type: added
+  title: Additional weight metrics added to Inform API
+  breaking: false
+  highlight: New weight metrics from 2020-03-24.
+  url: https://developer.validic.com/changelog/additional-weight-metrics-added-to-inform-api
+- date: '2020-02-19'
+  type: added
+  title: Nutrition model expanded to include food object
+  breaking: false
+  highlight: Nutrition model expanded to carry the foods consumed within meal segments.
+  url: https://developer.validic.com/changelog/food-object-added-to-the-nutrition-resource
+- date: '2020-02-19'
+  type: added
+  title: Additional active duration metrics added to Inform API
+  breaking: false
+  highlight: >-
+    fairly_active_duration, lightly_active_duration and very_active_duration
+    added to the summary and workout resources.
+  url: https://developer.validic.com/changelog/additional-active-duration-metrics-added-to-inform-api
+- date: '2019-12-10'
+  type: added
+  title: Spirometry metrics added to Inform API
+  breaking: true
+  highlight: >-
+    Spirometry metrics added and the peak_flow metric deprecated and replaced
+    in the same change.
+  url: https://developer.validic.com/changelog/spirometry-metrics-added-to-inform-api
+- date: '2019-02-01'
+  type: added
+  title: '"last_processed_at" added to users endpoint'
+  breaking: false
+  highlight: >-
+    GET /organizations/:org_id/users/:user_id began returning the last
+    processed time for each connected source.
+  url: https://developer.validic.com/changelog/last_processed_at-added-to-users-endpoint
+observations:
+- >-
+  Change is overwhelmingly data-model change, not interface change. Nineteen of
+  twenty entries add or rename METRICS and SOURCE TYPES; not one changes a
+  path, a parameter or an auth mechanism. That is the signature of a
+  normalisation platform - the contract is stable and the vocabulary underneath
+  it moves.
+- >-
+  The two genuinely breaking changes are both source-type RENAMES (nokia ->
+  withings in 2020, under_armour -> mapmyfitness in 2025), and both were
+  announced with a date. Any consumer string-matching on `source.type` should
+  treat that field as a moving vocabulary.
+- >-
+  Validic gave notice ahead of each change, but delivered it only as prose.
+  Neither the deprecation of Dexcom Intraday nor the deprecation of peak_flow
+  is expressed anywhere machine readable - no `deprecated: true` in the
+  OpenAPI, no Sunset header. See lifecycle/validic-lifecycle.yml.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

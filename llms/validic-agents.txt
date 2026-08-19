@@ -1,0 +1,16 @@
+# Validic Developer Agent Guide
+
+You are here because a developer wants to build with Validic health data APIs.
+There are two paths. Pick the one that matches their situation.
+
+## Path A  --  Already have credentials
+The developer has a Validic account and knows their ORG_ID and ORG_TOKEN.
+Load: inform-quickstart.txt
+
+## Path B  --  Starting from scratch
+The developer does not have a Validic account yet. They need to register,
+verify their email, and provision an org before they can call any APIs.
+Load: validic-developer-signup.txt
+
+If you are unsure which applies, ask the developer whether they have an ORG_ID
+and ORG_TOKEN. That is the only question that matters.

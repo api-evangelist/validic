@@ -1,0 +1,216 @@
+generated: '2026-08-15'
+method: searched
+source: >-
+  https://developer.validic.com/docs/using-the-inform-mobile-sdk +
+  https://github.com/validic + registry metadata endpoints (rubygems.org,
+  repo.packagist.org, registry.npmjs.org, pypi.org)
+description: >-
+  Validic's client-library estate splits cleanly in two. The SUPPORTED half is
+  the Inform Mobile SDK (v2.x) for iOS, Android and Cordova - genuinely
+  first-party and actively maintained, but distributed from a CREDENTIALED
+  private Artifactory instance (validic.jfrog.io), so it has no public registry
+  metadata and no publicly readable version or release date. The PUBLIC half is
+  a set of server-side REST wrappers on GitHub, all of which the company has
+  archived; the newest public release is from 2016.
+summary:
+  official_packages: 8
+  publicly_installable: 3
+  publicly_installable_and_maintained: 0
+  gated_behind_credentials: 5
+  latest_public_release: '2016-12-19'
+  note: >-
+    Every server-side SDK a developer can install without contacting Validic
+    is archived and roughly a decade old, and predates the v2 Inform API those
+    developers are being pointed at. The maintained SDKs are mobile-only and
+    require an Artifactory account. There is no supported public
+    Python / Node / Ruby / PHP / Go / Java client for the current API.
+packages:
+- language: swift
+  registry: artifactory
+  name: ValidicMobile.ValidicCore
+  url: https://validic.jfrog.io/artifactory/api/swift/mobile-swift
+  install: swift package-registry set "https://validic.jfrog.io/artifactory/api/swift/mobile-swift" --scope=ValidicMobile --global
+  official: true
+  maintained: true
+  version: null
+  published: null
+  note: >-
+    Inform Native iOS SDK, Swift Package Manager, scope `ValidicMobile`.
+    Sibling frameworks in the same scope: ValidicBluetooth, ValidicHealthKit,
+    ValidicOCR, ValidicOneTouch. version/published are null because the
+    registry is a PRIVATE Artifactory Swift registry - it requires an
+    Artifactory username plus an encrypted password or identity token, so
+    there is no unauthenticated metadata endpoint to read a version from. A
+    developer cannot tell what version they will get either until they have
+    credentials.
+  docs: https://developer.validic.com/docs/native-ios-mobile-inform-sdk-installation
+  access: contact Validic Support for Artifactory credentials
+- language: swift
+  registry: manual
+  name: Validic iOS xcframeworks
+  url: https://developer.validic.com/docs/native-ios-mobile-inform-sdk-installation
+  install: extract .xcframework files from the Frameworks directory of the Validic release zip
+  official: true
+  maintained: true
+  version: null
+  published: null
+  note: >-
+    Manual distribution path for teams not using SPM. Unversioned in public -
+    the release zip is delivered through support, so there is no public
+    version or date to record.
+- language: kotlin
+  registry: artifactory
+  name: validicmobile-shared
+  url: https://validic.jfrog.io/artifactory/mobile-release/
+  install: 'maven { url "https://validic.jfrog.io/artifactory/mobile-release/" } // credentials required'
+  official: true
+  maintained: true
+  version: null
+  published: null
+  note: >-
+    Inform Native Android SDK, published to a credentialed Artifactory Maven
+    repository. The Shared module is always required; feature modules
+    (Health Connect, Bluetooth, VitalSnap/OCR, LifeScan) are added as needed.
+    Also distributed as .aar files inside a downloadable zip containing a local
+    Maven repository (`validic-repository`). Not on Maven Central - searched,
+    absent - so there is no public version metadata.
+  docs: https://developer.validic.com/docs/native-android-mobile-inform-sdk-installation
+  access: contact Validic Support for Artifactory credentials
+- language: javascript
+  registry: artifactory-npm
+  name: '@validic-mobile/cordova-inform-core'
+  url: https://validic.jfrog.io/artifactory/api/npm/mobile-npm-release/
+  install: npm install @validic-mobile/cordova-inform-core --save && cordova plugin add @validic-mobile/cordova-inform-core
+  official: true
+  maintained: true
+  version: null
+  published: null
+  note: >-
+    Cordova wrapper for the Inform SDK, on a PRIVATE Artifactory npm registry.
+    Requires an .npmrc entry scoping @validic-mobile to
+    validic.jfrog.io with an _authToken. Confirmed ABSENT from public npm -
+    https://registry.npmjs.org/@validic-mobile%2Fcordova-inform-core returns
+    404 - so version/published are unreadable without credentials. Sibling
+    plugins: @validic-mobile/cordova-inform-ble,
+    @validic-mobile/cordova-inform-healthkit.
+  docs: https://developer.validic.com/docs/cordova-mobile-inform-wrapper-installation
+  access: Artifactory npm token via validic.jfrog.io "Set Me Up"
+- language: typescript
+  registry: github
+  name: inform-quickstart
+  url: https://github.com/validic/inform-quickstart
+  install: git clone https://github.com/validic/inform-quickstart.git && npm run quickstart
+  official: true
+  maintained: true
+  version: null
+  published: '2026-08-12'
+  note: >-
+    Not a client library - two runnable sample apps (a Node/Express quickstart
+    and a Next.js API "explorer" workbench) that exercise the Inform API end to
+    end. MIT licensed, Node 22+, CI green. `published` is the last push date
+    from the GitHub API, not a release: the repo publishes no tags or releases,
+    so `version` is null. This is the ONLY actively maintained public code
+    Validic ships and it is the de-facto replacement for the archived SDKs.
+  license: MIT
+- language: ruby
+  registry: rubygems
+  name: validic
+  url: https://rubygems.org/gems/validic
+  install: gem install validic
+  official: true
+  maintained: false
+  archived: true
+  version: 0.6.1
+  published: '2016-12-19'
+  downloads: 66190
+  source_code: https://github.com/validic/validic
+  note: >-
+    First-party Ruby wrapper. Publicly installable, but last released
+    2016-12-19 and the GitHub repo was archived in 2018. Nine and a half years
+    stale against a v2 API - the strongest abandonment signal in this artifact,
+    and it still has 66k downloads pulling people toward it.
+- language: php
+  registry: packagist
+  name: validic/validic
+  url: https://packagist.org/packages/validic/validic
+  install: composer require validic/validic
+  official: true
+  maintained: false
+  archived: true
+  version: 1.0.0
+  published: '2016-10-24'
+  downloads: 468
+  source_code: https://github.com/Validic/ValidicPHP
+  note: >-
+    First-party PHP wrapper. One release ever (1.0.0, 2016-10-24); GitHub repo
+    archived 2018.
+- language: csharp
+  registry: github
+  name: ValidicCSharpWrapper
+  url: https://github.com/validic/ValidicCSharpWrapper
+  install: clone from source
+  official: true
+  maintained: false
+  archived: true
+  version: null
+  published: '2017-07-13'
+  note: >-
+    First-party C# wrapper for the Validic REST API. Never published to NuGet -
+    searched, absent - so `version` is null; `published` is the last push
+    recorded by the GitHub API. Archived.
+- language: javascript
+  registry: github
+  name: ValidicNodeJS
+  url: https://github.com/validic/ValidicNodeJS
+  install: clone from source
+  official: true
+  maintained: false
+  archived: true
+  version: null
+  published: '2015-07-25'
+  note: >-
+    First-party Node.js wrapper. Never published to npm - `npm` returns no
+    results for "validic" at all - so `version` is null. Archived.
+- language: python
+  registry: github
+  name: PythonValidic
+  url: https://github.com/validic/PythonValidic
+  install: clone from source
+  official: true
+  maintained: false
+  archived: true
+  version: null
+  published: '2014-08-11'
+  note: >-
+    First-party Python wrapper. Confirmed absent from PyPI (pypi.org/pypi/validic/json
+    -> 404), so `version` is null. Archived. Twelve years old.
+third_party:
+- language: ruby
+  registry: rubygems
+  name: validic_api
+  url: https://rubygems.org/gems/validic_api
+  version: 0.1.0
+  published: '2022-08-03'
+  official: false
+  note: >-
+    Community gem describing itself as an "API Wrapper for Validic API v2". No
+    homepage or source URI declared on the gem and no link from Validic's own
+    docs, so it is recorded as third-party, not first-party.
+registries_checked:
+- registry: npm
+  result: no packages found for "validic"; @validic-mobile scope is private (404 on public npm)
+- registry: pypi
+  result: 404 for "validic" and "pyvalidic"
+- registry: rubygems
+  result: 'validic 0.6.1 (first-party, archived); validic_api 0.1.0 (third-party)'
+- registry: packagist
+  result: validic/validic 1.0.0 (first-party, archived)
+- registry: maven-central
+  result: absent - Android SDK is on private Artifactory only
+- registry: nuget
+  result: absent - C# wrapper was never published
+- registry: pkg.go.dev
+  result: absent - no Go client
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
