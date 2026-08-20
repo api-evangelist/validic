@@ -200,6 +200,8 @@ apis:
   humanURL: https://developer.validic.com/docs/provision-and-managing-users
   baseURL: https://api.v2.validic.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -235,6 +237,9 @@ apis:
   humanURL: https://dashboard.validic.com/register
   baseURL: https://api.dashboard.validic.com
   tags:
+  - Sign Up
+  - Authentication
+  tags_raw:
   - Signup
   - Authentication
   properties:
