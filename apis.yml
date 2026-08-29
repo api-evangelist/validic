@@ -12,6 +12,18 @@ description: Validic is an enterprise health-data platform that connects patient
   real time through a Server-Sent Events Streaming API and a webhook Push Service.
   The platform is HITRUST-certified and HIPAA-compliant. Requests authenticate with
   an organization access token passed as the token query parameter over HTTPS.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
