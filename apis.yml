@@ -240,12 +240,12 @@ apis:
     url: https://help.validic.com/space/VCS/3374284801/Streaming+API+vs+Push+Service
 - aid: validic:validic-developer-signup-api
   name: Validic Developer Signup API
-  description: Self-serve registration, email verification, login and organization
-    provisioning for the free Validic developer tier. Returns the organization_id
-    and organization_token that every Inform API call requires. Documented by Validic
-    as machine-readable instructions written for an AI coding agent, including an
-    explicit instruction to present the developer terms and wait for human acceptance
-    before registering. No OpenAPI is published for this API.
+  description: >-
+    Self-serve registration, email verification, login and organization provisioning for the free Validic
+    developer tier. Returns the organization_id and organization_token that every Inform API call requires.
+    Documented by Validic as machine-readable instructions written for an AI coding agent, including an
+    explicit instruction to present the developer terms and wait for human acceptance before registering.
+    No OpenAPI is published for this API.
   humanURL: https://dashboard.validic.com/register
   baseURL: https://api.dashboard.validic.com
   tags:
@@ -265,6 +265,46 @@ apis:
     url: sandbox/validic-sandbox.yml
   - type: AgentSkill
     url: skills/validic-get-developer-credentials.md
+- aid: validic:validic-measurements-api
+  name: Validic Measurements API
+  description: The Measurements API from Validic — 1 operation(s) for measurements.
+  humanURL: https://developer.validic.com/docs/provision-and-managing-users
+  baseURL: https://api.v2.validic.com
+  tags:
+  - Measurements
+  properties:
+  - type: OpenAPI
+    url: openapi/validic-measurements-api-openapi.yml
+- aid: validic:validic-organizations-api
+  name: Validic Organizations API
+  description: The Organizations API from Validic — 15 operation(s) for organizations.
+  humanURL: https://developer.validic.com/docs/provision-and-managing-users
+  baseURL: https://api.v2.validic.com
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/validic-organizations-api-openapi.yml
+- aid: validic:validic-streams-api
+  name: Validic Streams API
+  description: The Streams API from Validic — 1 operation(s) for streams.
+  humanURL: https://developer.validic.com/docs/provision-and-managing-users
+  baseURL: https://api.v2.validic.com
+  tags:
+  - Streams
+  properties:
+  - type: OpenAPI
+    url: openapi/validic-streams-api-openapi.yml
+- aid: validic:validic-streams-token-token-api
+  name: Validic Streams?token={token} API
+  description: The Streams?token={token} API from Validic — 1 operation(s) for streams?token={token}.
+  humanURL: https://developer.validic.com/docs/provision-and-managing-users
+  baseURL: https://api.v2.validic.com
+  tags:
+  - Streams?token={token}
+  properties:
+  - type: OpenAPI
+    url: openapi/validic-streams-token-token-api-openapi.yml
 common:
 - type: AgenticAccess
   url: agentic-access/validic-agentic-access.yml

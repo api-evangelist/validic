@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Validic Inform Devices Streaming API
+  title: Validic Inform Streaming API
   version: '2.0'
   description: 'The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations. It provides user provisioning against an organization, a hosted Marketplace for connecting API/cloud and Bluetooth sources, retrieval of standardized health observations (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts), cellular device management, connection-event history, a Server-Sent Events (SSE) Streaming API, and a Push Service for webhook delivery. Requests are authenticated with an organization access token passed as the `token` query parameter over HTTPS.
 
@@ -159,18 +159,18 @@ paths:
           description: Replay initiated.
 components:
   parameters:
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
-      schema:
-        type: string
     StreamId:
       name: id
       in: path
       required: true
       description: The stream identifier returned when the stream was created.
+      schema:
+        type: string
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
       schema:
         type: string
   schemas:

@@ -1,0 +1,51 @@
+openapi: 3.2.0
+info:
+  title: inform-data-resources Measurements API
+  version: '2.0'
+servers:
+- url: https://api.v2.validic.com
+security:
+- sec0: []
+tags:
+- name: Measurements
+paths:
+  /measurements:
+    get:
+      summary: CGM Reports
+      description: ''
+      operationId: cgm-reports
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Measurements
+components:
+  securitySchemes:
+    sec0:
+      type: apiKey
+      in: query
+      name: api_key
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

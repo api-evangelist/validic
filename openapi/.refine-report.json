@@ -1,24 +1,65 @@
 {
   "provider": "validic",
   "sources": [
-    "validic-devices-api-openapi.yml",
-    "validic-marketplace-connections-api-openapi.yml",
-    "validic-observations-data-api-openapi.yml",
-    "validic-push-service-api-openapi.yml",
-    "validic-streaming-api-openapi.yml",
-    "validic-users-api-openapi.yml"
+    "_original/validic-inform-data-resources-openapi.json",
+    "_original/validic-openapi.yml",
+    "_original/validic-streaming-resources-openapi.json"
   ],
   "outputs": [
+    "validic-measurements-api-openapi.yml",
+    "validic-organizations-api-openapi.yml",
     "validic-devices-api-openapi.yml",
     "validic-marketplace-connections-api-openapi.yml",
     "validic-observations-data-api-openapi.yml",
     "validic-push-service-api-openapi.yml",
     "validic-streaming-api-openapi.yml",
-    "validic-users-api-openapi.yml"
+    "validic-users-api-openapi.yml",
+    "validic-streams-api-openapi.yml",
+    "validic-streams-token-token-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "validic-inform-data-resources-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "validic-inform-data-resources-openapi.json: tagged paths POST /organizations/{org_id}/users?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths PUT /organizations/{org_id}/users/{uid}?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths DELETE /organizations/{org_id}/users/{uid}?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths POST /organizations/{org_id}/users/{uid}/marketplace?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/summaries?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/measurements?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /measurements -> Measurements",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/nutrition?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/intraday?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/cgm?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/connections?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/unified_sources?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/unified_sources?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/workouts?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths GET /organizations/{org_id}/users/{uid}/sleep?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths PUT /organizations/{org_id}/devices/activate?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: tagged paths PUT /organizations/{org_id}/devices/suspend?token={token} -> Organizations",
+    "validic-inform-data-resources-openapi.json: declared missing tag: Measurements",
+    "validic-inform-data-resources-openapi.json: declared missing tag: Organizations",
+    "validic-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "validic-streaming-resources-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "validic-streaming-resources-openapi.json: tagged paths POST /streams?token={token} -> Streams?token={token}",
+    "validic-streaming-resources-openapi.json: tagged paths GET /streams?token={token} -> Streams?token={token}",
+    "validic-streaming-resources-openapi.json: tagged paths GET /streams/{id}?token={token} -> Streams",
+    "validic-streaming-resources-openapi.json: tagged paths PUT /streams/{id}?token={token} -> Streams",
+    "validic-streaming-resources-openapi.json: tagged paths DELETE /streams/{id}?token={token} -> Streams",
+    "validic-streaming-resources-openapi.json: declared missing tag: Streams",
+    "validic-streaming-resources-openapi.json: declared missing tag: Streams?token={token}"
+  ],
+  "skipped": [
+    "validic-devices-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-marketplace-connections-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-observations-data-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-push-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-streaming-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

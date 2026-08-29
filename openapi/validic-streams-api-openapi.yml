@@ -1,0 +1,393 @@
+openapi: 3.2.0
+info:
+  title: streaming-resources Streams API
+  version: '2.0'
+servers:
+- url: https://streams.v2.validic.com
+security:
+- sec0: []
+tags:
+- name: Streams
+paths:
+  /streams/{id}?token={token}:
+    get:
+      summary: Get a Stream By ID
+      description: Returns a list of customer streams for the authenticated customer. The streams are returned sorted by creation date with the most recent streams appearing first.m.
+      operationId: get-a-stream-by-id-1
+      parameters:
+      - name: token
+        in: path
+        description: Developer Key as supplied by Validic.
+        schema:
+          type: string
+        required: true
+      - name: id
+        in: path
+        description: ID of stream defined when the stream was created
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": \"5978dc880b11e700010ae88b\",\n    \"name\": \"test1223\",\n    \"resource_filter\": [],\n    \"start_date\": null,\n    \"group\": \"stream_5978dc880b11e700010ae88b\",\n    \"members\": 0,\n    \"created_at\": \"2017-07-26T18:16:40Z\",\n    \"updated_at\": \"2017-07-26T18:16:40Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 5978dc880b11e700010ae88b
+                  name:
+                    type: string
+                    example: test1223
+                  resource_filter:
+                    type: array
+                    items:
+                      type: object
+                      properties: {}
+                  start_date: {}
+                  group:
+                    type: string
+                    example: stream_5978dc880b11e700010ae88b
+                  members:
+                    type: integer
+                    example: 0
+                    default: 0
+                  created_at:
+                    type: string
+                    example: '2017-07-26T18:16:40Z'
+                  updated_at:
+                    type: string
+                    example: '2017-07-26T18:16:40Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      security: []
+      x-readme:
+        code-samples:
+        - language: curl
+          code: "curl --request GET \\\n  --url 'https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896'"
+        - language: ruby
+          code: 'require ''uri''
+
+            require ''net/http''
+
+
+            url = URI("https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+
+            request = Net::HTTP::Get.new(url)
+
+
+            response = http.request(request)
+
+            puts response.read_body'
+        - language: python
+          code: 'import requests
+
+
+            url = "https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b"
+
+
+            querystring = {"token":"6f46db36dd6543d2b82d91698fcd0896"}
+
+
+            response = requests.request("GET", url, params=querystring)
+
+
+            print(response.text)'
+        - language: php
+          code: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+        - language: go
+          code: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        samples-languages:
+        - curl
+        - ruby
+        - python
+        - php
+        - go
+      tags:
+      - Streams
+    put:
+      summary: Update a Stream
+      description: Returns a list of customer streams for the authenticated customer. The streams are returned sorted by creation date with the most recent streams appearing first.
+      operationId: update-a-stream-1
+      parameters:
+      - name: token
+        in: path
+        description: Developer Key as supplied by Validic.
+        schema:
+          type: string
+        required: true
+      - name: id
+        in: path
+        description: ID of stream defined when the stream was created
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: A unique name for the stream.
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": \"5978dc880b11e700010ae88b\",\n    \"name\": \"WilcoMemorial\",\n    \"resource_filter\": [],\n    \"start_date\": null,\n    \"group\": \"stream_5978dc880b11e700010ae88b\",\n    \"members\": 0,\n    \"created_at\": \"2017-07-26T18:16:40Z\",\n    \"updated_at\": \"2017-08-04T16:38:22Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 5978dc880b11e700010ae88b
+                  name:
+                    type: string
+                    example: WilcoMemorial
+                  resource_filter:
+                    type: array
+                    items:
+                      type: object
+                      properties: {}
+                  start_date: {}
+                  group:
+                    type: string
+                    example: stream_5978dc880b11e700010ae88b
+                  members:
+                    type: integer
+                    example: 0
+                    default: 0
+                  created_at:
+                    type: string
+                    example: '2017-07-26T18:16:40Z'
+                  updated_at:
+                    type: string
+                    example: '2017-08-04T16:38:22Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      security: []
+      x-readme:
+        code-samples:
+        - language: curl
+          code: "curl --request PUT \\\n  --url 'https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896' \\\n  --header 'content-type: application/json' \\\n  --data '{\n  \"name\": \"WilcoMemorial\"\n}"
+        - language: ruby
+          code: 'require ''uri''
+
+            require ''net/http''
+
+
+            url = URI("https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+
+            request = Net::HTTP::Put.new(url)
+
+            request["content-type"] = ''application/json''
+
+            request.body = "{\n  \"name\": \"WilcoMemorial\"\n}\n"
+
+
+            response = http.request(request)
+
+            puts response.read_body'
+        - language: python
+          code: 'import requests
+
+
+            url = "https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b"
+
+
+            querystring = {"token":"6f46db36dd6543d2b82d91698fcd0896"}
+
+
+            payload = "{\n  \"name\": \"WilcoMemorial\"\n}\n"
+
+            headers = {''content-type'': ''application/json''}
+
+
+            response = requests.request("PUT", url, data=payload, headers=headers, params=querystring)
+
+
+            print(response.text)'
+        - language: php
+          code: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\n  \\\"name\\\": \\\"WilcoMemorial\\\"\\n}\\n\",\n  CURLOPT_HTTPHEADER => array(\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+        - language: go
+          code: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896\"\n\n\tpayload := strings.NewReader(\"{\\n  \\\"name\\\": \\\"WilcoMemorial\\\"\\n}\\n\")\n\n\treq, _ := http.NewRequest(\"PUT\", url, payload)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        samples-languages:
+        - curl
+        - ruby
+        - python
+        - php
+        - go
+      tags:
+      - Streams
+    delete:
+      summary: Delete a Stream
+      description: Deletes a stream. Once a stream has been deleted it cannot be restored. You may create a new stream.
+      operationId: delete-a-stream-1
+      parameters:
+      - name: token
+        in: path
+        description: Developer Key as supplied by Validic.
+        schema:
+          type: string
+        required: true
+      - name: id
+        in: path
+        description: ID of stream defined when the stream was created
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": \"5978dc880b11e700010ae88b\",\n    \"name\": \"WilcoMemorial\",\n    \"resource_filter\": [],\n    \"start_date\": null,\n    \"group\": \"stream_5978dc880b11e700010ae88b\",\n    \"members\": 0,\n    \"created_at\": \"2017-07-26T18:16:40Z\",\n    \"updated_at\": \"2017-08-04T16:38:22Z\",\n    \"deleted_at\": \"2017-08-04T17:02:11Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 5978dc880b11e700010ae88b
+                  name:
+                    type: string
+                    example: WilcoMemorial
+                  resource_filter:
+                    type: array
+                    items:
+                      type: object
+                      properties: {}
+                  start_date: {}
+                  group:
+                    type: string
+                    example: stream_5978dc880b11e700010ae88b
+                  members:
+                    type: integer
+                    example: 0
+                    default: 0
+                  created_at:
+                    type: string
+                    example: '2017-07-26T18:16:40Z'
+                  updated_at:
+                    type: string
+                    example: '2017-08-04T16:38:22Z'
+                  deleted_at:
+                    type: string
+                    example: '2017-08-04T17:02:11Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      security: []
+      x-readme:
+        code-samples:
+        - language: curl
+          code: "curl --request DELETE \\\n  --url 'https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896' \\\n  --header 'content-type: application/json'"
+        - language: ruby
+          code: 'require ''uri''
+
+            require ''net/http''
+
+
+            url = URI("https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+
+            request = Net::HTTP::Delete.new(url)
+
+            request["content-type"] = ''application/json''
+
+
+            response = http.request(request)
+
+            puts response.read_body'
+        - language: python
+          code: 'import requests
+
+
+            url = "https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b"
+
+
+            querystring = {"token":"6f46db36dd6543d2b82d91698fcd0896"}
+
+
+            payload = ""
+
+            headers = {''content-type'': ''application/json''}
+
+
+            response = requests.request("DELETE", url, data=payload, headers=headers, params=querystring)
+
+
+            print(response.text)'
+        - language: php
+          code: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_POSTFIELDS => \"\",\n  CURLOPT_HTTPHEADER => array(\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+        - language: go
+          code: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://streams.v2.validic.com/streams/5978dc880b11e700010ae88b?token=6f46db36dd6543d2b82d91698fcd0896\"\n\n\treq, _ := http.NewRequest(\"DELETE\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        samples-languages:
+        - curl
+        - ruby
+        - python
+        - php
+        - go
+      tags:
+      - Streams
+components:
+  securitySchemes:
+    sec0:
+      type: apiKey
+      in: query
+      name: token
+      x-default: 6f46db36dd6543d2b82d91698fcd0896
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true

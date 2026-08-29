@@ -1,0 +1,316 @@
+openapi: 3.2.0
+info:
+  title: streaming-resources Streams?token={token} API
+  version: '2.0'
+servers:
+- url: https://streams.v2.validic.com
+security:
+- sec0: []
+tags:
+- name: Streams?token={token}
+paths:
+  /streams?token={token}:
+    post:
+      summary: Create a Stream
+      description: Before connecting to the Stream endpoint, a customer will need to create a stream. Validic allows a customer to create up to 5 streams (note that this number is the number of streams, not the number of client connections to the stream). Attempting to create more than the allowed number will result in an error. Please note that optional filters need to be assigned when creating a stream. This allows Validic to apply the filters for each client that connects to the created stream’s connect endpoint, ensuring all clients receive a consistent view of the stream.
+      operationId: create-a-stream
+      parameters:
+      - name: token
+        in: path
+        description: Developer Key as supplied by Validic.
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: A unique name for the stream.
+                start_date:
+                  type: string
+                resource_filter:
+                  type: string
+                  description: 'Optional resource filter that is applied which will only send events if the event resource type is in the provided list. Supported Values: measurement, nutrition, sleep, summary, workout'
+                event_type_filter:
+                  type: string
+                  description: Optional SSE filter that is applied which will only send events if the event type is in the provided list
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"id\": \"59778dSAMPLE70001565a2d\",\n    \"name\": \"customer_meaningful_name\",\n    \"resource_filter\": [\n        \"summary\",\n        \"measurement\"\n    ],\n    \"start_date\": \"2017-07-25\",\n    \"group\": \"stream_59778d430b11e70001565a2d\",\n    \"members\": 0,\n    \"created_at\": \"2017-07-25T18:26:11Z\",\n    \"updated_at\": \"2017-07-25T18:26:11Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 59778dSAMPLE70001565a2d
+                  name:
+                    type: string
+                    example: customer_meaningful_name
+                  resource_filter:
+                    type: array
+                    items:
+                      type: string
+                      example: summary
+                  start_date:
+                    type: string
+                    example: '2017-07-25'
+                  group:
+                    type: string
+                    example: stream_59778d430b11e70001565a2d
+                  members:
+                    type: integer
+                    example: 0
+                    default: 0
+                  created_at:
+                    type: string
+                    example: '2017-07-25T18:26:11Z'
+                  updated_at:
+                    type: string
+                    example: '2017-07-25T18:26:11Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      security: []
+      x-readme:
+        code-samples:
+        - language: text
+          code: "POST https://streams.v2.validic.com/streams?token=6f46db3SAMPLEb82d91698fcd0896\n\n{\n  \"name\": \"customer_meaningful_name\",\n  \"start_date\": \"2017-01-01\",\n  \"resource_filter\": [\"summary\", \"measurement\"]\n}"
+        - language: curl
+          code: "curl --request POST \\\n  --url 'https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896' \\\n  --header 'content-type: application/json' \\\n  --data '{\n  \"name\": \"customer-meaningful-name\",\n  \"start_date\": \"2017-07-25\",\n  \"resource_filter\": [\"summary\", \"measurement\"]\n}'"
+        - language: ruby
+          code: 'require ''uri''
+
+            require ''net/http''
+
+
+            url = URI("https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["content-type"] = ''application/json''
+
+            request.body = "{\n  \"name\": \"customer-meaningful-name\",\n  \"start_date\": \"2017-07-25\",\n  \"resource_filter\": [\"summary\", \"measurement\"]\n}"
+
+
+            response = http.request(request)
+
+            puts response.read_body'
+        - language: python
+          code: 'import requests
+
+
+            url = "https://streams.v2.validic.com/streams"
+
+
+            querystring = {"token":"6f46db36dd6543d2b82d91698fcd0896"}
+
+
+            payload = "{\n  \"name\": \"customer-meaningful-name\",\n  \"start_date\": \"2017-07-25\",\n  \"resource_filter\": [\"summary\", \"measurement\"]\n}"
+
+            headers = {''content-type'': ''application/json''}
+
+
+            response = requests.request("POST", url, data=payload, headers=headers, params=querystring)
+
+
+            print(response.text)'
+        - language: php
+          code: "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_URL => \"https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\n  \\\"name\\\": \\\"customer-meaningful-name\\\",\\n  \\\"start_date\\\": \\\"2017-07-25\\\",\\n  \\\"resource_filter\\\": [\\\"summary\\\", \\\"measurement\\\"]\\n}\",\n  CURLOPT_HTTPHEADER => array(\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+        - language: go
+          code: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896\"\n\n\tpayload := strings.NewReader(\"{\\n  \\\"name\\\": \\\"customer-meaningful-name\\\",\\n  \\\"start_date\\\": \\\"2017-07-25\\\",\\n  \\\"resource_filter\\\": [\\\"summary\\\", \\\"measurement\\\"]\\n}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        samples-languages:
+        - text
+        - curl
+        - ruby
+        - python
+        - php
+        - go
+      tags:
+      - Streams?token={token}
+    get:
+      summary: Get a Stream
+      description: Returns a list of customer streams for the authenticated customer. The streams are returned sorted by creation date with the most recent streams appearing first.m.
+      operationId: get-a-stream
+      parameters:
+      - name: token
+        in: path
+        description: Developer Key as supplied by Validic.
+        schema:
+          type: string
+        required: true
+      - name: q
+        in: query
+        description: 'Used to query for a customer''s streams. Ex: ?q=name=a'
+        schema:
+          type: string
+      - name: sort
+        in: query
+        description: 'Used to sort the results. Ex: ?sort[]=-created_at or ?sort[]=updated_at'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"streams\": [\n    {\n      \"id\": \"5978bfe10b11e70001748518\",\n      \"name\": \"RDWest\",\n      \"resource_filter\": [\n        \"summary\",\n        \"measurement\"\n      ],\n      \"start_date\": \"2017-07-25\",\n      \"group\": \"stream_5978bfe10b11e70001748518\",\n      \"members\": 0,\n      \"created_at\": \"2017-07-26T16:14:25Z\",\n      \"updated_at\": \"2017-07-26T16:14:25Z\"\n    },\n    {\n      \"id\": \"5978b73b0b11e70001645780\",\n      \"name\": \"hospital2\",\n      \"resource_filter\": [],\n      \"start_date\": null,\n      \"group\": \"stream_5978b73b0b11e70001645780\",\n      \"members\": 0,\n      \"created_at\": \"2017-07-26T15:37:31Z\",\n      \"updated_at\": \"2017-07-26T15:37:31Z\"\n    },\n    {\n      \"id\": \"59778d430b11e70001565a2d\",\n      \"name\": \"hospital1\",\n      \"resource_filter\": [\n        \"summary\",\n        \"measurement\"\n      ],\n      \"start_date\": \"2017-07-25\",\n      \"group\": \"stream_59778d430b11e70001565a2d\",\n      \"members\": 0,\n      \"created_at\": \"2017-07-25T18:26:11Z\",\n      \"updated_at\": \"2017-07-25T18:26:11Z\"\n    }\n  ],\n  \"meta\": {\n    \"offset\": 0,\n    \"limit\": 25,\n    \"total\": 3,\n    \"sort\": [\n      \"created_at DESC\"\n    ]\n  }\n}"
+              schema:
+                type: object
+                properties:
+                  streams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 5978bfe10b11e70001748518
+                        name:
+                          type: string
+                          example: RDWest
+                        resource_filter:
+                          type: array
+                          items:
+                            type: string
+                            example: summary
+                        start_date:
+                          type: string
+                          example: '2017-07-25'
+                        group:
+                          type: string
+                          example: stream_5978bfe10b11e70001748518
+                        members:
+                          type: integer
+                          example: 0
+                          default: 0
+                        created_at:
+                          type: string
+                          example: '2017-07-26T16:14:25Z'
+                        updated_at:
+                          type: string
+                          example: '2017-07-26T16:14:25Z'
+                  meta:
+                    type: object
+                    properties:
+                      offset:
+                        type: integer
+                        example: 0
+                        default: 0
+                      limit:
+                        type: integer
+                        example: 25
+                        default: 0
+                      total:
+                        type: integer
+                        example: 3
+                        default: 0
+                      sort:
+                        type: array
+                        items:
+                          type: string
+                          example: created_at DESC
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      security: []
+      x-readme:
+        code-samples:
+        - language: text
+          code: https://streams.v2.validic.com/streams?token=6f46db36ddSAMPLE2d91698fcd0896&q=&sort=created_at
+        - language: curl
+          code: "curl --request GET \\\n  --url 'https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896' \\\n  --header 'content-type: application/json'"
+        - language: ruby
+          code: 'require ''uri''
+
+            require ''net/http''
+
+
+            url = URI("https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = ''application/json''
+
+
+            response = http.request(request)
+
+            puts response.read_body'
+        - language: python
+          code: 'import requests
+
+
+            url = "https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896"
+
+
+            querystring = {"token":"6f46db36dd6543d2b82d91698fcd0896"}
+
+
+            headers = {''content-type'': ''application/json''}
+
+
+            response = requests.request("GET", url, headers=headers, params=querystring)
+
+
+            print(response.text)'
+        - language: php
+          code: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - language: go
+          code: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://streams.v2.validic.com/streams?token=6f46db36dd6543d2b82d91698fcd0896\"\n\n\tpayload := strings.NewReader(\"{\\n  \\\"name\\\": \\\"customer-meaningful-name\\\",\\n  \\\"start_date\\\": \\\"2017-07-25\\\",\\n  \\\"resource_filter\\\": [\\\"summary\\\", \\\"measurement\\\"]\\n}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        samples-languages:
+        - text
+        - curl
+        - ruby
+        - python
+        - php
+        - go
+      tags:
+      - Streams?token={token}
+components:
+  securitySchemes:
+    sec0:
+      type: apiKey
+      in: query
+      name: token
+      x-default: 6f46db36dd6543d2b82d91698fcd0896
+x-readme:
+  headers: []
+  explorer-enabled: true
+  proxy-enabled: true
+x-readme-fauxas: true
