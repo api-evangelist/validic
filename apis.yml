@@ -281,6 +281,8 @@ apis:
   humanURL: https://developer.validic.com/docs/provision-and-managing-users
   baseURL: https://api.v2.validic.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -300,7 +302,8 @@ apis:
   description: The Streams?token={token} API from Validic — 1 operation(s) for streams?token={token}.
   humanURL: https://developer.validic.com/docs/provision-and-managing-users
   baseURL: https://api.v2.validic.com
-  tags:
+  tags: []
+  tags_raw:
   - Streams?token={token}
   properties:
   - type: OpenAPI
