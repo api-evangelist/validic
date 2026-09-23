@@ -52,14 +52,19 @@
     "validic-streaming-resources-openapi.json: tagged paths PUT /streams/{id}?token={token} -> Streams",
     "validic-streaming-resources-openapi.json: tagged paths DELETE /streams/{id}?token={token} -> Streams",
     "validic-streaming-resources-openapi.json: declared missing tag: Streams",
-    "validic-streaming-resources-openapi.json: declared missing tag: Streams?token={token}"
+    "validic-streaming-resources-openapi.json: declared missing tag: Streams?token={token}",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "validic-devices-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "validic-marketplace-connections-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-measurements-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "validic-observations-data-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "validic-push-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "validic-streaming-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-streams-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "validic-streams-token-token-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "validic-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

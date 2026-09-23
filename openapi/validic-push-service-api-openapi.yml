@@ -2,10 +2,7 @@ openapi: 3.2.0
 info:
   title: Validic Inform Push Service API
   version: '2.0'
-  description: 'The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations. It provides user provisioning against an organization, a hosted Marketplace for connecting API/cloud and Bluetooth sources, retrieval of standardized health observations (CGM, intraday, measurements, nutrition, sleep, daily summaries, and workouts), cellular device management, connection-event history, a Server-Sent Events (SSE) Streaming API, and a Push Service for webhook delivery. Requests are authenticated with an organization access token passed as the `token` query parameter over HTTPS.
-
-
-    Transport note: the Inform REST resources are request/response REST over HTTPS on `https://api.v2.validic.com`. The Streaming API is a long-lived HTTP connection delivering Server-Sent Events (`Content-Type: text/event-stream`) on `https://streams.v2.validic.com`. Validic does not document a public WebSocket API.'
+  description: The Validic Inform API connects patient-recorded data from digital health applications, devices, and wearables to healthcare organizations.
   contact:
     name: Validic Developer Support
     url: https://developer.validic.com
@@ -55,18 +52,18 @@ paths:
           description: Push subscription created.
 components:
   parameters:
-    OrgId:
-      name: org_id
-      in: path
-      required: true
-      description: The Validic organization identifier.
-      schema:
-        type: string
     Token:
       name: token
       in: query
       required: true
       description: Organization access token.
+      schema:
+        type: string
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
       schema:
         type: string
   securitySchemes:

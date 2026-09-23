@@ -207,7 +207,10 @@ paths:
       - Organizations
     get:
       summary: Get All Users
-      description: "Returns all end users and includes profiles (minus connected devices) based on the organization ID. \n\nGET /organizations/:org_id/users?token=:token"
+      description: 'Returns all end users and includes profiles (minus connected devices) based on the organization ID.
+
+
+        GET /organizations/:org_id/users?token=:token'
       operationId: get-all-user-profiles
       parameters:
       - name: org_id
@@ -362,7 +365,10 @@ paths:
   /organizations/{org_id}/users/{uid}?token={token}:
     get:
       summary: Get User Profile
-      description: "Returns an end users profile and connected devices, based on the uid of the user for the organization. \n\nGET /organizations/:org_id/users/:uid?token=:token"
+      description: 'Returns an end users profile and connected devices, based on the uid of the user for the organization.
+
+
+        GET /organizations/:org_id/users/:uid?token=:token'
       operationId: get-user-profile
       parameters:
       - name: org_id
@@ -715,7 +721,10 @@ paths:
       - Organizations
     delete:
       summary: Delete User
-      description: "Deletes a user. Deleting a user will permanently remove user data access. Per HIPAA guidelines, data is retained for 7 years and is available upon special request. \n\nDELETE /organizations/:org_id/users/:uid?token=:token"
+      description: 'Deletes a user. Deleting a user will permanently remove user data access. Per HIPAA guidelines, data is retained for 7 years and is available upon special request.
+
+
+        DELETE /organizations/:org_id/users/:uid?token=:token'
       operationId: delete-user
       parameters:
       - name: org_id
@@ -1352,7 +1361,10 @@ paths:
   /organizations/{org_id}/users/{uid}/measurements?token={token}:
     get:
       summary: Measurements
-      description: "Returns a list of measurements for a given user \n\nGET /organizations/:org_id/users/:uid/measurements"
+      description: 'Returns a list of measurements for a given user
+
+
+        GET /organizations/:org_id/users/:uid/measurements'
       operationId: measurements
       parameters:
       - name: org_id
@@ -2830,7 +2842,10 @@ paths:
   /organizations/{org_id}/users/{uid}/workouts?token={token}:
     get:
       summary: Workouts
-      description: "Returns a list of workouts for a given user. \n\nGET /organizations/:org_id/users/:uid/workouts"
+      description: 'Returns a list of workouts for a given user.
+
+
+        GET /organizations/:org_id/users/:uid/workouts'
       operationId: workouts
       parameters:
       - name: org_id
