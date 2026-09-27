@@ -184,6 +184,21 @@ components:
       description: Comma-separated list of source (device/app) types to filter by.
       schema:
         type: string
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+    EndDate:
+      name: end_date
+      in: query
+      required: false
+      description: End of the date range (YYYY-MM-DD).
+      schema:
+        type: string
+        format: date
     Uid:
       name: uid
       in: path
@@ -196,21 +211,6 @@ components:
       in: query
       required: true
       description: Organization access token.
-      schema:
-        type: string
-    EndDate:
-      name: end_date
-      in: query
-      required: false
-      description: End of the date range (YYYY-MM-DD).
-      schema:
-        type: string
-        format: date
-    OrgId:
-      name: org_id
-      in: path
-      required: true
-      description: The Validic organization identifier.
       schema:
         type: string
   schemas:

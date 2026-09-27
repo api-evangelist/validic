@@ -297,17 +297,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/validic-streams-api-openapi.yml
-- aid: validic:validic-streams-token-token-api
-  name: Validic Streams?token={token} API
-  description: The Streams?token={token} API from Validic — 1 operation(s) for streams?token={token}.
-  humanURL: https://developer.validic.com/docs/provision-and-managing-users
-  baseURL: https://api.v2.validic.com
-  tags: []
-  tags_raw:
-  - Streams?token={token}
-  properties:
-  - type: OpenAPI
-    url: openapi/validic-streams-token-token-api-openapi.yml
 common:
 - type: AgenticAccess
   url: agentic-access/validic-agentic-access.yml

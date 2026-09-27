@@ -14,10 +14,11 @@
     "validic-push-service-api-openapi.yml",
     "validic-streaming-api-openapi.yml",
     "validic-users-api-openapi.yml",
-    "validic-streams-api-openapi.yml",
-    "validic-streams-token-token-api-openapi.yml"
+    "validic-streams-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
   "notes": [
@@ -46,14 +47,14 @@
     "validic-inform-data-resources-openapi.json: declared missing tag: Organizations",
     "validic-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "validic-streaming-resources-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "validic-streaming-resources-openapi.json: tagged paths POST /streams?token={token} -> Streams?token={token}",
-    "validic-streaming-resources-openapi.json: tagged paths GET /streams?token={token} -> Streams?token={token}",
+    "validic-streaming-resources-openapi.json: tagged paths POST /streams?token={token} -> Streams",
+    "validic-streaming-resources-openapi.json: tagged paths GET /streams?token={token} -> Streams",
     "validic-streaming-resources-openapi.json: tagged paths GET /streams/{id}?token={token} -> Streams",
     "validic-streaming-resources-openapi.json: tagged paths PUT /streams/{id}?token={token} -> Streams",
     "validic-streaming-resources-openapi.json: tagged paths DELETE /streams/{id}?token={token} -> Streams",
     "validic-streaming-resources-openapi.json: declared missing tag: Streams",
-    "validic-streaming-resources-openapi.json: declared missing tag: Streams?token={token}",
-    "apis.yml register: already-registered"
+    "superseded outputs removed: validic-streams-token-token-api-openapi.yml",
+    "apis.yml register: written (+0 apis, 10 total)"
   ],
   "skipped": [
     "validic-devices-api-openapi.yml: previously refined output, superseded by openapi/_original/",

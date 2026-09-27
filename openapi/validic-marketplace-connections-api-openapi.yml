@@ -45,37 +45,6 @@ paths:
                     items:
                       $ref: '#/components/schemas/ConnectionEvent'
 components:
-  parameters:
-    StartDate:
-      name: start_date
-      in: query
-      required: false
-      description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
-      schema:
-        type: string
-        format: date
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
-      schema:
-        type: string
-    EndDate:
-      name: end_date
-      in: query
-      required: false
-      description: End of the date range (YYYY-MM-DD).
-      schema:
-        type: string
-        format: date
-    OrgId:
-      name: org_id
-      in: path
-      required: true
-      description: The Validic organization identifier.
-      schema:
-        type: string
   schemas:
     ConnectionEvent:
       type: object
@@ -92,6 +61,37 @@ components:
         occurred_at:
           type: string
           format: date-time
+  parameters:
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+    EndDate:
+      name: end_date
+      in: query
+      required: false
+      description: End of the date range (YYYY-MM-DD).
+      schema:
+        type: string
+        format: date
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
+    StartDate:
+      name: start_date
+      in: query
+      required: false
+      description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
+      schema:
+        type: string
+        format: date
   securitySchemes:
     tokenAuth:
       type: apiKey

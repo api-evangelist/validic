@@ -155,6 +155,21 @@ paths:
         '200':
           description: Replay initiated.
 components:
+  parameters:
+    StreamId:
+      name: id
+      in: path
+      required: true
+      description: The stream identifier returned when the stream was created.
+      schema:
+        type: string
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
   schemas:
     Stream:
       type: object
@@ -173,21 +188,6 @@ components:
         created_at:
           type: string
           format: date-time
-  parameters:
-    StreamId:
-      name: id
-      in: path
-      required: true
-      description: The stream identifier returned when the stream was created.
-      schema:
-        type: string
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
-      schema:
-        type: string
   securitySchemes:
     tokenAuth:
       type: apiKey
