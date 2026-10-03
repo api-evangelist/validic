@@ -69,11 +69,11 @@ components:
       description: The Validic organization identifier.
       schema:
         type: string
-    EndDate:
-      name: end_date
+    StartDate:
+      name: start_date
       in: query
       required: false
-      description: End of the date range (YYYY-MM-DD).
+      description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
       schema:
         type: string
         format: date
@@ -84,11 +84,11 @@ components:
       description: Organization access token.
       schema:
         type: string
-    StartDate:
-      name: start_date
+    EndDate:
+      name: end_date
       in: query
       required: false
-      description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
+      description: End of the date range (YYYY-MM-DD).
       schema:
         type: string
         format: date

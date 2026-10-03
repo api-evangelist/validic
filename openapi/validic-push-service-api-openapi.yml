@@ -52,18 +52,18 @@ paths:
           description: Push subscription created.
 components:
   parameters:
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
-      schema:
-        type: string
     OrgId:
       name: org_id
       in: path
       required: true
       description: The Validic organization identifier.
+      schema:
+        type: string
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
       schema:
         type: string
   securitySchemes:

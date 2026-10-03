@@ -168,7 +168,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/ObservationList'
 components:
+  schemas:
+    ObservationList:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            status:
+              type: integer
+            message:
+              type: string
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
   parameters:
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
     StartDate:
       name: start_date
       in: query
@@ -177,18 +200,18 @@ components:
       schema:
         type: string
         format: date
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
     Source:
       name: source
       in: query
       required: false
       description: Comma-separated list of source (device/app) types to filter by.
-      schema:
-        type: string
-    OrgId:
-      name: org_id
-      in: path
-      required: true
-      description: The Validic organization identifier.
       schema:
         type: string
     EndDate:
@@ -206,29 +229,6 @@ components:
       description: The user identifier (customer-supplied uid or Validic id).
       schema:
         type: string
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
-      schema:
-        type: string
-  schemas:
-    ObservationList:
-      type: object
-      properties:
-        summary:
-          type: object
-          properties:
-            status:
-              type: integer
-            message:
-              type: string
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
   securitySchemes:
     tokenAuth:
       type: apiKey
