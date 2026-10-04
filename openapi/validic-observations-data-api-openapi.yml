@@ -168,28 +168,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ObservationList'
 components:
-  schemas:
-    ObservationList:
-      type: object
-      properties:
-        summary:
-          type: object
-          properties:
-            status:
-              type: integer
-            message:
-              type: string
-        data:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
   parameters:
-    OrgId:
-      name: org_id
+    Uid:
+      name: uid
       in: path
       required: true
-      description: The Validic organization identifier.
+      description: The user identifier (customer-supplied uid or Validic id).
       schema:
         type: string
     StartDate:
@@ -197,6 +181,21 @@ components:
       in: query
       required: false
       description: Start of the date range (YYYY-MM-DD). Maximum range is 30 days per request.
+      schema:
+        type: string
+        format: date
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+    EndDate:
+      name: end_date
+      in: query
+      required: false
+      description: End of the date range (YYYY-MM-DD).
       schema:
         type: string
         format: date
@@ -214,21 +213,22 @@ components:
       description: Comma-separated list of source (device/app) types to filter by.
       schema:
         type: string
-    EndDate:
-      name: end_date
-      in: query
-      required: false
-      description: End of the date range (YYYY-MM-DD).
-      schema:
-        type: string
-        format: date
-    Uid:
-      name: uid
-      in: path
-      required: true
-      description: The user identifier (customer-supplied uid or Validic id).
-      schema:
-        type: string
+  schemas:
+    ObservationList:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            status:
+              type: integer
+            message:
+              type: string
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
   securitySchemes:
     tokenAuth:
       type: apiKey

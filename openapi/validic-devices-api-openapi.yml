@@ -67,18 +67,18 @@ components:
       description: The Validic organization identifier.
       schema:
         type: string
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
-      schema:
-        type: string
     Uid:
       name: uid
       in: path
       required: true
       description: The user identifier (customer-supplied uid or Validic id).
+      schema:
+        type: string
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
       schema:
         type: string
   securitySchemes:
