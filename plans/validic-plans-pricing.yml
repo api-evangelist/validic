@@ -153,3 +153,45 @@ plans:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - seat
+  - subscription
+  units:
+  - seat
+  plans:
+  - name: Developer (Free)
+    access: free
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - unbounded
+  - name: Inform Platform (Enterprise Contract)
+    access: enterprise
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Streaming & Push Delivery
+    access: enterprise
+    model: free
+    model_how: derived
+    units:
+    - other
+    periods:
+    - unbounded
+  - name: Cellular RPM Devices
+    access: enterprise
+    model: free
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
