@@ -128,21 +128,6 @@ paths:
         '404':
           description: User not found.
 components:
-  parameters:
-    OrgId:
-      name: org_id
-      in: path
-      required: true
-      description: The Validic organization identifier.
-      schema:
-        type: string
-    Uid:
-      name: uid
-      in: path
-      required: true
-      description: The user identifier (customer-supplied uid or Validic id).
-      schema:
-        type: string
   schemas:
     User:
       type: object
@@ -184,6 +169,21 @@ components:
         last_processed_at:
           type: string
           format: date-time
+  parameters:
+    OrgId:
+      name: org_id
+      in: path
+      required: true
+      description: The Validic organization identifier.
+      schema:
+        type: string
+    Uid:
+      name: uid
+      in: path
+      required: true
+      description: The user identifier (customer-supplied uid or Validic id).
+      schema:
+        type: string
   securitySchemes:
     tokenAuth:
       type: apiKey

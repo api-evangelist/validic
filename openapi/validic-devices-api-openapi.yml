@@ -60,6 +60,13 @@ paths:
           description: Device suspended.
 components:
   parameters:
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
     OrgId:
       name: org_id
       in: path
@@ -72,13 +79,6 @@ components:
       in: path
       required: true
       description: The user identifier (customer-supplied uid or Validic id).
-      schema:
-        type: string
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
       schema:
         type: string
   securitySchemes:

@@ -54,6 +54,13 @@ components:
       schema:
         type: string
         format: date
+    Token:
+      name: token
+      in: query
+      required: true
+      description: Organization access token.
+      schema:
+        type: string
     OrgId:
       name: org_id
       in: path
@@ -69,13 +76,6 @@ components:
       schema:
         type: string
         format: date
-    Token:
-      name: token
-      in: query
-      required: true
-      description: Organization access token.
-      schema:
-        type: string
   schemas:
     ConnectionEvent:
       type: object
